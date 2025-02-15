@@ -1,11 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../css_file/home.css">
     <title>Booking Pickleball CourtsCourts</title>
 </head>
+
 <body>
-    
+    <div class="top">
+        <div class="top-left"><a href="">PKA Pickleball</a></div>
+        <div class="top-right">
+            <ul>
+                <li><i class='bx bx-user'></i></li>
+                <li><a href="">Đăng nhập</a></li>
+                <li><a href="">Đăng ký</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="below-top">
+        <a href="javascript:void(0);" onclick="showContent('home', this)">Trang chủ</a>
+        <a href="javascript:void(0);" onclick="showContent('courts', this)">Danh sách sân</a>
+        <a href="javascript:void(0);" onclick="showContent('appointments', this)">Quản lý lịch hẹn</a>
+        <a href="javascript:void(0);" onclick="showContent('history', this)">Lịch sử giao dịch</a>
+        <a href="javascript:void(0);" onclick="showContent('membership', this)">Gói hội viên</a>
+        <a href="javascript:void(0);" onclick="showContent('profile', this)">Quản lý thông tin</a>
+        <a href="javascript:void(0);" onclick="showContent('map', this)">Map</a>
+    </div>
+    <div id="home" class="content active">
+        <h2>Chào mừng đến với PKA Pickleball</h2>
+        <p>Đây là trang chủ.</p>
+    </div>
+
+    <div id="courts" class="content">
+        <h2>Danh sách sân Pickleball</h2>
+        <p>Danh sách các sân đang hoạt động...</p>
+    </div>
+
+    <div id="appointments" class="content">
+        <h2>Quản lý lịch hẹn</h2>
+        <p>Thông tin lịch hẹn của bạn...</p>
+    </div>
+
+    <div id="history" class="content">
+        <h2>Lịch sử giao dịch</h2>
+        <p>Các giao dịch đã thực hiện...</p>
+    </div>
+
+    <div id="membership" class="content">
+        <h2>Gói hội viên</h2>
+        <p>Thông tin về các gói hội viên...</p>
+    </div>
+
+    <div id="profile" class="content">
+        <h2>Quản lý thông tin</h2>
+        <p>Cập nhật thông tin cá nhân...</p>
+    </div>
+
+    <div id="map" class="content">
+        <h2>Bản đồ các sân Pickleball</h2>
+        <div id="leafletMap" style="width:100%; height:1000px;"></div>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-icon" onclick="toggleChat()"><i class='bx bxs-chat'></i></div>
+        <div class="chat-box">
+            <div class="chat-header" onclick="toggleChat()">Hỗ trợ trực tuyến</div>
+            <div class="chat-body">
+                <p>Xin chào! Tôi có thể giúp gì cho bạn?</p>
+            </div>
+            <input type="text" class="chat-input" placeholder="Nhập tin nhắn...">
+        </div>
+    </div>
+
+
+    <script src="../js_file/home.js"></script>
 </body>
+
 </html>
