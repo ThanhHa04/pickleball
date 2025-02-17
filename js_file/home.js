@@ -11,40 +11,38 @@ window.onload = function () {
 function toggleChat() {
     let chatBox = document.querySelector(".chat-box");
     let chatIcon = document.querySelector(".chat-icon");
-
     if (chatBox.style.display === "none" || chatBox.style.display === "") {
-        chatBox.style.display = "block"; // Hiển thị chatbox
-        chatIcon.style.display = "none"; // Ẩn biểu tượng chat nhỏ
+        chatBox.style.display = "block";
+        chatIcon.style.display = "none";
     } else {
-        chatBox.style.display = "none"; // Ẩn chatbox
-        chatIcon.style.display = "flex"; // Hiện biểu tượng chat nhỏ
+        chatBox.style.display = "none";
+        chatIcon.style.display = "flex";
     }
 }
-document.addEventListener("DOMContentLoaded", function () {
-    // Khởi tạo bản đồ, đặt tâm tại quận Hà Đông, Hà Nội
-    var map = L.map('map').setView([20.9725, 105.7772], 14);
 
+document.addEventListener("DOMContentLoaded", function () {
+    var map = L.map('map').setView([20.9725, 105.7772], 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Danh sách các sân Pickleball ở Hà Đông
-    var locations = [
-        { lat: 20.9746, lng: 105.7745, name: "Sân Pickleball Hà Đông 1", address: "KĐT Văn Quán, Hà Đông, Hà Nội" },
-        { lat: 20.9689, lng: 105.7807, name: "Sân Pickleball Hà Đông 2", address: "Công viên Thiên Văn Học, Hà Đông, Hà Nội" },
-        { lat: 20.9783, lng: 105.7701, name: "Sân Pickleball Hà Đông 3", address: "Sân thể thao Mỗ Lao, Hà Đông, Hà Nội" }
-    ];
+    // Lấy danh sách sân từ server (API)
+    fetch('http://localhost:3000/locations')
+        .then(response => response.json())
+        .then(locations => {
+            var markers = locations.map(loc => {
+                var marker = L.marker([loc.lat, loc.lng]).addTo(map);
+                marker.bindTooltip(loc.name, { permanent: true, direction: "top" });
+                marker.bindPopup(`<b>${loc.name}</b><br>${loc.address}`);
+                return marker;
+            });
 
-    var markers = locations.map(loc => {
-        var marker = L.marker([loc.lat, loc.lng]).addTo(map);
-        marker.bindPopup(`<b>${loc.name}</b><br>${loc.address}`);
-        return marker;
-    });
+            var group = new L.featureGroup(markers);
+            map.fitBounds(group.getBounds(), { padding: [50, 50] });
+        })
+        .catch(error => console.error('Lỗi khi lấy dữ liệu sân:', error));
 
-    var group = new L.featureGroup(markers);
-    map.fitBounds(group.getBounds(), { padding: [50, 50] });
-
-    // Xác định vị trí của người dùng
+    // Xác định vị trí người dùng
     function locateUser() {
         if (!navigator.geolocation) {
             alert("Trình duyệt của bạn không hỗ trợ xác định vị trí.");
@@ -56,10 +54,33 @@ document.addEventListener("DOMContentLoaded", function () {
                 var userLat = position.coords.latitude;
                 var userLng = position.coords.longitude;
 
-                var userMarker = L.marker([userLat, userLng]).addTo(map)
-                    .bindPopup("<b>Vị trí của bạn</b>").openPopup();
+                function cleanAddress(address) {
+                    let parts = address.split(", ");
+                    if (parts.length > 5) {
+                        return parts.slice(0, 5).join(", ");
+                    }
+                    return address;
+                }
 
-                map.setView([userLat, userLng], 15);
+                // Sử dụng API Nominatim để lấy địa chỉ từ tọa độ
+                fetch(`https://nominatim.openstreetmap.org/reverse?lat=${userLat}&lon=${userLng}&format=json&accept-language=vi`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let address = data.display_name;
+                        address = cleanAddress(address);
+
+                        var userMarker = L.marker([userLat, userLng]).addTo(map)
+                            .bindPopup(`<b>Vị trí của bạn</b><br>${address}`).openPopup();
+
+                        map.setView([userLat, userLng], 15);
+                    })
+                    .catch(error => {
+                        console.error("Lỗi khi lấy địa chỉ:", error);
+                        var userMarker = L.marker([userLat, userLng]).addTo(map)
+                            .bindPopup("<b>Vị trí của bạn</b><br>Không xác định được địa chỉ").openPopup();
+
+                        map.setView([userLat, userLng], 15);
+                    });
             },
             function (error) {
                 alert("Không thể lấy vị trí của bạn. Vui lòng kiểm tra cài đặt.");
@@ -67,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
     }
 
-    // Thêm nút xác định vị trí vào giao diện
+    // Tạo nút xác định vị trí người dùng
     var locateButton = L.control({ position: "topright" });
     locateButton.onAdd = function () {
         var btn = L.DomUtil.create("button", "locate-button");
