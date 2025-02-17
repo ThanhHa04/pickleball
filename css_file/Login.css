@@ -1,0 +1,69 @@
+body {
+    background-image: url("/images/PKB_nen.webp"); /* Thay đổi nền thành hình ảnh */
+    background-size: cover; /* Đảm bảo hình ảnh phủ kín toàn bộ */
+    background-position: center; /* Căn giữa hình ảnh */
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #f0f0f0; /* Màu nền của form */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 60%;
+    width: 20%;
+}
+
+h1 {
+    text-align: center;
+    color: black;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-form h2 {
+    text-align: center;
+}
+
+input {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    background-color: #4CAF50; /* Màu nút */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049; /* Màu nút khi hover */
+}
+
+p {
+    text-align: center;
+}
+
+a {
+    color: #4CAF50; /* Màu giống như nút */
+    text-decoration: none; /* Bỏ gạch chân */
+    transition: color 0.3s; /* Hiệu ứng chuyển màu */
+}
+
+a:hover {
+    color: #45a049; /* Màu khi hover giống như nút khi hover */
+    text-decoration: underline;
+}
