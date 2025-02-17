@@ -4,6 +4,7 @@ function showContent(page, element) {
     document.querySelectorAll(".below-top a").forEach(link => link.classList.remove("active"));
     element.classList.add("active");
 }
+
 window.onload = function () {
     showContent('home', document.querySelector(".below-top a"));
 };
@@ -30,15 +31,19 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch('http://localhost:3000/locations')
         .then(response => response.json())
         .then(locations => {
-            var markers = locations.map(loc => {
-                var marker = L.marker([loc.lat, loc.lng]).addTo(map);
-                marker.bindTooltip(loc.name, { permanent: true, direction: "top" });
-                marker.bindPopup(`<b>${loc.name}</b><br>${loc.address}`);
-                return marker;
-            });
+            if (Array.isArray(locations)) {
+                var markers = locations.map(loc => {
+                    var marker = L.marker([loc.lat, loc.lng]).addTo(map);
+                    marker.bindTooltip(loc.name, { permanent: true, direction: "top" });
+                    marker.bindPopup(`<b>${loc.name}</b><br>${loc.address}`);
+                    return marker;
+                });
 
-            var group = new L.featureGroup(markers);
-            map.fitBounds(group.getBounds(), { padding: [50, 50] });
+                var group = new L.featureGroup(markers);
+                map.fitBounds(group.getBounds(), { padding: [50, 50] });
+            } else {
+                console.error("Dữ liệu trả về không phải là mảng.");
+            }
         })
         .catch(error => console.error('Lỗi khi lấy dữ liệu sân:', error));
 
@@ -56,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 function cleanAddress(address) {
                     let parts = address.split(", ");
-                    if (parts.length > 5) {
+                    if (parts.length > 6) {
                         return parts.slice(0, 5).join(", ");
                     }
                     return address;
