@@ -36,35 +36,35 @@ a:hover {
     width: 20%;
 }
 
-.top-right>ul {
+.top-right > ul {
     width: 100%;
     display: flex;
     padding: 2%;
     justify-content: space-between;
 }
 
-.top-right>ul>li:first-child {
+.top-right > ul > li:first-child {
     font-size: 22px;
 }
 
-.top-right>ul>li:nth-child(2) {
+.top-right > ul > li:nth-child(2) {
     width: 40%;
     text-align: center;
 }
 
-.top-right>ul>li:nth-child(3) {
+.top-right > ul > li:nth-child(3) {
     border-left: 1px solid rgb(102, 193, 102);
     width: 40%;
     margin-left: 5%;
     text-align: center;
 }
 
-.top-right>ul>li {
+.top-right > ul > li {
     font-size: 17px;
     padding: 0 3%;
 }
 
-.top-right>ul>li>i {
+.top-right > ul > li > i {
     font-size: 100%;
 }
 
@@ -78,13 +78,13 @@ a:hover {
     box-sizing: border-box;
 }
 
-.below-top>a {
+.below-top > a {
     padding: 1% 2%;
     font-size: 17px;
     color: rgb(68, 18, 112);
 }
 
-.below-top>a:hover {
+.below-top > a:hover {
     border-radius: 20px;
     background-color: rgb(107, 212, 120);
 }
