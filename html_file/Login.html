@@ -3,20 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css_file/Login.css">
-    <title>Đăng Nhập</title>
+    <title>Đăng ký</title>
+    <link rel="stylesheet" href="/css_file/Signup.css">
 </head>
 <body>
     <div class="container">
-        <h1><a href="/html_file/home.html"><img src="/images/PKA_Pickleball.png"></a>
-        </h1>
-        <div class="login-form">
-            <h2>Đăng nhập</h2>
-            <input type="text" placeholder="Tên đăng nhập">
-            <input type="password" placeholder="Mật khẩu">
-            <button type="submit">Đăng nhập</button>
-            <p><a href="#">Quên mật khẩu</a></p>
-            <p><a href="/html_file/Signup.html">Chưa có tài khoản? </a></p>
+        <div class="signup-box">
+            <h2>Đăng Nhập</h2>
+            <form>
+                <div class="form-group">
+                    <input type="email" required>
+                    <label>Email</label>
+                </div>
+                <div class="form-group">
+                    <input type="password" required>
+                    <label>Mật khẩu</label>
+                </div>
+                <button type="submit">Đăng Nhập </button>
+                <p class="login-link"><a href="/html_file/Signup.html">Chưa có tài khoản?</a></p>
+            </form>
         </div>
     </div>
 </body>
