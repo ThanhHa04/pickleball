@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" >
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../css_file/home.css">
     <title>Booking Pickleball CourtsCourts</title>
 </head>
 
-<body>
+<body>    
     <div class="top">
         <div class="top-left"><a href="">PKA Pickleball</a></div>
         <div class="top-right">
@@ -24,7 +24,7 @@
     </div>
     <div class="below-top">
         <a href="javascript:void(0);" onclick="showContent('home', this)">Trang chủ</a>
-        <a href="javascript:void(0);" onclick="showContent('courts', this)">Danh sách sân</a>
+        <a href="javascript:void(0);" onclick="showContent('list-courts', this)">Danh sách sân</a>
         <a href="javascript:void(0);" onclick="showContent('appointments', this)">Quản lý lịch hẹn</a>
         <a href="javascript:void(0);" onclick="showContent('history', this)">Lịch sử giao dịch</a>
         <a href="javascript:void(0);" onclick="showContent('membership', this)">Gói hội viên</a>
@@ -38,8 +38,29 @@
     </div>
 
     <div id="list-courts" class="content">
-        <h2>Danh sách sân</h1>
-        x<div id="san-list"></div>      
+        <h2>Danh sách sân</h2>
+        <div class="list-box">
+            <div class="list-left">
+                <p id="pickleball-count">Pickleball... 0</p>
+                <p id="football-count">Bóng đá... 0</p>
+                <p id="badminton-count">Cầu lông... 0</p>
+            </div>
+            <div class="list-right">
+                <!-- Thanh tìm kiếm -->
+                <input type="text" id="search-bar" placeholder="Tìm kiếm sân...">
+                <select id="price-filter">
+                    <option value="">Chọn giá</option>
+                    <option value="low-to-high">Giá từ thấp đến cao</option>
+                    <option value="high-to-low">Giá từ cao đến thấp</option>
+                </select>
+                <div id="san-list" class="court-list"></div>
+                <div id="pagination">
+                    <button id="prev-page" disabled>Trang trước</button>
+                    <span id="page-number">Trang 1</span>
+                    <button id="next-page">Trang sau</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="appointments" class="content">

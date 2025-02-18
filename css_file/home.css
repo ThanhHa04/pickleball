@@ -35,35 +35,35 @@ a:hover {
     width: 20%;
 }
 
-.top-right > ul {
+.top-right>ul {
     width: 100%;
     display: flex;
     padding: 2%;
     justify-content: space-between;
 }
 
-.top-right > ul > li:first-child {
+.top-right>ul>li:first-child {
     font-size: 22px;
 }
 
-.top-right > ul > li:nth-child(2) {
+.top-right>ul>li:nth-child(2) {
     width: 40%;
     text-align: center;
 }
 
-.top-right > ul > li:nth-child(3) {
+.top-right>ul>li:nth-child(3) {
     border-left: 1px solid rgb(102, 193, 102);
     width: 40%;
     margin-left: 5%;
     text-align: center;
 }
 
-.top-right > ul > li {
+.top-right>ul>li {
     font-size: 17px;
     padding: 0 3%;
 }
 
-.top-right > ul > li > i {
+.top-right>ul>li>i {
     font-size: 100%;
 }
 
@@ -78,13 +78,13 @@ a:hover {
     box-sizing: border-box;
 }
 
-.below-top > a {
+.below-top>a {
     padding: 1% 2%;
     font-size: 17px;
     color: rgb(68, 18, 112);
 }
 
-.below-top > a:hover {
+.below-top>a:hover {
     border-radius: 20px;
     background-color: rgb(107, 212, 120);
 }
@@ -150,7 +150,7 @@ a:hover {
 #map {
     margin-left: auto;
     margin-right: auto;
-    justify-content:center;
+    justify-content: center;
     width: 80%;
     height: 800px;
     margin-top: 20px;
@@ -170,4 +170,60 @@ a:hover {
 .locate-button:hover {
     background-color: #007bff;
     color: white;
+}
+
+.list-box {
+    display: flex;
+}
+
+.list-right {
+    width: 80%;
+}
+
+.list-left {
+    width: 20%;
+}
+
+#list-courts {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#search-bar {
+    width: 80%;
+    padding: 8px;
+    margin-bottom: 20px;
+}
+
+.court-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.court-item {
+    border: 1px solid #ccc;
+    padding: 15px;
+    text-align: center;
+}
+
+#pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+}
+
+#pagination button {
+    padding: 5px 15px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+#pagination button:disabled {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
 }
