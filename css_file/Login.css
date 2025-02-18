@@ -67,3 +67,7 @@ a:hover {
     color: #45a049; /* Màu khi hover giống như nút khi hover */
     text-decoration: underline;
 }
+
+img {
+    height: 100px;
+}
