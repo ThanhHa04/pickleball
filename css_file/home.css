@@ -227,3 +227,8 @@ a:hover {
     background-color: #e0e0e0;
     cursor: not-allowed;
 }
+
+img {
+    background: none;
+    height: 100px;
+}
