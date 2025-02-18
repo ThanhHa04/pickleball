@@ -15,7 +15,7 @@ a:hover {
 
 .top {
     width: 100%;
-    height: 77px;
+    max-height: 1200px;
     background-color: rgb(97, 216, 97);
     display: flex;
     justify-content: space-between;
