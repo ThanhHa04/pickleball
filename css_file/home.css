@@ -182,6 +182,17 @@ a:hover {
 
 .list-left {
     width: 20%;
+    padding: 4% 4% 4% 2%;
+    border: 1px solid black;
+    margin: 4%;
+}
+
+.sport-item {
+    display: flex;
+    width:100%;
+    justify-content: space-between;
+    font-size: 18px; 
+    padding: 5px 10px;
 }
 
 #list-courts {
@@ -209,6 +220,13 @@ a:hover {
     text-align: center;
 }
 
+.dich-vu{
+    margin:auto;
+    width:90%;
+    display:flex;
+    justify-content: space-between;
+}
+
 #pagination {
     display: flex;
     justify-content: center;
@@ -230,5 +248,9 @@ a:hover {
 
 img {
     background: none;
-    height: 100px;
+    width: 55%;
+}
+
+.court-img-ex{
+    width: 100%;
 }

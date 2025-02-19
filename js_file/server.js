@@ -5,10 +5,11 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
+// Cấu hình CORS
 const allowedOrigins = ['http://127.0.0.1:5500', 'http://localhost:5000'];
 app.use(cors({
     origin: function (origin, callback) {
-        if (allowedOrigins.indexOf(origin) !== -1) {
+        if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -16,6 +17,7 @@ app.use(cors({
     }
 }));
 
+// Kết nối MySQL
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -23,34 +25,40 @@ const connection = mysql.createConnection({
     database: 'pickleball_db'
 });
 
-connection.connect(function (err) {
+connection.connect(err => {
     if (err) {
-        console.error('Lỗi kết nối MySQL: ' + err.stack);
+        console.error('Lỗi kết nối MySQL:', err.stack);
         return;
     }
-    console.log('Kết nối MySQL thành công với ID: ' + connection.threadId);
+    console.log('Kết nối MySQL thành công với ID:', connection.threadId);
 });
 
-// Endpoint để lấy danh sách các địa điểm
+app.get('/San', (req, res) => {
+    const sql = `
+        SELECT San.*, locations.name AS location_name 
+        FROM San 
+        LEFT JOIN locations ON San.location_id = locations.id
+    `;
+    connection.query(sql, (err, results) => {
+        if (err) {
+            console.error("Lỗi truy vấn:", err);
+            return res.status(500).send("Lỗi server");
+        }
+        res.json(results);
+    });
+});
+
 app.get('/locations', (req, res) => {
-    connection.query('SELECT * FROM locations', function (err, results) {
+    connection.query('SELECT * FROM locations', (err, results) => {
         if (err) {
             console.error('Lỗi truy vấn:', err);
             return res.status(500).send('Lỗi truy vấn');
         }
-        res.json(results);  // Trả về dữ liệu dạng JSON
-    });
-});
-app.get('/San', (req, res) => {
-    connection.query('SELECT * FROM San', (err, results) => {
-        if (err) {
-            res.status(500).send('Lỗi khi truy vấn cơ sở dữ liệu');
-            return;
-        }
-        res.json(results);  // Trả kết quả dưới dạng JSON
+        res.json(results);
     });
 });
 
+// Khởi động server
 app.listen(port, () => {
     console.log(`Server đang chạy trên cổng ${port}`);
 });
