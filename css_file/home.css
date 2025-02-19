@@ -177,14 +177,14 @@ a:hover {
 }
 
 .list-right {
-    width: 80%;
+    width: 90%;
 }
 
 .list-left {
     width: 15%;
     padding: 4% 4% 4% 2%;
-    border: 1px solid black;
-    margin: 4%;
+    border: 1px solid rgb(202, 191, 191);
+    margin: 4% 2%;
 }
 
 .sport-item {
