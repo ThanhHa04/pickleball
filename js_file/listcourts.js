@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 courtListDiv.innerHTML = '';
 
                 courtsToDisplay.forEach(court => {
-                    const courtItem = document.createElement("  div");
+                    const courtItem = document.createElement("div");
                     courtItem.classList.add("court-item");
                     let giaThue = court.GiaThue;
                     if (giaThue % 1 === 0) {
