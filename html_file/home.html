@@ -13,23 +13,27 @@
 
 <body>    
     <div class="top">
-        <div class="top-left"><a href="/html_file/home.html"><img src="/images/PKA_Pickleball.png"></a></div>
-        <div class="top-right">
-            <ul>
-                <li><i class='bx bx-user'></i></li>
-                <li><a href="/html_file/Login.html">Đăng nhập</a></li>
-                <li><a href="/html_file/Signup.html">Đăng ký</a></li>
-            </ul>
+        <div class="left">
+            <a href="/html_file/home.html"><img src="/images/PKA_Pickleball.png"></a>
         </div>
-    </div>
-    <div class="below-top">
-        <a href="javascript:void(0);" onclick="showContent('home', this)">Trang chủ</a>
-        <a href="javascript:void(0);" onclick="showContent('list-courts', this)">Danh sách sân</a>
-        <a href="javascript:void(0);" onclick="showContent('appointments', this)">Quản lý lịch hẹn</a>
-        <a href="javascript:void(0);" onclick="showContent('history', this)">Lịch sử giao dịch</a>
-        <a href="javascript:void(0);" onclick="showContent('membership', this)">Gói hội viên</a>
-        <a href="javascript:void(0);" onclick="showContent('profile', this)">Quản lý thông tin</a>
-        <a href="javascript:void(0);" onclick="showContent('map', this)">Map</a>
+        <div class="right">
+            <div class="top-top">
+                <ul>
+                    <li><i class='bx bx-user'></i></li>
+                    <li><a href="/html_file/Login.html">Đăng nhập</a></li>
+                    <li><a href="/html_file/Signup.html">Đăng ký</a></li>
+                </ul>
+            </div>
+            <div class="below-top">
+                <a href="javascript:void(0);" onclick="showContent('home', this)"><i class='bx bxs-home'></i></a>
+                <a href="javascript:void(0);" onclick="showContent('list-courts', this)">Danh sách sân</a>
+                <a href="javascript:void(0);" onclick="showContent('appointments', this)">Quản lý lịch hẹn</a>
+                <a href="javascript:void(0);" onclick="showContent('history', this)">Lịch sử giao dịch</a>
+                <a href="javascript:void(0);" onclick="showContent('membership', this)">Gói hội viên</a>
+                <a href="javascript:void(0);" onclick="showContent('profile', this)">Quản lý thông tin</a>
+                <a href="javascript:void(0);" onclick="showContent('map', this)">Map</a>
+            </div>
+        </div>
     </div>
 
     <div id="home" class="content active">
@@ -38,15 +42,17 @@
     </div>
 
     <div id="list-courts" class="content">
-        <h2>Danh sách sân</h2>
         <div class="list-box">
             <div class="list-left">
-                <p class="sport-item"><span>Pickleball</span> <span id="pickleball-count">0</span></p>
-                <p class="sport-item"><span>Bóng đá</span> <span id="football-count">0</span></p>
-                <p class="sport-item"><span>Cầu lông</span> <span id="badminton-count">0</span></p>
+                <h2>Danh sách sân</h2>
+                <div class="count-item">
+                    <p class="sport-item"><span>Pickleball</span> <span id="pickleball-count">0</span></p>
+                    <p class="sport-item"><span>Bóng đá</span> <span id="football-count">0</span></p>
+                    <p class="sport-item"><span>Cầu lông</span> <span id="badminton-count">0</span></p>
+                </div>
             </div>
             <div class="list-right">
-                <input type="text" id="search-bar" placeholder="Tìm kiếm sân...">
+                <input type="text" id="search-bar" placeholder=" Tìm kiếm sân...">
                 <select id="price-filter">
                     <option value="">Chọn giá</option>
                     <option value="low-to-high">Giá từ thấp đến cao</option>
