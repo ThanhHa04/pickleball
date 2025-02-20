@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 return 0;
             }
-
+            
             function countCourtTypes() {
                 let pickleballCount = 0;
                 let footballCount = 0;

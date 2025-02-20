@@ -14,68 +14,69 @@ a:hover {
 }
 
 .top {
-    width: 100%;
-    max-height: 1200px;
     background-color: rgb(97, 216, 97);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 10%;
-    box-sizing: border-box;
-    border: 1px solid rgb(102, 193, 102);
-}
-
-.top-left {
-    font-size: 30px;
-}
-
-.top-right {
-    align-items: center;
-    justify-items: center;
-    width: 20%;
-}
-
-.top-right>ul {
     width: 100%;
     display: flex;
-    padding: 2%;
+    border: 1px solid rgb(141, 219, 141);
+}
+
+.right {
+    width: 85%;
+    padding-right: 0;
+    border: 1px solid rgb(141, 219, 141);
+}
+
+.left {
+    width: 15%;
+    border: 1px solid rgb(141, 219, 141);
+}
+
+.left>img {
+    font-size: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.left>a {
+    display: flex;
+    align-items: center;
+    width: 160%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.top-top {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    background-color: rgb(97, 216, 97);
+    border-bottom: 1px solid rgb(141, 219, 141);
+}
+
+.top-top>ul {
+    margin-right: 5%;
+    width: 15%;
+    display: flex;
+    padding: 1% 2%;
     justify-content: space-between;
 }
 
-.top-right>ul>li:first-child {
-    font-size: 22px;
-}
-
-.top-right>ul>li:nth-child(2) {
-    width: 40%;
-    text-align: center;
-}
-
-.top-right>ul>li:nth-child(3) {
-    border-left: 1px solid rgb(102, 193, 102);
-    width: 40%;
-    margin-left: 5%;
-    text-align: center;
-}
-
-.top-right>ul>li {
-    font-size: 17px;
-    padding: 0 3%;
-}
-
-.top-right>ul>li>i {
-    font-size: 100%;
+.top-top>ul>li:first-child {
+    font-size: 1em;
+    width: 20%;
+    padding-right: 1%;
 }
 
 .below-top {
     background-color: rgb(97, 216, 97);
     width: 100%;
-    height: 75px;
+    height: 55px;
+    box-sizing: border-box;
     display: flex;
+    padding: 0 5%;
     justify-content: space-between;
     align-items: center;
-    padding: 0 10%;
-    box-sizing: border-box;
 }
 
 .below-top>a {
@@ -87,10 +88,12 @@ a:hover {
 .below-top>a:hover {
     border-radius: 20px;
     background-color: rgb(107, 212, 120);
+    color: black;
 }
 
 .below-top a.active {
     background-color: lightgreen;
+    border-radius: 20px;
     color: black;
 }
 
@@ -173,26 +176,37 @@ a:hover {
 }
 
 .list-box {
+    padding-top: 1%;
     display: flex;
 }
 
 .list-right {
-    width: 90%;
+    width: 80%;
 }
 
 .list-left {
-    width: 15%;
-    padding: 4% 4% 4% 2%;
-    border: 1px solid rgb(202, 191, 191);
-    margin: 4% 2%;
+    width: 20%;
+}
+
+.list-left>h2 {
+    width: 90%;
+    padding: 0;
+    margin: 5% 2%;
+    font-size: 150%;
+}
+
+.count-item {
+    padding-top: 2%;
+    margin: 5%;
+    border: 0.5px solid #ccc;
 }
 
 .sport-item {
     display: flex;
-    width:100%;
+    width: 80%;
     justify-content: space-between;
-    font-size: 18px; 
-    padding: 5px 10px;
+    font-size: 18px;
+    padding: 1% 5%;
 }
 
 #list-courts {
@@ -203,8 +217,20 @@ a:hover {
 
 #search-bar {
     width: 80%;
-    padding: 8px;
-    margin-bottom: 20px;
+    padding: 1.2%;
+    border-radius: 20px;
+    margin-bottom: 1%;
+    border: 1px solid rgb(202, 191, 191);
+}
+
+#price-filter {
+    width: 10%;
+    padding: 1.2%;
+    border-radius: 20px;
+}
+
+#price-filter:hover {
+    cursor: pointer;
 }
 
 .court-list {
@@ -220,10 +246,10 @@ a:hover {
     text-align: center;
 }
 
-.dich-vu{
-    margin:auto;
-    width:90%;
-    display:flex;
+.dich-vu {
+    margin: auto;
+    width: 90%;
+    display: flex;
     justify-content: space-between;
 }
 
@@ -235,15 +261,17 @@ a:hover {
 }
 
 #pagination button {
-    padding: 5px 15px;
-    background-color: #f0f0f0;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: rgb(186, 242, 186);
     border: 1px solid #ccc;
     cursor: pointer;
 }
 
 #pagination button:disabled {
-    background-color: #e0e0e0;
+    background-color: rgb(151, 233, 151);
     cursor: not-allowed;
+    color: black;
 }
 
 img {
@@ -251,6 +279,6 @@ img {
     width: 55%;
 }
 
-.court-img-ex{
+.court-img-ex {
     width: 100%;
 }
