@@ -1,23 +1,28 @@
 document.addEventListener("DOMContentLoaded", function () {
-    fetch('http://localhost:3000/San')
+    fetch('http://localhost:3000/san')  // Lấy dữ liệu sân từ API
         .then(response => response.json())
         .then(San => {
+            console.log(San);
             let currentPage = 1;
             const itemsPerPage = 8;
+            let locations = {};  // Đối tượng để lưu thông tin locations
 
-            function getMatchScore(court, query) {
-                const position = court.TenSan.toLowerCase();
-                query = query.toLowerCase();
-                if (position === query) {
-                    return 3;
-                } else if (position.startsWith(query)) {
-                    return 2;
-                } else if (position.includes(query)) {
-                    return 1;
+            function getLocationName(locationId) {
+                if (locations[locationId]) {
+                    return Promise.resolve(locations[locationId]);
                 }
-                return 0;
+                return fetch(`http://localhost:3000/locations/${locationId}`)
+                    .then(response => response.json())
+                    .then(location => {
+                        locations[locationId] = location.name;
+                        return location.name;
+                    })
+                    .catch(err => {
+                        console.error('Lỗi khi lấy thông tin địa điểm:', err);
+                        return "Không có thông tin địa điểm";
+                    });
             }
-            
+
             function countCourtTypes() {
                 let pickleballCount = 0;
                 let footballCount = 0;
@@ -41,67 +46,66 @@ document.addEventListener("DOMContentLoaded", function () {
             function displayCourts() {
                 const searchQuery = document.getElementById("search-bar").value.toLowerCase();
                 const priceFilter = document.getElementById("price-filter").value;
+                
+                function removeAccents(str) {
+                    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                }
+                let filteredCourts = San.filter(court =>
+                    removeAccents(court.TenSan).includes(removeAccents(searchQuery))
+                );
 
-                let filteredCourts = San.filter(court => court.TenSan.toLowerCase().includes(searchQuery))
-                    .sort((a, b) => getMatchScore(a, searchQuery) - getMatchScore(b, searchQuery));
-
-                if (priceFilter === "low-to-high") {
-                    filteredCourts.sort((a, b) => a.GiaThue - b.GiaThue);
-                } else if (priceFilter === "high-to-low") {
-                    filteredCourts.sort((a, b) => b.GiaThue - a.GiaThue);
+                if (priceFilter) {
+                    filteredCourts = filteredCourts.filter(court => court.GiaThue !== undefined && court.GiaThue !== null);
+                    if (priceFilter === "low-to-high") {
+                        filteredCourts.sort((a, b) => Number(a.GiaThue) - Number(b.GiaThue));
+                    } else if (priceFilter === "high-to-low") {
+                        filteredCourts.sort((a, b) => Number(b.GiaThue) - Number(a.GiaThue));
+                    }
                 }
 
+                countCourtTypes(filteredCourts); 
                 const start = (currentPage - 1) * itemsPerPage;
                 const end = start + itemsPerPage;
                 const courtsToDisplay = filteredCourts.slice(start, end);
                 const courtListDiv = document.getElementById("san-list");
                 courtListDiv.innerHTML = '';
 
-                courtsToDisplay.forEach(court => {
-                    const courtItem = document.createElement("div");
-                    courtItem.classList.add("court-item");
-                    let giaThue = court.GiaThue;
-                    if (giaThue % 1 === 0) {
-                        giaThue = Math.floor(giaThue);
-                    }
+                Promise.all(courtsToDisplay.map(async (court) => {
+                    court.locationName = await getLocationName(court.location_id);
+                    return court;
+                })).then(updatedCourts => {
+                    updatedCourts.forEach(court => {
+                        const courtItem = document.createElement("div");
+                        courtItem.classList.add("court-item");
 
-                    let imageUrl = court.HinhAnh ? court.HinhAnh : "default-image.jpg"; // Nếu không có hình thì dùng ảnh mặc định
+                        let giaThue = court.GiaThue % 1 === 0 ? Math.floor(court.GiaThue) : court.GiaThue;
+                        let imageUrl = court.HinhAnh ? court.HinhAnh : "default-image.jpg";
 
-                    courtItem.innerHTML = ` 
-                    <div class="court-img">
-                        <img class="court-img-ex" src="${imageUrl}" alt="${court.TenSan}">
-                    </div>
-                    <div class="court-info">
-                        <h3>${court.TenSan}</h3>
-                        <p><strong>Địa chỉ:</strong> ${court.location_name}</p> 
-                        <p><strong>Giá thuê:</strong> ${giaThue.toLocaleString()}</p>
-                        <p class="rating">⭐⭐⭐⭐⭐</p>
-                        <p class="dich-vu">
-                            <span>📶 Wifi</span>
-                            <span>🍽 Căng tin</span>
-                        </p>
-                    </div>
-                    `;
-                    courtListDiv.appendChild(courtItem);
+                        courtItem.innerHTML = `
+                        <div class="court-img">
+                            <img class="court-img-ex" src="${imageUrl}" alt="${court.TenSan}">
+                        </div>
+                        <div class="court-info">
+                            <h3>${court.TenSan}</h3>
+                            <p><strong>Địa chỉ:</strong> ${court.locationName}</p> 
+                            <p><strong>Giá thuê:</strong> ${giaThue.toLocaleString()}</p>
+                            <p class="rating">⭐⭐⭐⭐⭐</p>
+                            <p class="dich-vu">
+                                <span>📶 Wifi</span>
+                                <span>🍽 Căng tin</span>
+                            </p>
+                        </div>
+                        `;
+                        courtListDiv.appendChild(courtItem);
+                    });
+
+                    document.getElementById("page-number").textContent = `Trang ${currentPage}`;
+                    document.getElementById("prev-page").disabled = currentPage === 1;
+                    document.getElementById("next-page").disabled = end >= filteredCourts.length;
                 });
-
-                document.getElementById("page-number").textContent = `Trang ${currentPage}`;
-                document.getElementById("prev-page").disabled = currentPage === 1;
-                document.getElementById("next-page").disabled = end >= filteredCourts.length;
-
-                countCourtTypes();
             }
 
-            document.getElementById("search-bar").addEventListener("input", () => {
-                currentPage = 1;
-                displayCourts();
-            });
-
-            document.getElementById("price-filter").addEventListener("change", () => {
-                console.log("Selected price filter: ", document.getElementById("price-filter").value);
-                currentPage = 1;
-                displayCourts();
-            });
+            displayCourts();
 
             document.getElementById("prev-page").addEventListener("click", () => {
                 if (currentPage > 1) {
@@ -111,14 +115,13 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             document.getElementById("next-page").addEventListener("click", () => {
-                const filteredCourts = San.filter(court => court.TenSan.toLowerCase().includes(document.getElementById("search-bar").value.toLowerCase()));
-                if ((currentPage * itemsPerPage) < filteredCourts.length) {
-                    currentPage++;
-                    displayCourts();
-                }
+                currentPage++;
+                displayCourts();
             });
 
-            displayCourts();
+            document.getElementById("search-bar").addEventListener("input", displayCourts);
+            document.getElementById("price-filter").addEventListener("change", displayCourts);
+
         })
         .catch(error => {
             console.error('Lỗi khi lấy dữ liệu sân:', error);

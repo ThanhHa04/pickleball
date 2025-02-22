@@ -1,0 +1,8 @@
+# Bỏ file cấu hình Firebase (tránh lộ API key)
+firebase-config.json  
+
+# Bỏ thư mục node_modules (tránh push thư viện nặng)
+node_modules/  
+
+# Nếu không muốn lock version package (tùy chọn)
+package-lock.json  
