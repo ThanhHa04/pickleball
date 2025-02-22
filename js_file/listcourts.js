@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(San);
             let currentPage = 1;
             const itemsPerPage = 8;
-            let locations = {};  // Đối tượng để lưu thông tin locations
+            let locations = {};
 
             function getLocationName(locationId) {
                 if (locations[locationId]) {
@@ -23,19 +23,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
             }
 
-            function countCourtTypes() {
+            function countCourtTypes(filteredCourts) {
                 let pickleballCount = 0;
                 let footballCount = 0;
                 let badmintonCount = 0;
 
-                San.forEach(court => {
-                    if (court.IDLoaiSan && court.IDLoaiSan.startsWith("P")) {
-                        pickleballCount++;
-                    } else if (court.IDLoaiSan && court.IDLoaiSan.startsWith("S")) {
-                        footballCount++;
-                    } else if (court.IDLoaiSan && court.IDLoaiSan.startsWith("B")) {
-                        badmintonCount++;
-                    }
+                filteredCourts.forEach(court => {
+                    if (court.IDLoaiSan?.startsWith("P")) pickleballCount++;
+                    else if (court.IDLoaiSan?.startsWith("S")) footballCount++;
+                    else if (court.IDLoaiSan?.startsWith("B")) badmintonCount++;
                 });
 
                 document.getElementById('pickleball-count').textContent = pickleballCount;
@@ -46,9 +42,9 @@ document.addEventListener("DOMContentLoaded", function () {
             function displayCourts() {
                 const searchQuery = document.getElementById("search-bar").value.toLowerCase();
                 const priceFilter = document.getElementById("price-filter").value;
-                
+
                 function removeAccents(str) {
-                    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                    return str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
                 }
                 let filteredCourts = San.filter(court =>
                     removeAccents(court.TenSan).includes(removeAccents(searchQuery))
@@ -63,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 }
 
-                countCourtTypes(filteredCourts); 
+                countCourtTypes(filteredCourts);
                 const start = (currentPage - 1) * itemsPerPage;
                 const end = start + itemsPerPage;
                 const courtsToDisplay = filteredCourts.slice(start, end);
@@ -77,9 +73,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     updatedCourts.forEach(court => {
                         const courtItem = document.createElement("div");
                         courtItem.classList.add("court-item");
+                        courtItem.dataset.idSan = court.IDSan;  // Đảm bảo sử dụng IDSan
 
                         let giaThue = court.GiaThue % 1 === 0 ? Math.floor(court.GiaThue) : court.GiaThue;
-                        let imageUrl = court.HinhAnh ? court.HinhAnh : "default-image.jpg";
+                        let imageUrl = court.HinhAnh || "default-image.jpg";
 
                         courtItem.innerHTML = `
                         <div class="court-img">
@@ -122,8 +119,18 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("search-bar").addEventListener("input", displayCourts);
             document.getElementById("price-filter").addEventListener("change", displayCourts);
 
+            // --- HIỂN THỊ THÔNG TIN CHI TIẾT SÂN KHI CLICK ---
+            document.getElementById("san-list").addEventListener("click", function (event) {
+                const courtItem = event.target.closest(".court-item");
+                if (courtItem) {
+                    const idSan = courtItem.dataset.idSan;
+                    console.log("ID sân:", idSan);
+
+                    // Điều hướng đến trang chi tiết với ID sân trong URL
+                    window.location.href = `../html_file/infoSan.html?idSan=${idSan}`;
+                }
+            });
         })
-        .catch(error => {
-            console.error('Lỗi khi lấy dữ liệu sân:', error);
-        });
+        .catch(error => console.error('Lỗi khi lấy dữ liệu sân:', error));
 });
+

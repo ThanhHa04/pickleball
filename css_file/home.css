@@ -282,3 +282,40 @@ img {
 .court-img-ex {
     width: 100%;
 }
+
+#court-details {
+    display: none;
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #045D32;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+}
+.court-info {
+    cursor:pointer;
+}
+.court-info-card {
+    text-align: center;
+    cursor:pointer;
+}
+
+.court-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.close-btn {
+    margin-top: 10px;
+    padding: 5px 15px;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
