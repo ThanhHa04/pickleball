@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 const cors = require('cors');
 
 // Kết nối Firebase
-const serviceAccount = require('./firebase-config.json');
+const serviceAccount = require('../firebase-config.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
