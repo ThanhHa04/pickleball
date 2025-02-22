@@ -1,64 +1,99 @@
 const express = require('express');
-const mysql = require('mysql2');
+const admin = require('firebase-admin');
 const cors = require('cors');
 
+// Kết nối Firebase
+const serviceAccount = require('./firebase-config.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+const db = admin.firestore();
+
+// Khởi tạo Express
 const app = express();
 const port = 3000;
 
-// Cấu hình CORS
-const allowedOrigins = ['http://127.0.0.1:5500', 'http://localhost:5000'];
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    }
-}));
+// Cấu hình CORS để cho phép frontend truy cập
+app.use(cors());
 
-// Kết nối MySQL
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '050604',
-    database: 'pickleball_db'
-});
-
-connection.connect(err => {
-    if (err) {
-        console.error('Lỗi kết nối MySQL:', err.stack);
-        return;
-    }
-    console.log('Kết nối MySQL thành công với ID:', connection.threadId);
-});
-
-app.get('/San', (req, res) => {
-    const sql = `
-        SELECT San.*, locations.name AS location_name 
-        FROM San 
-        LEFT JOIN locations ON San.location_id = locations.id
-    `;
-    connection.query(sql, (err, results) => {
-        if (err) {
-            console.error("Lỗi truy vấn:", err);
-            return res.status(500).send("Lỗi server");
-        }
-        res.json(results);
-    });
-});
-
+// API để lấy dữ liệu từ collection locations
 app.get('/locations', (req, res) => {
-    connection.query('SELECT * FROM locations', (err, results) => {
-        if (err) {
-            console.error('Lỗi truy vấn:', err);
-            return res.status(500).send('Lỗi truy vấn');
-        }
-        res.json(results);
+  const collectionRef = db.collection('locations');
+  
+  collectionRef.get()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        return res.status(404).json({ message: 'No locations found.' });
+      }
+
+      let locations = [];
+      snapshot.forEach(doc => {
+        locations.push(doc.data());
+      });
+
+      res.json(locations);  // Trả về dữ liệu cho frontend
+    })
+    .catch(err => {
+      console.log('Error getting documents:', err);
+      res.status(500).json({ error: 'Lỗi khi lấy dữ liệu từ Firebase.' });
     });
 });
 
-// Khởi động server
+app.get('/san', (req, res) => {
+    const collectionRef = db.collection('san');
+    
+    collectionRef.get()
+      .then(snapshot => {
+        if (snapshot.empty) {
+          return res.status(404).json({ message: 'No locations found.' });
+        }
+  
+        let locations = [];
+        snapshot.forEach(doc => {
+          locations.push(doc.data());
+        });
+  
+        res.json(locations);  // Trả về dữ liệu cho frontend
+      })
+      .catch(err => {
+        console.log('Error getting documents:', err);
+        res.status(500).json({ error: 'Lỗi khi lấy dữ liệu từ Firebase.' });
+      });
+  });
+
+    app.get('/locations/:id', (req, res) => {
+        const locationId = req.params.id;  // Lấy ID từ request
+        console.log('Request for location ID:', locationId);  // Log để kiểm tra
+    
+        db.collection('locations').get()  // Lấy tất cả dữ liệu trong collection 'locations'
+        .then(snapshot => {
+            let foundLocation = null;
+    
+            snapshot.forEach(doc => {
+            const docData = doc.data();
+            if (docData.id && docData.id.toString() === locationId) {  // So sánh ID với request ID
+                foundLocation = docData;  // Lưu lại thông tin location
+            }
+            });
+    
+            if (!foundLocation) {
+            console.log('Location with ID ' + locationId + ' not found');
+            return res.status(404).json({ message: 'Location not found.' });
+            }
+    
+            res.json(foundLocation);  // Trả về dữ liệu location
+        })
+        .catch(err => {
+            console.error('Error getting location:', err);
+            res.status(500).json({ error: 'Lỗi khi lấy thông tin địa điểm.' });
+        });
+    });
+  
+  
+  
+// Lắng nghe trên cổng 3000
 app.listen(port, () => {
-    console.log(`Server đang chạy trên cổng ${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });

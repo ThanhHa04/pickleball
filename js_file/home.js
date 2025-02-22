@@ -1,3 +1,4 @@
+// Hàm để chuyển đổi giữa các trang
 function showContent(page, element) {
     document.querySelectorAll(".content").forEach(div => div.style.display = "none");
     document.getElementById(page).style.display = "block";
@@ -5,10 +6,12 @@ function showContent(page, element) {
     element.classList.add("active");
 }
 
+// Chạy khi trang web được tải xong
 window.onload = function () {
     showContent('home', document.querySelector(".below-top a"));
 };
 
+// Hàm toggle chat box
 function toggleChat() {
     let chatBox = document.querySelector(".chat-box");
     let chatIcon = document.querySelector(".chat-icon");
@@ -21,13 +24,15 @@ function toggleChat() {
     }
 }
 
+// Khi tài liệu HTML đã tải xong
 document.addEventListener("DOMContentLoaded", function () {
-    var map = L.map('map').setView([20.9725, 105.7772], 14);
+    // Khởi tạo bản đồ
+    var map = L.map('map').setView([20.9725, 105.7772], 14); // Vị trí mặc định của bản đồ
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Lấy danh sách sân từ server (API)
+    // Lấy danh sách địa điểm từ server (API)
     fetch('http://localhost:3000/locations')
         .then(response => response.json())
         .then(locations => {
@@ -39,6 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     return marker;
                 });
 
+                // Tự động căn chỉnh bản đồ sao cho hiển thị hết các marker
                 var group = new L.featureGroup(markers);
                 map.fitBounds(group.getBounds(), { padding: [50, 50] });
             } else {
@@ -47,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => console.error('Lỗi khi lấy dữ liệu sân:', error));
 
-    // Xác định vị trí người dùng
+    // Hàm xác định vị trí người dùng
     function locateUser() {
         if (!navigator.geolocation) {
             alert("Trình duyệt của bạn không hỗ trợ xác định vị trí.");
@@ -59,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 var userLat = position.coords.latitude;
                 var userLng = position.coords.longitude;
 
+                // Hàm xử lý địa chỉ người dùng
                 function cleanAddress(address) {
                     let parts = address.split(", ");
                     if (parts.length > 6) {
@@ -74,9 +81,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         let address = data.display_name;
                         address = cleanAddress(address);
 
+                        // Thêm marker vị trí người dùng vào bản đồ
                         var userMarker = L.marker([userLat, userLng]).addTo(map)
                             .bindPopup(`<b>Vị trí của bạn</b><br>${address}`).openPopup();
 
+                        // Di chuyển bản đồ về vị trí người dùng
                         map.setView([userLat, userLng], 15);
                     })
                     .catch(error => {
@@ -84,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         var userMarker = L.marker([userLat, userLng]).addTo(map)
                             .bindPopup("<b>Vị trí của bạn</b><br>Không xác định được địa chỉ").openPopup();
 
+                        // Di chuyển bản đồ về vị trí người dùng
                         map.setView([userLat, userLng], 15);
                     });
             },
@@ -103,4 +113,3 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     locateButton.addTo(map);
 });
-
