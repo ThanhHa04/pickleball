@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sân</title>
+    <link rel="stylesheet" href="../css_file/home.css">
+</head>
+
+<body>
+    <div id="court-details">Đang tải thông tin sân...</div>
+    <button onclick="window.history.back()">Trở lại</button>
+
+    <script>
+        // Lấy idSan từ URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const idSan = urlParams.get('idSan');  // Lấy giá trị idSan từ URL query string
+
+        if (!idSan) {
+            // Nếu không có idSan trong URL, hiển thị thông báo lỗi
+            document.getElementById("court-details").innerHTML = "Không tìm thấy ID sân trong URL!";
+            console.error("Không tìm thấy idSan trong URL.");
+        } else {
+            console.log("ID Sân từ URL:", idSan);  // Kiểm tra giá trị idSan
+
+            // Gọi API để lấy thông tin chi tiết sân
+            fetch(`http://localhost:3000/chitietsan/${idSan}`)
+                .then(response => response.json())
+                .then(court => {
+                    console.log("Dữ liệu sân trả về từ API:", court);  // Kiểm tra dữ liệu trả về từ API
+
+                    if (!court || !court.IDSan) {
+                        document.getElementById("court-details").innerHTML = "Không có thông tin sân hoặc dữ liệu không hợp lệ.";
+                        return;
+                    }
+
+                    // Hiển thị thông tin sân
+                    document.getElementById("court-details").innerHTML = `
+                        <div class="court-info-card">
+                            <span class="close-btn" onclick="window.history.back()">❌</span>
+                            <img src="${court.image || 'default-image.jpg'}" class="court-logo">
+                            <h2>${court.TenSan || 'Tên sân không có'}</h2>
+                            <p><strong>ID Sân:</strong> ${court.IDSan}</p>
+                            <p><strong>Mô tả:</strong> ${court.MoTa}</p>
+                            <p><strong>Trạng thái:</strong> ${court.TinhTrang}</p>
+                            <p><strong>Giờ hoạt động:</strong> ${court.GioHoatDong}</p>
+                            <p><strong>Số điện thoại:</strong> ${court.SDTLienHe}</p>
+                            <p><strong>Kích thước:</strong> ${court.KichThuoc}</p>
+                            <p><strong>Loại sân:</strong> ${court.IDLoaiSan}</p>
+                        </div>
+                    `;
+                })
+                .catch(error => {
+                    console.error("Lỗi khi lấy thông tin sân:", error);
+                    document.getElementById("court-details").innerHTML = "Lỗi khi lấy thông tin sân.";
+                });
+        }
+    </script>
+</body>
+
+</html>
