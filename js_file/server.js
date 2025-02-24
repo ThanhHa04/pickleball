@@ -135,6 +135,15 @@ app.get("/chitietsan/:id", async (req, res) => {
     }
 });
 
+// API gửi mã xác nhận về email
+app.post('/send-verification-code', async (req, res) => {
+    const { email } = req.body;
+    // Logic để gửi mã xác nhận đến email
+    // Ví dụ: sử dụng một dịch vụ gửi email như Nodemailer
+    // ...
+
+    res.status(200).json({ message: 'Mã xác nhận đã được gửi.' });
+});
 
 // Lắng nghe trên cổng 3000
 app.listen(port, () => {
