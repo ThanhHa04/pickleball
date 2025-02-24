@@ -13,6 +13,7 @@ app.use('/js_file', express.static(path.join(__dirname, '../js_file')));
 app.use('/images', express.static(path.resolve(__dirname, '../images')));
 app.use(express.static(path.resolve(__dirname, '../html_file')));
 
+
 const { FieldValue } = admin.firestore;
 // Kết nối Firebase
 const serviceAccount = require('../firebase-config.json');

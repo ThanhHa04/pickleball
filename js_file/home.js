@@ -56,7 +56,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }).addTo(map);
 
     // Lấy danh sách địa điểm từ server (API)
-    fetch('http://localhost:3000/locations')
+    const apiBaseUrl = window.location.hostname === "localhost" ? "http://localhost:3000" : "https://yourproductionapi.com";
+    fetch(`${apiBaseUrl}/locations`)
         .then(response => response.json())
         .then(locations => {
             if (Array.isArray(locations)) {
@@ -162,5 +163,8 @@ function manageProfile() {
 // Hàm đăng xuất
 function logout() {
     localStorage.removeItem("userName"); // Xóa tên người dùng khỏi localStorage
-    window.location.href = "/html_file/login.html"; // Điều hướng về trang đăng nhập
+    
+    // Đảm bảo sử dụng đường dẫn động cho trang đăng nhập
+    const baseUrl = window.location.origin;
+    window.location.href = `${baseUrl}/html_file/login.html`; // Điều hướng về trang đăng nhập
 }
