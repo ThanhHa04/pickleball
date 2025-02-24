@@ -1,38 +1,41 @@
-// Hàm gửi mã xác nhận về email
-function sendEmail(event) {
-    event.preventDefault(); // Ngăn chặn hành động mặc định của form
+async function sendEmail(event) {
+    event.preventDefault();
 
     const emailInput = document.querySelector('input[type="email"]');
-    const email = emailInput.value;
-
-    // Lấy phần tử thông báo
+    const email = emailInput.value.trim();
     const notification = document.getElementById('notification');
-    notification.style.display = 'block'; // Hiển thị phần tử thông báo
+    notification.style.display = 'block';
 
-    // Gửi yêu cầu đến server để gửi mã xác nhận
-    fetch('http://localhost:3000/send-verification-code', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: email }),
-    })
-    .then(response => {
-        if (response.status === 404) { // Kiểm tra nếu email không tồn tại
-            throw new Error('Email không tồn tại');
-        }
+    if (!email) {
+        notification.textContent = 'Vui lòng nhập email!';
+        notification.style.color = 'red';
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:3000/send-verification-code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        
+
+        const data = await response.json().catch(() => ({}));  // Tránh lỗi JSON
+
         if (!response.ok) {
-            throw new Error('Lỗi khi gửi mã xác nhận');
+            throw new Error(data.message || 'Lỗi server!');
         }
-        return response.json();
-    })
-    .then(data => {
-        notification.textContent = 'Mã xác nhận đã được gửi đến email của bạn!';
-        notification.style.color = 'green'; // Màu xanh cho thông báo thành công
-    })
-    .catch(error => {
+
+        notification.textContent = data.message || 'Mã xác nhận đã được gửi!';
+        notification.style.color = 'green';
+
+        // Ẩn thông báo sau 3 giây
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    } catch (error) {
         console.error('Lỗi:', error);
-        notification.textContent = error.message; // Hiển thị thông báo lỗi
-        notification.style.color = 'red'; // Màu đỏ cho thông báo lỗi
-    });
-} 
+        notification.textContent = error.message;
+        notification.style.color = 'red';
+    }
+}

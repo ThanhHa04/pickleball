@@ -8,3 +8,5 @@ node_modules/
 
 # Nếu không muốn lock version package (tùy chọn)
 package-lock.json  
+
+.env

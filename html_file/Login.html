@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <title>Đăng nhập</title>
     <link rel="stylesheet" href="/css_file/Account.css">
 </head>
@@ -18,17 +21,13 @@
                     <input type="password" id="password" required placeholder="Mật khẩu">
                 </div>
                 <button type="submit">Đăng Nhập</button>
-                <p class="login-link"><a href="/html_file/Signup.html">Chưa có tài khoản?</a></p>
-                <p class="login-link forgot-password"><a href="/html_file/ForgotPassWord.html">Quên mật khẩu?</a></p>
+                <p class="login-link"><a href="Signup.html">Chưa có tài khoản?</a></p>
+                <p class="login-link forgot-password"><a href="ForgotPassWord.html">Quên mật khẩu?</a></p>
             </form>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-
     <!-- Nhúng file login.js -->
-    <script src="/js_file/login.js"></script> <!-- Đảm bảo file login.js có trong thư mục /js_file -->
+    <script defer src="/js_file/login.js"></script> <!-- Đảm bảo file login.js có trong thư mục /js_file -->
 </body>
 </html>
