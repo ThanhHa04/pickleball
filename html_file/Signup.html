@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.googleapis.com">
+    <meta http-equiv="Content-Security-Policy"
+        content="script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.googleapis.com">
     <title>Đăng ký</title>
     <link rel="stylesheet" href="../css_file/Account.css">
 </head>
@@ -27,11 +28,20 @@
                     <label>Mật khẩu</label>
                 </div>
                 <div class="form-group">
-                    <input type="password" id="confirmPassword" required>
+                    <input type="password" id="confirmpassword" required>
                     <label>Xác nhận mật khẩu</label>
                 </div>
+                <div class="form-group">
+                    <input type="phone" id="phone" required>
+                    <label>Số điện thoại</label>
+                </div>
+                <div class="form-group">
+                    <input type="address" id="address" required>
+                    <label>Địa chỉ</label>
+                </div>
+
                 <button type="submit">Đăng Ký</button>
-                <p class="login-link">Đã có tài khoản? <a href="../html_file/Login.html">Đăng nhập</a></p>
+                <p class="login-link">Đã có tài khoản? <a href="login.html">Đăng nhập</a></p>
             </form>
         </div>
     </div>
