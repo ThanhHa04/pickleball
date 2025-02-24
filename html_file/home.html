@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; connect-src 'self' http://localhost:3000 https://nominatim.openstreetmap.org; img-src * data:;">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -15,15 +15,25 @@
 <body>
     <div class="top">
         <div class="left">
-            <a href="/html_file/home.html"><img src="/images/PKA_Pickleball.png"></a>
+            <a href="#home"><img src="/images/PKA_Pickleball.png" alt="PKA Pickleball Logo"></a>
         </div>
         <div class="right">
             <div class="top-top">
                 <ul>
-                    <li><i class='bx bx-user'></i></li>
-                    <li><a href="/html_file/Login.html">Đăng nhập</a></li>
-                    <li><a href="/html_file/Signup.html">Đăng ký</a></li>
-                </ul>
+                    <li><i class='bx bx-user' onclick="toggleUserDropdown()"></i></li>
+                    <!-- Tên người dùng sẽ hiển thị khi đăng nhập -->
+                    <li id="user-name" style="display: none;">
+                        <span id="user-name-text" onclick="toggleUserDropdown(event)">User</span>
+                        <div id="user-dropdown" class="user-dropdown" style="display: none;">
+                            <ul>
+                                <li><a href="#" onclick="manageProfile()">Quản lý thông tin cá nhân</a></li>
+                                <li><a href="#" onclick="logout()">Đăng xuất</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li id="login-link" style="display: block;"><a href="/html_file/Login.html">Đăng nhập</a></li>
+                    <li id="signup-link" style="display: block;"><a href="/html_file/Signup.html">Đăng ký</a></li>
+                </ul>            
             </div>
             <div class="below-top">
                 <a href="javascript:void(0);" onclick="showContent('home', this)"><i class='bx bxs-home'></i></a>

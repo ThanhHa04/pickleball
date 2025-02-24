@@ -1,13 +1,36 @@
 // Hàm để chuyển đổi giữa các trang
 function showContent(page, element) {
+    // Ẩn tất cả các content
     document.querySelectorAll(".content").forEach(div => div.style.display = "none");
+
+    // Hiển thị trang tương ứng
     document.getElementById(page).style.display = "block";
+
+    // Loại bỏ class active của tất cả các link
     document.querySelectorAll(".below-top a").forEach(link => link.classList.remove("active"));
+
+    // Thêm class active cho link hiện tại
     element.classList.add("active");
 }
 
-// Chạy khi trang web được tải xong
 window.onload = function () {
+    // Ẩn tất cả content trước khi hiển thị content tương ứng
+    document.querySelectorAll(".content").forEach(div => div.style.display = "none");
+
+    // Kiểm tra nếu có người dùng đã đăng nhập từ localStorage, hiển thị content 'home' mặc định
+    const userName = localStorage.getItem("userName");
+    if (userName) {
+        document.getElementById("user-name").style.display = "block";
+        document.getElementById("user-name-text").textContent = userName; // Hiển thị tên người dùng
+        document.getElementById("login-link").style.display = "none";
+        document.getElementById("signup-link").style.display = "none";
+    } else {
+        document.getElementById("login-link").style.display = "block";
+        document.getElementById("signup-link").style.display = "block";
+        document.getElementById("user-name").style.display = "none";
+    }
+
+    // Mặc định hiển thị content home
     showContent('home', document.querySelector(".below-top a"));
 };
 
@@ -113,3 +136,31 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     locateButton.addTo(map);
 });
+
+// Hàm toggle dropdown cho user
+function toggleUserDropdown(event) {
+    var dropdown = document.getElementById("user-dropdown");
+    var userName = document.getElementById("user-name");
+
+    // Kiểm tra xem dropdown đã hiển thị hay chưa
+    if (dropdown.style.display === "block") {
+        dropdown.style.display = "none";  // Nếu đã hiển thị thì ẩn đi
+    } else {
+        dropdown.style.display = "block";  // Nếu chưa hiển thị thì bật dropdown lên
+    }
+
+    // Ngừng lan truyền sự kiện nhấp chuột (chỉ áp dụng cho phần tử cần toggle)
+    event.stopPropagation();
+}
+
+
+// Hàm quản lý thông tin cá nhân (Bạn có thể thay đổi tùy theo yêu cầu)
+function manageProfile() {
+    alert("Quản lý thông tin cá nhân");
+}
+
+// Hàm đăng xuất
+function logout() {
+    localStorage.removeItem("userName"); // Xóa tên người dùng khỏi localStorage
+    window.location.href = "/html_file/login.html"; // Điều hướng về trang đăng nhập
+}

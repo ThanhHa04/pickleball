@@ -66,7 +66,54 @@ a:hover {
     font-size: 1em;
     width: 20%;
     padding-right: 1%;
+    cursor:pointer;
 }
+.top-top>ul>li:nth-child(2) {
+    font-size: 1.1em;
+    width: 80%;
+    padding-right: 1%;
+    cursor:pointer;
+}
+
+/* Căn chỉnh lại icon và tên người dùng */
+#user-name {
+    position: relative;
+    display: inline-block;
+}
+
+#user-name-text {
+    cursor: pointer;
+}
+
+/* Cấu trúc dropdown */
+.user-dropdown {
+    display: none;
+    position: absolute; /* Đảm bảo dropdown hiển thị dưới tên */
+    top: 100%; /* Đặt dropdown dưới tên */
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10; /* Đảm bảo dropdown hiển thị trên các phần tử khác */
+    width: 200px; /* Chiều rộng của dropdown */
+}
+
+.user-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-dropdown ul li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.user-dropdown ul li:hover {
+    background-color: #f0f0f0;
+}
+
 
 .below-top {
     background-color: rgb(97, 216, 97);
