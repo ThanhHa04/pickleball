@@ -34,7 +34,7 @@ function resetPassword(event) {
         notification.style.color = data.success ? 'green' : 'red';
         notification.textContent = data.message;
         if (data.success) {
-            setTimeout(() => window.location.href = "../html_file/Login.html", 1000);
+            setTimeout(() => window.location.href = "/Login.html", 1000);
         }
     })
     .catch(error => {

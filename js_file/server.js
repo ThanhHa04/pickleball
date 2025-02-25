@@ -46,7 +46,6 @@ app.get('/locations', async (req, res) => {
 
         res.json(locations);
     } catch (err) {
-        console.error('Lỗi khi lấy danh sách địa điểm:', err);
         res.status(500).json({ error: 'Lỗi server' });
     }
 });
@@ -66,21 +65,18 @@ app.get('/san', async (req, res) => {
 
         res.json(sanList);
     } catch (err) {
-        console.error('Lỗi khi lấy danh sách sân:', err);
         res.status(500).json({ error: 'Lỗi server' });
     }
 });
 
-// API lấy chi tiết sân từ 'san' hoặc hiển thị mẫu Sân A01 nếu không có
+// API lấy chi tiết sân từ 'san' 
 app.get('/san/:id', async (req, res) => {
     try {
         const sanId = req.params.id;
         const sanRef = db.collection('san').doc(sanId);
         const doc = await sanRef.get();
-
         res.json({ id: doc.id, ...doc.data() });
     } catch (err) {
-        console.error('Lỗi khi lấy thông tin sân:', err);
         res.status(500).json({ error: 'Lỗi server' });
     }
 });
@@ -106,7 +102,6 @@ app.get('/locations/:id', async (req, res) => {
 
         res.json(foundLocation);
     } catch (err) {
-        console.error('Lỗi khi lấy thông tin địa điểm:', err);
         res.status(500).json({ error: 'Lỗi server' });
     }
 });
@@ -115,16 +110,13 @@ app.get("/chitietsan/:id", async (req, res) => {
     try {
         const courtId = req.params.id;
 
-        const snapshot = await db.collection("san").where("IDSan", "==", courtId).get();  // Dùng IDSan để truy vấn
+        const snapshot = await db.collection("san").where("IDSan", "==", courtId).get();
         if (snapshot.empty) {
             return res.status(404).json({ message: "Không tìm thấy sân." });
         }
-
-        // Nếu có dữ liệu, trả về tài liệu đầu tiên
         const court = snapshot.docs[0];
         res.json({ id: court.id, ...court.data() });
     } catch (err) {
-        console.error("Lỗi khi lấy chi tiết sân:", err);
         res.status(500).json({ error: "Lỗi server" });
     }
 });
@@ -141,7 +133,7 @@ const transporter = nodemailer.createTransport({
 });
 
 
-// 📌 API gửi mã xác nhận về email
+// API gửi mã xác nhận về email
 app.post('/send-verification-code', async (req, res) => {
     try {
         const { email } = req.body;
@@ -150,7 +142,6 @@ app.post('/send-verification-code', async (req, res) => {
         // 🔍 Kiểm tra email trong Firestore
         const userSnapshot = await db.collection('nguoidung').where('Email', '==', email).get();
         if (userSnapshot.empty) {
-            console.log("❌ Không tìm thấy email:", email);
             return res.status(404).json({ message: 'Email không tồn tại trong hệ thống!' });
         }
 
@@ -174,21 +165,24 @@ app.post('/send-verification-code', async (req, res) => {
             from: process.env.EMAIL,
             to: email,
             subject: 'Đặt lại mật khẩu',
-            text: `Xin chào ${userData.HoTen},\n\nMã xác nhận của bạn: ${verificationCode}\nClick vào link để đặt lại mật khẩu: ${resetLink}\n\nNếu bạn không yêu cầu, vui lòng bỏ qua email này.`
+            text: `Xin chào ${userData.HoTen},\n\n
+                    Mã xác nhận của bạn: ${verificationCode}\n
+                    Click vào link để đặt lại mật khẩu: ${resetLink}\n\n
+                    Nếu bạn không yêu cầu, vui lòng bỏ qua email này.\n\n
+                    Lưu ý: Mã xác nhận này chỉ có hiệu lực trong vòng 5 phút!`
         });
 
         console.log("📧 Mã xác nhận đã gửi đến:", email);
         res.json({ message: 'Mã xác nhận đã được gửi!' });
 
     } catch (error) {
-        console.error("❌ Lỗi khi gửi mã xác nhận:", error);
         res.status(500).json({ message: 'Lỗi server!' });
     }
 });
 
 app.post('/api/reset-password', async (req, res) => {
     const { email, code, newPassword } = req.body;
-    const expirationTime = 5 * 60 * 1000; // 5 phút
+    const expirationTime = 5 * 60 * 1000;
 
     try {
         const userRef = db.collection('nguoidung').where('Email', '==', email);
