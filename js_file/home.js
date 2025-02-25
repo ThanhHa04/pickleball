@@ -133,5 +133,5 @@
     function logout() {
         localStorage.removeItem("userName");
         const baseUrl = window.location.origin;
-        window.location.href = `${baseUrl}/login.html`; // Điều hướng về trang đăng nhập
+        window.location.href = `${baseUrl}/login.html`; 
     }

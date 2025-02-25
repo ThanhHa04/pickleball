@@ -85,17 +85,16 @@ a:hover {
     cursor: pointer;
 }
 
-/* Cấu trúc dropdown */
 .user-dropdown {
     display: none;
-    position: absolute; /* Đảm bảo dropdown hiển thị dưới tên */
-    top: 100%; /* Đặt dropdown dưới tên */
-    left: 0;
+    position: absolute;
+    top: 100%;
+    right: 20%;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 10; /* Đảm bảo dropdown hiển thị trên các phần tử khác */
+    z-index: 10; 
     width: 200px; /* Chiều rộng của dropdown */
 }
 
