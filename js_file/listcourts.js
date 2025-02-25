@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    fetch('http://localhost:3000/san')  // Lấy dữ liệu sân từ API
+    fetch('http://localhost:3000/san')  
         .then(response => response.json())
         .then(San => {
             console.log(San);
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     updatedCourts.forEach(court => {
                         const courtItem = document.createElement("div");
                         courtItem.classList.add("court-item");
-                        courtItem.dataset.idSan = court.IDSan;  // Đảm bảo sử dụng IDSan
+                        courtItem.dataset.idSan = court.IDSan; 
 
                         let giaThue = court.GiaThue % 1 === 0 ? Math.floor(court.GiaThue) : court.GiaThue;
                         let imageUrl = court.HinhAnh || "default-image.jpg";
@@ -119,15 +119,14 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("search-bar").addEventListener("input", displayCourts);
             document.getElementById("price-filter").addEventListener("change", displayCourts);
 
-            // --- HIỂN THỊ THÔNG TIN CHI TIẾT SÂN KHI CLICK ---
+            // --- HIỂN THỊ THÔNG TIN CHI TIẾT SÂN 
             document.getElementById("san-list").addEventListener("click", function (event) {
                 const courtItem = event.target.closest(".court-item");
                 if (courtItem) {
                     const idSan = courtItem.dataset.idSan;
                     console.log("ID sân:", idSan);
 
-                    // Điều hướng đến trang chi tiết với ID sân trong URL
-                    window.location.href = `../html_file/infoSan.html?idSan=${idSan}`;
+                    window.location.href = `/infoSan.html?idSan=${idSan}`;
                 }
             });
         })
