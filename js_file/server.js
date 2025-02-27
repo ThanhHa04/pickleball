@@ -1,4 +1,6 @@
 require('dotenv').config();
+console.log("📩 Email:", process.env.EMAIL);
+console.log("🔑 Pass:", process.env.EMAIL_PASS ? "OK" : "Lỗi");
 const express = require('express');
 const admin = require('firebase-admin');
 const cors = require('cors');
@@ -176,6 +178,7 @@ app.post('/send-verification-code', async (req, res) => {
         res.json({ message: 'Mã xác nhận đã được gửi!' });
 
     } catch (error) {
+        console.error("🚨 Lỗi server:", error);
         res.status(500).json({ message: 'Lỗi server!' });
     }
 });
