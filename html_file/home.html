@@ -9,17 +9,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <meta http-equiv="Content-Security-Policy"
         content="default-src 'self' https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; connect-src 'self' http://localhost:3000 https://nominatim.openstreetmap.org; img-src * data:;">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../css_file/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Booking Pickleball CourtsCourts</title>
 </head>
 
 <body>
     <div class="top">
         <div class="left">
-            <a href="#home"><img src="/images/PKA_Pickleball.png" alt="PKA Pickleball Logo"></a>
+            <a href="/html_file/home.html"><img src="/images/PKA_Pickleball.png" alt="PKA Pickleball Logo"></a>
         </div>
         <div class="right">
             <div class="top-top">
@@ -96,7 +98,42 @@
 
     <div id="membership" class="content">
         <h2>Gói hội viên</h2>
-        <p>Thông tin về các gói hội viên...</p>
+        <div class="membership-container">
+            <div class="membership-slide">
+                <div class="membership-item" style="background-image: url('https://i.ibb.co/qCkd9jS/img1.jpg');">
+                    <div class="content">
+                        <div class="name">Gói Cơ Bản</div>
+                        <div class="des">Truy cập cơ bản với giá rẻ nhất.</div>
+                        <button>Đăng ký</button>
+                    </div>
+                </div>
+                <div class="membership-item" style="background-image: url('https://i.ibb.co/jrRb11q/img2.jpg');">
+                    <div class="content">
+                        <div class="name">Gói Tiêu Chuẩn</div>
+                        <div class="des">Quyền lợi tiêu chuẩn cho thành viên.</div>
+                        <button>Đăng ký</button>
+                    </div>
+                </div>
+                <div class="membership-item" style="background-image: url('https://i.ibb.co/NSwVv8D/img3.jpg');">
+                    <div class="content">
+                        <div class="name">Gói Cao Cấp</div>
+                        <div class="des">Ưu đãi đặc biệt và tính năng nâng cao.</div>
+                        <button>Đăng ký</button>
+                    </div>
+                </div>
+                <div class="membership-item" style="background-image: url('https://i.ibb.co/Bq4Q0M8/img4.jpg');">
+                    <div class="content">
+                        <div class="name">Gói VIP</div>
+                        <div class="des">Trải nghiệm cao cấp và đặc quyền VIP.</div>
+                        <button>Đăng ký</button>
+                    </div>
+                </div>
+            </div>
+            <div class="button">
+                <button class="prev-membership"><i class="fa-solid fa-arrow-left"></i></button>
+                <button class="next-membership"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
     </div>
 
     <div id="profile" class="content">
