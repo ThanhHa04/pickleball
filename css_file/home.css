@@ -427,14 +427,13 @@ img {
     color: rgb(0, 0, 0);
     transform: translate(0, -50%);
     font-family: system-ui;
-    display: nones;
+    display: none;
     z-index: 10;
 }
 
-.membership-item .content {
-    display: block;
+.membership-slide .membership-item:nth-child(2) .content {
+    display: block !important;
 }
-
 /* Hiệu ứng fade-in */
 .content .name {
     font-size: 40px;
@@ -495,4 +494,8 @@ img {
 .button button:hover {
     background: #ababab;
     color: #fff;
+}
+.membership-slide {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
 }
