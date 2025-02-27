@@ -135,3 +135,15 @@
         const baseUrl = window.location.origin;
         window.location.href = `${baseUrl}/login.html`; 
     }
+    let nextMembership = document.querySelector('.next-membership');
+    let prevMembership = document.querySelector('.prev-membership');
+    
+    nextMembership.addEventListener('click', function () {
+        let items = document.querySelectorAll('.membership-item');
+        document.querySelector('.membership-slide').appendChild(items[0]); // Chuyển item đầu tiên ra cuối
+    });
+    
+    prevMembership.addEventListener('click', function () {
+        let items = document.querySelectorAll('.membership-item');
+        document.querySelector('.membership-slide').prepend(items[items.length - 1]); // Đưa item cuối lên đầu
+    });    
