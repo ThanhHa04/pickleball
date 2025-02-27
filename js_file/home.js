@@ -140,10 +140,10 @@
     
     nextMembership.addEventListener('click', function () {
         let items = document.querySelectorAll('.membership-item');
-        document.querySelector('.membership-slide').appendChild(items[0]); // Chuyển item đầu tiên ra cuối
+        document.querySelector('.membership-slide').appendChild(items[0]); 
     });
     
     prevMembership.addEventListener('click', function () {
         let items = document.querySelectorAll('.membership-item');
-        document.querySelector('.membership-slide').prepend(items[items.length - 1]); // Đưa item cuối lên đầu
+        document.querySelector('.membership-slide').prepend(items[items.length - 1]);
     });    
