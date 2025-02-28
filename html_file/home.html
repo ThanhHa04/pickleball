@@ -7,8 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/toastr@latest/toastr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self' https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; connect-src 'self' http://localhost:3000 https://nominatim.openstreetmap.org; img-src * data:;">
+    <link rel="stylesheet" href="https://unpkg.com/toastr@latest/build/toastr.min.css">
+    <meta http-equiv="Content-Security-Policy"content="default-src 'self' https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://fonts.googleapis.com; connect-src 'self' http://localhost:3000 https://nominatim.openstreetmap.org ; img-src * data:;">
     <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -33,12 +33,12 @@
                         <div id="user-dropdown" class="user-dropdown" style="display: none;">
                             <ul>
                                 <li><a href="#" onclick="manageProfile()">Quản lý thông tin cá nhân</a></li>
-                                <li><a href="/html_file/home.html" onclick="logout()">Đăng xuất</a></li>
+                                <li id="logouLink"><a href="Login.html" onclick="logout()">Đăng xuất</a></li>
                             </ul>
                         </div>
                     </li>
-                    <li id="login-link" style="display: block;"><a href="/html_file/Login.html">Đăng nhập</a></li>
-                    <li id="signup-link" style="display: block;"><a href="/html_file/Signup.html">Đăng ký</a></li>
+                    <li id="loginLink" style="display: block;"><a href="Login.html">Đăng nhập</a></li>
+                    <li id="signupLink" style="display: block;"><a href="Signup.html">Đăng ký</a></li>
                 </ul>
             </div>
             <div class="below-top">
@@ -52,111 +52,158 @@
             </div>
         </div>
     </div>
-
-    <div id="home" class="content active">
-        <h2>Chào mừng đến với PKA Pickleball</h2>
-        <p>Đây là trang chủ.</p>
-    </div>
-
-    <div id="list-courts" class="content">
-        <div class="list-box">
-            <div class="list-left">
-                <h2>Danh sách sân</h2>
-                <div class="count-item">
-                    <p class="sport-item"><span>Pickleball</span> <span id="pickleball-count">0</span></p>
-                    <p class="sport-item"><span>Bóng đá</span> <span id="football-count">0</span></p>
-                    <p class="sport-item"><span>Cầu lông</span> <span id="badminton-count">0</span></p>
+    <div class="container">
+        <div id="home" class="content active">
+            <div class="intro-section">
+                <div class="intro-content">
+                    <h2>PKA Pickleball là gì?</h2>
+                    <p>
+                        PKA Pickleball là ứng dụng cho người yêu thể thao, giúp bạn dễ dàng tìm và đặt sân chơi ngay trên điện thoại. 
+                        Dù là bóng đá, tennis, pickleball, hay cầu lông, bạn chỉ cần vài thao tác để tìm sân gần nhất, đặt lịch mong muốn 
+                        và kết nối với những người cùng đam mê.
+                    </p>
+                </div>
+                <div class="intro-image">
+                    <img src="../images/home_pic.webp" alt="Sân chơi">
                 </div>
             </div>
-            <div class="list-right">
-                <input type="text" id="search-bar" placeholder=" Tìm kiếm sân...">
-                <select id="price-filter">
-                    <option value="">Chọn giá</option>
-                    <option value="low-to-high">Giá từ thấp đến cao</option>
-                    <option value="high-to-low">Giá từ cao đến thấp</option>
-                </select>
-                <div id="san-list" class="court-list"></div>
-
-                <div id="pagination">
-                    <button id="prev-page" disabled>Trang trước</button>
-                    <span id="page-number">Trang 1</span>
-                    <button id="next-page">Trang sau</button>
+            <div class="chuc_nang_chinh">
+                <h2> 🏓 CHỨC NĂNG CHÍNH</h2>
+                <div class="cards">
+                    <div class="card highlight">
+                        <img src="icon1.webp" alt="Tìm kiếm sân chơi">
+                        <h3>Tìm kiếm sân chơi</h3>
+                        <p>Ứng dụng giúp bạn dễ dàng tìm và chọn sân thể thao gần vị trí hiện tại hoặc khu vực mong muốn.</p>
+                    </div>
+                    <div class="card">
+                        <img src="icon2.webp" alt="Tìm bạn cùng chơi">
+                        <h3>Tìm bạn cùng chơi</h3>
+                        <p>Người chơi có thể tìm đối tác phù hợp trên ứng dụng dựa trên trình độ, giới tính và vị trí.</p>
+                    </div>
+                    <div class="card">
+                        <img src="icon3.webp" alt="Đặt giờ thuê sân">
+                        <h3>Đặt giờ thuê sân</h3>
+                        <p>Người chơi có thể đặt sân nhanh chóng chỉ với vài thao tác.</p>
+                    </div>
+                    <div class="card">
+                        <img src="icon4.webp" alt="Liên hệ chủ sân">
+                        <h3>Liên hệ chủ sân</h3>
+                        <p>Người chơi có thể liên hệ trực tiếp với chủ sân để hỏi thông tin.</p>
+                    </div>
+                    <div class="card">
+                        <img src="icon5.webp" alt="Xem chi tiết về sân">
+                        <h3>Xem chi tiết về sân</h3>
+                        <p>Thông tin về sân như tên, mô tả, bảng giá theo giờ.</p>
+                    </div>
+                    <div class="card">
+                        <img src="icon6.webp" alt="Thanh toán và xác nhận">
+                        <h3>Thanh toán và xác nhận</h3>
+                        <p>Ứng dụng hiển thị xác nhận sau khi đặt sân thành công.</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        
 
-    <div id="appointments" class="content">
-        <h2>Quản lý lịch hẹn</h2>
-        <p>Thông tin lịch hẹn của bạn...</p>
-    </div>
-
-    <div id="history" class="content">
-        <h2>Lịch sử giao dịch</h2>
-        <p>Các giao dịch đã thực hiện...</p>
-    </div>
-
-    <div id="membership" class="content">
-        <h2>Gói hội viên</h2>
-        <div class="membership-container">
-            <div class="membership-slide">
-                <div class="membership-item" style="background-image: url('/images/membership2.png');">
-                    <div class="content">
-                        <div class="name">Gói Cơ Bản</div>
-                        <div class="des">Truy cập cơ bản với giá rẻ nhất.</div>
-                        <button>Đăng ký</button>
+        <div id="list-courts" class="content">
+            <div class="list-box">
+                <div class="list-left">
+                    <h2>Danh sách sân</h2>
+                    <div class="count-item">
+                        <p class="sport-item"><span>Pickleball</span> <span id="pickleball-count">0</span></p>
+                        <p class="sport-item"><span>Bóng đá</span> <span id="football-count">0</span></p>
+                        <p class="sport-item"><span>Cầu lông</span> <span id="badminton-count">0</span></p>
                     </div>
                 </div>
-                <div class="membership-item" style="background-image: url('/images/membership4.jpg');">
-                    <div class="content">
-                        <div class="name">Gói Tiêu Chuẩn</div>
-                        <div class="des">Quyền lợi tiêu chuẩn cho thành viên.</div>
-                        <button>Đăng ký</button>
-                    </div>
-                </div>
-                <div class="membership-item" style="background-image: url('/images/membership5.png');">
-                    <div class="content">
-                        <div class="name">Gói Cao Cấp</div>
-                        <div class="des">Ưu đãi đặc biệt và tính năng nâng cao.</div>
-                        <button>Đăng ký</button>
-                    </div>
-                </div>
-                <div class="membership-item" style="background-image: url('/images/membership6.png');">
-                    <div class="content">
-                        <div class="name">Gói VIP</div>
-                        <div class="des">Trải nghiệm cao cấp và đặc quyền VIP.</div>
-                        <button>Đăng ký</button>
+                <div class="list-right">
+                    <input type="text" id="search-bar" placeholder=" Tìm kiếm sân...">
+                    <select id="price-filter">
+                        <option value="">Chọn giá</option>
+                        <option value="low-to-high">Giá từ thấp đến cao</option>
+                        <option value="high-to-low">Giá từ cao đến thấp</option>
+                    </select>
+                    <div id="san-list" class="court-list"></div>
+
+                    <div id="pagination">
+                        <button id="prev-page" disabled>Trang trước</button>
+                        <span id="page-number">Trang 1</span>
+                        <button id="next-page">Trang sau</button>
                     </div>
                 </div>
             </div>
-            <div class="button">
-                <button class="prev-membership"><i class="fa-solid fa-arrow-left"></i></button>
-                <button class="next-membership"><i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+
+        <div id="appointments" class="content">
+            <h2>Quản lý lịch hẹn</h2>
+            <p>Thông tin lịch hẹn của bạn...</p>
+        </div>
+
+        <div id="history" class="content">
+            <h2>Lịch sử giao dịch</h2>
+            <p>Các giao dịch đã thực hiện...</p>
+        </div>
+
+        <div id="membership" class="content">
+            <h2>Gói hội viên</h2>
+            <div class="membership-container">
+                <div class="membership-slide">
+                    <div class="membership-item" style="background-image: url('/images/membership2.png');">
+                        <div class="content">
+                            <div class="name">Gói Cơ Bản</div>
+                            <div class="des">Truy cập cơ bản với giá rẻ nhất.</div>
+                            <button>Đăng ký</button>
+                        </div>
+                    </div>
+                    <div class="membership-item" style="background-image: url('/images/membership4.jpg');">
+                        <div class="content">
+                            <div class="name">Gói Tiêu Chuẩn</div>
+                            <div class="des">Quyền lợi tiêu chuẩn cho thành viên.</div>
+                            <button>Đăng ký</button>
+                        </div>
+                    </div>
+                    <div class="membership-item" style="background-image: url('/images/membership5.png');">
+                        <div class="content">
+                            <div class="name">Gói Cao Cấp</div>
+                            <div class="des">Ưu đãi đặc biệt và tính năng nâng cao.</div>
+                            <button>Đăng ký</button>
+                        </div>
+                    </div>
+                    <div class="membership-item" style="background-image: url('/images/membership6.png');">
+                        <div class="content">
+                            <div class="name">Gói VIP</div>
+                            <div class="des">Trải nghiệm cao cấp và đặc quyền VIP.</div>
+                            <button>Đăng ký</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="button">
+                    <button class="prev-membership"><i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="next-membership"><i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div id="profile" class="content">
+            <h2>Quản lý thông tin</h2>
+            <p>Cập nhật thông tin cá nhân...</p>
+        </div>
+
+        <div id="map" class="content">
+            <h2>Bản đồ các sân Pickleball</h2>
+            <div id="leafletMap" style="width:100%; height:1000px;"></div>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-icon" onclick="toggleChat()"><i class='bx bxs-chat'></i></div>
+            <div class="chat-box">
+                <div class="chat-header" onclick="toggleChat()">Hỗ trợ trực tuyến</div>
+                <div class="chat-body">
+                    <p>Xin chào! Tôi có thể giúp gì cho bạn?</p>
+                </div>
+                <input type="text" class="chat-input" placeholder="Nhập tin nhắn...">
             </div>
         </div>
     </div>
-
-    <div id="profile" class="content">
-        <h2>Quản lý thông tin</h2>
-        <p>Cập nhật thông tin cá nhân...</p>
-    </div>
-
-    <div id="map" class="content">
-        <h2>Bản đồ các sân Pickleball</h2>
-        <div id="leafletMap" style="width:100%; height:1000px;"></div>
-    </div>
-
-    <div class="chat-container">
-        <div class="chat-icon" onclick="toggleChat()"><i class='bx bxs-chat'></i></div>
-        <div class="chat-box">
-            <div class="chat-header" onclick="toggleChat()">Hỗ trợ trực tuyến</div>
-            <div class="chat-body">
-                <p>Xin chào! Tôi có thể giúp gì cho bạn?</p>
-            </div>
-            <input type="text" class="chat-input" placeholder="Nhập tin nhắn...">
-        </div>
-    </div>
-
 
     <script src="../js_file/home.js"></script>
     <script src="../js_file/listcourts.js"></script>

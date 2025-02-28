@@ -22,7 +22,6 @@ function resetPassword(event) {
         return;
     }
 
-    // Gửi yêu cầu đến server
     fetch('/api/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -34,7 +33,7 @@ function resetPassword(event) {
         notification.style.color = data.success ? 'green' : 'red';
         notification.textContent = data.message;
         if (data.success) {
-            setTimeout(() => window.location.href = "/Login.html", 1000);
+            setTimeout(() => window.location.href = "Login.html", 1000);
         }
     })
     .catch(error => {
@@ -43,3 +42,13 @@ function resetPassword(event) {
         notification.textContent = 'Lỗi hệ thống, thử lại sau!';
     });
 }
+
+function getPath(filename) {
+    if (window.location.origin.includes("127.0.0.1:5500")) {
+        return `/html_file/${filename}`; 
+    }
+    return `/${filename}`;
+}
+window.onload = function () {
+    document.getElementById("loginLink").setAttribute("href", getPath("Login.html"));
+};
