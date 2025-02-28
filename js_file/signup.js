@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             alert("Đăng ký thành công!");
-            window.location.href = "/login.html"; // Chuyển hướng về trang đăng nhập
+            window.location.href = "login.html"; // Chuyển hướng về trang đăng nhập
         } catch (error) {
             toastr.error("Lỗi: " + error.message);
         }

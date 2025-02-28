@@ -29,7 +29,6 @@ async function sendEmail(event) {
         notification.textContent = data.message || 'Mã xác nhận đã được gửi!';
         notification.style.color = 'green';
 
-        // Ẩn thông báo sau 3 giây
         setTimeout(() => {
             notification.style.display = 'none';
         }, 3000);
@@ -39,3 +38,13 @@ async function sendEmail(event) {
         notification.style.color = 'red';
     }
 }
+
+function getPath(filename) {
+    if (window.location.origin.includes("127.0.0.1:5500")) {
+        return `/html_file/${filename}`; 
+    }
+    return `/${filename}`;
+}
+window.onload = function () {
+    document.getElementById("loginLink").setAttribute("href", getPath("Login.html"));
+};

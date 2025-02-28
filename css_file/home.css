@@ -2,8 +2,12 @@
     text-decoration: none;
     list-style: none;
     font-family: 'Arial', sans-serif;
+    color: black;
 }
+.container{
+    background: linear-gradient(to bottom, #EAF8E6, #C8E6C9);
 
+}
 i {
     font-size: 1.5em;
 }
@@ -14,7 +18,8 @@ a:hover {
 }
 
 .top {
-    background-color: rgb(97, 216, 97);
+    background-color: #4adb60;
+    opacity: 0.9; 
     width: 100%;
     display: flex;
     border: 1px solid rgb(141, 219, 141);
@@ -50,13 +55,13 @@ a:hover {
     display: flex;
     justify-content: flex-end;
     width: 100%;
-    background-color: rgb(97, 216, 97);
+    background-color: #4adb60;
     border-bottom: 1px solid rgb(141, 219, 141);
 }
 
 .top-top>ul {
     margin-right: 5%;
-    width: 15%;
+    width: 16%;
     display: flex;
     padding: 1% 2%;
     justify-content: space-between;
@@ -66,16 +71,16 @@ a:hover {
     font-size: 1em;
     width: 20%;
     padding-right: 1%;
-    cursor:pointer;
+    cursor: pointer;
 }
+
 .top-top>ul>li:nth-child(2) {
     font-size: 1.1em;
     width: 80%;
     padding-right: 1%;
-    cursor:pointer;
+    cursor: pointer;
 }
 
-/* Căn chỉnh lại icon và tên người dùng */
 #user-name {
     position: relative;
     display: inline-block;
@@ -90,12 +95,14 @@ a:hover {
     position: absolute;
     top: 100%;
     right: 20%;
+    padding: 10px;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 10; 
-    width: 200px; /* Chiều rộng của dropdown */
+    z-index: 10;
+    width: 200px;
+    /* Chiều rộng của dropdown */
 }
 
 .user-dropdown ul {
@@ -107,6 +114,7 @@ a:hover {
 .user-dropdown ul li {
     padding: 10px;
     cursor: pointer;
+    color: black;
 }
 
 .user-dropdown ul li:hover {
@@ -115,7 +123,7 @@ a:hover {
 
 
 .below-top {
-    background-color: rgb(97, 216, 97);
+    background-color: #4adb60;
     width: 100%;
     height: 55px;
     box-sizing: border-box;
@@ -340,14 +348,16 @@ img {
     padding: 20px;
     border-radius: 10px;
     width: 400px;
-    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
+
 .court-info {
-    cursor:pointer;
+    cursor: pointer;
 }
+
 .court-info-card {
     text-align: center;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .court-logo {
@@ -365,6 +375,7 @@ img {
     cursor: pointer;
     border-radius: 5px;
 }
+
 #membership {
     position: absolute;
     top: 60%;
@@ -404,9 +415,11 @@ img {
 .membership-slide .membership-item:nth-child(3) {
     left: 50%;
 }
+
 .membership-slide .membership-item:nth-child(4) {
     left: calc(50% + 220px);
 }
+
 .membership-slide .membership-item:nth-child(5) {
     left: calc(50% + 440px);
 }
@@ -434,6 +447,7 @@ img {
 .membership-slide .membership-item:nth-child(2) .content {
     display: block !important;
 }
+
 /* Hiệu ứng fade-in */
 .content .name {
     font-size: 40px;
@@ -465,6 +479,7 @@ img {
         transform: translate(0, 100px);
         filter: blur(33px);
     }
+
     to {
         opacity: 1;
         transform: translate(0);
@@ -495,7 +510,157 @@ img {
     background: #ababab;
     color: #fff;
 }
+
 .membership-slide {
     display: flex;
     transition: transform 0.5s ease-in-out;
+}
+
+.intro-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+}
+
+.intro-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 80%;
+    margin: auto;   
+    position: relative;
+}
+.chuc_nang_chinh {
+    position: relative;
+}
+
+.chuc_nang_chinh > h2 {
+    display: flex;
+    width:88%;
+    margin:auto;
+    align-items: center;
+    font-size: 22px;
+    font-weight: bold;
+    padding:1.5% 0%;
+    color: #C02D48; /* Màu chữ */
+    text-transform: uppercase;
+    position: relative;
+}
+
+.chuc_nang_chinh > h2::before,
+.chuc_nang_chinh > h2::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #c9d4ca; /* Màu đường kẻ */
+    margin: 0 10px;
+}
+
+/* Nội dung text bên trái */
+.intro-content {
+    width:40%;
+    margin:auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 12px;
+    text-align: left;
+}
+
+.intro-content:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.intro-content h2 {
+    width:50%;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.intro-content p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    width:100%;
+}
+
+/* Hình ảnh bên phải */
+.intro-image {
+    flex: 1;
+    width:100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+}
+
+.intro-image img {
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    width:90%;
+    height: auto;
+}
+
+.intro-image img:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #d83f57;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    max-width: 80%;
+    margin: auto;
+
+}
+
+.card {
+    background: #fdfdfd;
+    border-radius: 10px;
+    padding: 50px;
+    margin:10px;
+    width: 250px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: 0.3s;
+}
+
+.card img {
+    width: 50px;
+    margin-bottom: 10px;
+}
+
+.card h3 {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.card p {
+    font-size: 14px;
+    color: #666;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.highlight {
+    background: #e75b72;
+    color: white;
+}
+
+.highlight p {
+    color: #f3f3f3;
 }
