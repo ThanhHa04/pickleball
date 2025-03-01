@@ -71,15 +71,53 @@ app.get('/san', async (req, res) => {
     }
 });
 
-// API lấy chi tiết sân từ 'san' 
 app.get('/san/:id', async (req, res) => {
+    const id = req.params.id;
+    console.log("🔍 Đang tìm IDSan:", id);
+
     try {
-        const sanId = req.params.id;
-        const sanRef = db.collection('san').doc(sanId);
-        const doc = await sanRef.get();
-        res.json({ id: doc.id, ...doc.data() });
-    } catch (err) {
-        res.status(500).json({ error: 'Lỗi server' });
+        const snapshot = await db.collection('san').where("IDSan", "==", id).get();
+
+        if (snapshot.empty) {
+            console.log("❌ Không tìm thấy sân với IDSan:", id);
+            return res.status(404).json({ error: "Không tìm thấy sân" });
+        }
+
+        let san;
+        snapshot.forEach(doc => {
+            san = doc.data();
+        });
+
+        console.log("✅ Tìm thấy sân:", san);
+        res.json(san);
+    } catch (error) {
+        console.error("🔥 Lỗi server:", error);
+        res.status(500).json({ error: "Lỗi server, vui lòng thử lại sau." });
+    }
+});
+
+app.get('/chitietsan/:id', async (req, res) => {
+    const id = req.params.id;
+    console.log("🔍 Đang tìm IDSan:", id);
+
+    try {
+        const snapshot = await db.collection('chitietsan').where("IDSan", "==", id).get();
+
+        if (snapshot.empty) {
+            console.log("❌ Không tìm thấy sân với IDSan:", id);
+            return res.status(404).json({ error: "Không tìm thấy sân" });
+        }
+
+        let isan;
+        snapshot.forEach(doc => {
+            isan = doc.data();
+        });
+
+        console.log("✅ Tìm thấy sân:", isan);
+        res.json(isan);
+    } catch (error) {
+        console.error("🔥 Lỗi server:", error);
+        res.status(500).json({ error: "Lỗi server, vui lòng thử lại sau." });
     }
 });
 
@@ -108,7 +146,7 @@ app.get('/locations/:id', async (req, res) => {
     }
 });
 
-app.get("/chitietsan/:id", async (req, res) => {
+app.get("/san/:id", async (req, res) => {
     try {
         const courtId = req.params.id;
 

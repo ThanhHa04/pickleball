@@ -104,11 +104,9 @@
             </div>
             <div class="chu_san">
                 <h2>⚽ CHỦ SÂN - CHỨC NĂNG QUẢN LÝ</h2>
-                <p><i>Booking Sports</i> giúp chủ sân quản lý hiệu quả các sân thể thao, từ sân đơn lẻ đến cụm sân với nhiều môn thể thao. Ứng dụng tối ưu hóa quy trình đặt sân, thu hút khách hàng và tăng hiệu suất hoạt động.</p>
-            
-                <div class="content">
-                    <!-- Hình ảnh minh họa -->
-                    <div class="images">
+                <div class="chuc_nang_ql">
+                    <div class="ql-images">
+                        <p><i>PKA Picklball</i> giúp chủ sân quản lý hiệu quả các sân thể thao, từ sân đơn lẻ đến cụm sân với nhiều môn thể thao. Ứng dụng tối ưu hóa quy trình đặt sân, thu hút khách hàng và tăng hiệu suất hoạt động.</p>
                         <img src="../images/booknow.webp" alt="Voucher">
                     </div>
                     <div class="quan_ly">
@@ -134,11 +132,34 @@
                     </div>
                 </div>
             </div>
+            <div class="chu_san">
+                <h2>⚽ CHỦ SÂN - CHỨC NĂNG THỐNG KÊ</h2>
+                <div class="chuc_nang_tk">
+                    <div class="quan_ly">
+                        <div class="boxx">
+                            <div class="boxx-img"><img src="../images/icon11.webp" alt="Sân chơi"></div>
+                            <div class="boxx-content">
+                                <h3>Báo cáo kinh doanh</h3>
+                                <p>Các báo cáo này bao gồm số lượng đặt sân, doanh thu dịch vụ, và các giao dịch thanh toán, giúp chủ sân đánh giá hiệu quả kinh doanh và tối ưu chiến lược vận hành.</p>
+                            </div>
+                        </div>
             
-            
+                        <div class="boxx">
+                            <div class="boxx-img"><img src="../images/icon12.webp" alt="Sân chơi"></div>
+                            <div class="boxx-content">
+                                <h3>Tối ưu thanh toán</h3>
+                                <p>Quản lý toàn bộ quá trình thanh toán từ người chơi. Ứng dụng cung cấp danh sách thanh toán đến hạn và nhắc nhở người chơi tự động.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tk-images">
+                        <p><i>PKA Picklball</i> giúp chủ sân quản lý doanh thu, thống kê và phân tích chiến lược kinh doanh hiệu quả. Cung cấp báo cáo chi tiết về doanh thu, lượng đặt sân và tỷ lệ lấp đầy, giúp chủ sân điều chỉnh chiến lược, tối ưu giá và khung giờ để tăng doanh thu, thu hút thêm khách hàng.</p>
+                        <img src="../images/thongke.webp" alt="Voucher">
+                    </div>
+                </div>
+            </div>   
         </div>
         
-
         <div id="list-courts" class="content">
             <div class="list-box">
                 <div class="list-left">
@@ -223,9 +244,14 @@
         </div>
 
         <div id="map" class="content">
-            <h2>Bản đồ các sân Pickleball</h2>
-            <div id="leafletMap" style="width:100%; height:1000px;"></div>
-        </div>
+            <div class="left-content">
+                <h2>Bản đồ các sân Pickleball</h2>
+                <div id="pickleball-courts"></div>
+            </div>
+            <div class="right-content">
+                <div id="leafletMap"></div>
+            </div>
+        </div>        
 
         <div class="chat-container">
             <div class="chat-icon" onclick="toggleChat()"><i class='bx bxs-chat'></i></div>
