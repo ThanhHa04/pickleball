@@ -1,0 +1,33 @@
+name: Update Firebase Lichsan
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Mỗi ngày vào lúc 00:00 UTC
+  workflow_dispatch: # Cho phép chạy thủ công
+
+jobs:
+  update-firebase:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          
+      - name: Install dependencies
+        run: |
+          npm install firebase-admin
+
+      - name: Set up Firebase credentials
+        run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > firebase-key.json
+          
+      - name: Update Date in Firestore
+        run: |
+          node ./scripts/update-lichsan.js # Chạy script cập nhật ngày trong Firestore
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: firebase-key.json

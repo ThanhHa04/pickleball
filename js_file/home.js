@@ -1,7 +1,11 @@
 // Hàm để chuyển đổi giữa các trang
 function showContent(page, element) {
     document.querySelectorAll(".content").forEach(div => div.style.display = "none");
-    document.getElementById(page).style.display = "block";
+    if (page === "map") {
+        document.getElementById(page).style.display = "flex";
+    } else {
+        document.getElementById(page).style.display = "block";
+    }
     document.querySelectorAll(".below-top a").forEach(link => link.classList.remove("active"));
     element.classList.add("active");
 }
@@ -43,7 +47,7 @@ function toggleChat() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    var map = L.map('map').setView([20.9725, 105.7772], 14);
+    var map = L.map('leafletMap').setView([20.9725, 105.7772], 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
@@ -148,7 +152,6 @@ function logout() {
     }
 }
 
-// ✅ Sửa lỗi không kiểm tra phần tử có tồn tại trước khi gán sự kiện
 let nextMembership = document.querySelector('.next-membership');
 let prevMembership = document.querySelector('.prev-membership');
 
@@ -163,3 +166,40 @@ if (nextMembership && prevMembership) {
         document.querySelector('.membership-slide').prepend(items[items.length - 1]);
     });
 }
+
+async function loadPickleballData() {
+    try {
+        const locationsRes = await fetch('http://localhost:3000/locations');
+        const locations = await locationsRes.json();
+        const sanRes = await fetch('http://localhost:3000/san');
+        const sanList = await sanRes.json();
+
+        let courtCount = {};
+
+        // Đếm số sân theo location_id
+        sanList.forEach(san => {
+            let locationId = san.location_id;
+            courtCount[locationId] = (courtCount[locationId] || 0) + 1;
+        });
+
+        // Sắp xếp danh sách locations theo id tăng dần
+        locations.sort((a, b) => a.id - b.id);
+
+        let htmlContent = `<p>Có ${locations.length} cơ sở:</p><ul>`;
+
+        // Tạo danh sách hiển thị
+        locations.forEach(loc => {
+            let numCourts = courtCount[loc.id] || 0;
+            htmlContent += `<li>${loc.name}: có ${numCourts} sân</li>`;
+        });
+        htmlContent += `</ul>`;
+
+        // Hiển thị nội dung lên trang web
+        document.getElementById("pickleball-courts").innerHTML = htmlContent;
+
+    } catch (error) {
+        console.error("🚨 Lỗi khi tải dữ liệu:", error);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", loadPickleballData);

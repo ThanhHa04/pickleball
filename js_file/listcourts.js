@@ -126,10 +126,17 @@ document.addEventListener("DOMContentLoaded", function () {
                     const idSan = courtItem.dataset.idSan;
                     console.log("ID sân:", idSan);
 
-                    window.location.href = `/infoSan.html?idSan=${idSan}`;
+                    window.location.href = getPath(`infoSan.html?idSan=${idSan}`);
                 }
             });
         })
         .catch(error => console.error('Lỗi khi lấy dữ liệu sân:', error));
 });
 
+// Hàm getPath để xử lý đường dẫn dựa trên môi trường
+function getPath(filename) {
+    if (window.location.origin.includes("127.0.0.1:5500")) {
+        return `/html_file/${filename}`; 
+    }
+    return `/${filename}`;
+}

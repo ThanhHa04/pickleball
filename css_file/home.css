@@ -2,11 +2,9 @@
     text-decoration: none;
     list-style: none;
     font-family: 'Arial', sans-serif;
-    color: black;
 }
 .container{
     background: linear-gradient(to bottom, #EAF8E6, #C8E6C9);
-
 }
 i {
     font-size: 1.5em;
@@ -137,18 +135,19 @@ a:hover {
     padding: 1% 2%;
     font-size: 17px;
     color: rgb(68, 18, 112);
+    color:black;
 }
 
 .below-top>a:hover {
     border-radius: 20px;
     background-color: rgb(107, 212, 120);
-    color: black;
+    color: rgb(9, 11, 87);
 }
 
 .below-top a.active {
     background-color: lightgreen;
     border-radius: 20px;
-    color: black;
+    color: rgb(9, 11, 87);
 }
 
 .chat-container {
@@ -205,14 +204,47 @@ a:hover {
 }
 
 #map {
-    margin-left: auto;
-    margin-right: auto;
-    justify-content: center;
-    width: 80%;
-    height: 800px;
-    margin-top: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    min-height: 500px;
+    width:100%;
+}
+
+.left-content {
+    flex: 0 0 35%;
+    min-height: 600px;
+    padding: 1% 3%;
+    box-sizing: border-box;
+}
+
+#pickleball-courts {
+    font-size: 18px;
+    border-radius: 20px;
+    padding: 3% 10% 5% 5%;
+    background: linear-gradient(135deg, #fdfbfb, #ebedee);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    max-width: 100%;
+    border-left: 5px solid #4CAF50; 
+    margin-top: 15px;
+}
+
+#pickleball-courts > ul > li{
+    padding:2%;
+}
+
+.right-content {
+    flex: 0 0 65%;
+    min-height: 750px;
+    padding: 2%;
+    box-sizing: border-box;
+}
+
+#leafletMap {
+    width: 100%;
+    margin: auto;
+    height: 100%;
+    min-height: 500px;
+    border-radius: 20px;
+    background: lightgray;
 }
 
 .locate-button {
@@ -251,8 +283,16 @@ a:hover {
 
 .count-item {
     padding-top: 2%;
+    border-radius: 10px;
     margin: 5%;
-    border: 0.5px solid #ccc;
+    background:white;
+    font-size: 18px;
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid #33e459;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    border-left: 7px solid #5ec562; /* Viền trái nổi bật */
+    margin-top: 15px;
 }
 
 .sport-item {
@@ -264,7 +304,7 @@ a:hover {
 }
 
 #list-courts {
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
     text-align: center;
 }
@@ -274,13 +314,14 @@ a:hover {
     padding: 1.2%;
     border-radius: 20px;
     margin-bottom: 1%;
-    border: 1px solid rgb(202, 191, 191);
+    border: 1px solid rgb(121, 218, 134);
 }
 
 #price-filter {
     width: 10%;
     padding: 1.2%;
     border-radius: 20px;
+    border: 1px solid rgb(121, 218, 134);
 }
 
 #price-filter:hover {
@@ -291,13 +332,25 @@ a:hover {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
+    padding-left:10px;
     margin-bottom: 20px;
 }
 
 .court-item {
-    border: 1px solid #ccc;
-    padding: 15px;
-    text-align: center;
+    border-radius: 10px;
+    border: 1px solid #33e459;
+    padding: 7%;
+    background:white;
+}
+
+.court-img-ex{
+    border-radius: 10px;
+}
+
+.court-item:hover{
+    transform: scale(1.02);
+    cursor: pointer;
+    box-shadow: 0px 0px 12px rgba(85, 244, 95, 0.5);
 }
 
 .dich-vu {
@@ -351,8 +404,10 @@ img {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.court-info {
+.court-info p:nth-child(2), .court-info p:nth-child(3){
     cursor: pointer;
+    text-align: left;
+    font-size: 15px;
 }
 
 .court-info-card {
@@ -520,7 +575,7 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 30px 20px;
+    padding: 0px 20px;
 }
 
 .intro-section {
@@ -537,7 +592,7 @@ img {
 
 .chuc_nang_chinh > h2 {
     display: flex;
-    width:88%;
+    width:90%;
     margin:auto;
     align-items: center;
     font-size: 22px;
@@ -557,14 +612,13 @@ img {
     margin: 0 10px;
 }
 
-/* Nội dung text bên trái */
 .intro-content {
     width:40%;
     margin:auto;
     padding: 20px;
     background: rgba(0, 0, 0, 0.2);
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
-    color: white;
+    color: black;
     border-radius: 12px;
     text-align: left;
 }
@@ -582,13 +636,12 @@ img {
 }
 
 .intro-content p {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.6;
     margin-bottom: 20px;
     width:100%;
 }
 
-/* Hình ảnh bên phải */
 .intro-image {
     flex: 1;
     width:100%;
@@ -620,7 +673,7 @@ img {
     flex-wrap: wrap;
     justify-content: center;
     gap: 30px;
-    max-width: 80%;
+    max-width: 83%;
     margin: auto;
 
 }
@@ -630,7 +683,7 @@ img {
     border-radius: 10px;
     padding: 30px;
     margin:10px;
-    width: 250px;
+    width: 270px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: 0.3s;
@@ -642,12 +695,12 @@ img {
 }
 
 .card h3 {
-    font-size: 18px;
+    font-size: 20px;
     margin: 10px 0;
 }
 
 .card p {
-    font-size: 14px;
+    font-size: 18px;
     color: #666;
 }
 
@@ -665,18 +718,17 @@ img {
     color: #f3f3f3;
 }
 
-/* Phần tiêu đề */
 .chu_san {
     text-align: center;
     margin: 40px auto;
-    max-width: 1000px;
+    width:88%;
 }
 
 .chu_san h2 {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 25px;
     font-weight: bold;
     color: #C02D48;
     text-transform: uppercase;
@@ -688,70 +740,101 @@ img {
     content: "";
     flex: 1;
     height: 1px;
-    background: #E5E5E5;
+    background: #afeaa2;
     margin: 0 10px;
 }
 
-/* Phần mô tả */
 .chu_san p {
-    font-size: 16px;
+    padding-top:5%;
+    font-size: 18px;
     color: #333;
-    margin-bottom: 20px;
-    font-style: italic;
+    width:80%;
+    margin:auto;
     text-align: justify;
 }
 
-/* Bố cục chính */
-.content {
+.chuc_nang_ql, .chuc_nang_tk {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 30px;
-}
-.content {
-    display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 20px;
+    gap: 30px;
+    width:90%;
+    margin:auto;
 }
 
-.images {
-    flex: 1;
-    text-align: center; /* Căn giữa ảnh */
+.ql-images, .tk-images {
+    text-align: center; 
+    width:50%;
 }
 
-.images img {
-    max-width: 100%;
+.ql-images img, .tk-images img {
+    width: 100%;
     height: auto;
 }
 
+.ql-images img:hover, .tk-images img:hover{
+    transform: translateY(-5px);
+}
+
 .quan_ly {
-    flex: 2;
     display: flex;
+    height:100%;
     flex-direction: column;
-    gap: 15px;
+    gap: 30px;
+    width:50%;
 }
 
 .box {
-    background: #FDE7EA;
-    padding: 15px;
-    border-radius: 10px;
-    width: 100%;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background: white;
+    padding: 5%;
+    border-radius: 20px;
+    width: 80%;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
 }
 
-.box h3 {
+.boxx {
+    margin:10px;
+    background: white;
+    border-radius: 20px;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.boxx-img{
+    width:40%;
+}
+
+.boxx-content{
+    padding:0;
+    width:70%;
+    height:10%;
+}
+
+.box:hover, .boxx:hover{
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+}
+
+.box h3{
     color: #C02D48;
-    font-size: 16px;
+    font-size: 22px;
     font-weight: bold;
 }
 
-.box p {
-    font-size: 14px;
+.boxx-content h3{
+    color: #C02D48;
+    font-size: 22px;
+    font-weight: bold;
+    padding-right:20%;
+}
+
+.boxx p {
+    padding-bottom:10%;
+    font-size: 18px;
     color: #444;
     margin: 5px 0 0;
 }
