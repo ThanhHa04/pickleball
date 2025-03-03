@@ -87,8 +87,6 @@ app.get('/san/:id', async (req, res) => {
         snapshot.forEach(doc => {
             san = doc.data();
         });
-
-        console.log("✅ Tìm thấy sân:", san);
         res.json(san);
     } catch (error) {
         console.error("🔥 Lỗi server:", error);
@@ -112,8 +110,6 @@ app.get('/chitietsan/:id', async (req, res) => {
         snapshot.forEach(doc => {
             isan = doc.data();
         });
-
-        console.log("✅ Tìm thấy sân:", isan);
         res.json(isan);
     } catch (error) {
         console.error("🔥 Lỗi server:", error);
@@ -160,8 +156,22 @@ app.get("/san/:id", async (req, res) => {
         res.status(500).json({ error: "Lỗi server" });
     }
 });
-const nodemailer = require('nodemailer');
 
+app.get('/lichsan', async (req, res) => {
+    try {
+      const snapshot = await db.collection('lichsan').get();
+      let slots = [];
+      snapshot.forEach(doc => {
+        slots.push({ id: doc.id, ...doc.data() });
+      });
+      res.json(slots);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
+
+const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465, // Cố định cho Gmail

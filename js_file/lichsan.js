@@ -43,8 +43,6 @@ async function createLichSan() {
                 }
             }
         }
-
-        console.log("✅ Đã tạo lịch sân cho 16 sân thành công!");
     } catch (error) {
         console.error("❌ Lỗi khi tạo lịch sân:", error);
     }
@@ -58,7 +56,6 @@ async function resetLichSan() {
         querySnapshot.forEach(async (doc) => {
             await deleteDoc(doc.ref);
         });
-        console.log("✅ Dữ liệu cũ đã xóa xong.");
         await createLichSan();
     } catch (error) {
         console.error("❌ Lỗi khi xóa dữ liệu cũ:", error);
