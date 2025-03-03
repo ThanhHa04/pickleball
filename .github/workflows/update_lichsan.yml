@@ -24,8 +24,6 @@ jobs:
           
       - name: Set up Firebase credentials
         run: |
-          # Tạo file firebase-config.json ở thư mục gốc, 
-          # để scripts/update-lichsan.js có thể require('../firebase-config.json')
           echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > firebase-config.json
           
       - name: Update Date in Firestore
