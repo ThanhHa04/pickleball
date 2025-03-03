@@ -5,6 +5,11 @@
 }
 .container{
     background: linear-gradient(to bottom, #EAF8E6, #C8E6C9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Đảm bảo container chiếm toàn bộ chiều cao màn hình */
+    position: relative;
 }
 i {
     font-size: 1.5em;
@@ -433,7 +438,7 @@ img {
 
 #membership {
     position: absolute;
-    top: 60%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 1000px;
@@ -441,6 +446,7 @@ img {
     background: #f5f5f5;
     box-shadow: 0 30px 50px #dbdbdb;
     overflow: hidden;
+    margin-bottom: 100px;
 }
 
 .membership-slide .membership-item {
@@ -838,3 +844,84 @@ img {
     color: #444;
     margin: 5px 0 0;
 }
+footer {
+    background-color: #6DBE45; /* Xanh lá nhạt */
+    color: white;
+    padding: 30px 0;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.footer-logo {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.footer-logo img {
+    width: 120px;
+    filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.2));
+}
+
+.footer-section {
+    width: 22%;
+    min-width: 250px;
+    margin-bottom: 20px;
+}
+
+.footer-section h3 {
+    border-bottom: 2px solid #A3D977; /* Xanh lá sáng */
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin: 8px 0;
+}
+
+.footer-section ul li a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+    font-weight: bold;
+}
+
+.footer-section ul li a:hover {
+    color: #D4F4A1; /* Xanh lá pastel */
+}
+
+.social-icons a {
+    font-size: 24px;
+    margin: 0 10px;
+    color: white;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.social-icons a:hover {
+    color: #D4F4A1;
+    transform: scale(1.1);
+}
+
+.footer-bottom {
+    margin-top: 10px;
+    border-top: 1px solid #d2ffc2;
+    padding-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #D4F4A1;
+}
+
