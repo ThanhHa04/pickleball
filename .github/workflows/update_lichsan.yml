@@ -23,11 +23,10 @@ jobs:
           npm install firebase-admin
           
       - name: Set up Firebase credentials
+        shell: bash
         run: |
-          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > firebase-config.json
+          printf '%s' "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > firebase-config.json
 
-
-          
       - name: Update Date in Firestore
         run: |
           node ./scripts/update-lichsan.js
