@@ -2,44 +2,61 @@
 <html lang="vi">
 
 <head>
-    <meta charset="UTF-8">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết sân bóng</title>
-    <link rel="stylesheet" href="../css_file/infoSan.css">
+  <meta charset="UTF-8">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi tiết sân bóng</title>
+  <link rel="stylesheet" href="../css_file/infoSan.css">
 </head>
 
 <body>
-
-    <div class="container">
-        <h1 id="tensan">Sân bóng</h1>
-        <p class="mota" id="mota">Đang tải địa chỉ...</p>
-        <div class="card-info">
-            <div class="gallery" id="hinhAnh">
-                <p>Đang tải hình ảnh...</p>
-            </div>
-            <div class="info-box">  
-                <div class="info-card">
-                    <h3>Thông tin sân</h3>
-                    <p><strong>Giờ mở cửa:</strong> <span id="gioHoatDong"></span></p>
-                    <p><strong>Giá sân:</strong> <span id="giaSan"></span></p>
-                </div>
-
-                <div class="info-card">
-                    <h3>Dịch vụ tiện ích</h3>
-                    <p id="dichVu">
-                        <p id="wifi"><i class='bx bx-wifi'></i> Wifi</p>
-                        <p id="baidoxe"><i class='bx bxs-car-garage' ></i> Bãi đỗ xe</p>
-                        <p id="cantin"><i class='bx bxs-bowl-hot'></i> Căn tin</p>
-                        <p id="douong"><i class='bx bxs-drink' ></i> Đồ uống</p>
-                        <p id="huanluyenvien"><i class='bx bxs-user-check' ></i> Huấn luyện viên</p>
-                    </p>
-                </div>
-            </div>
+  <div class="container">
+    <h1 id="tensan">Sân bóng</h1>
+    <p class="mota" id="mota">Đang tải địa chỉ...</p>
+    <div class="card-info">
+        <div class="gallery" id="hinhAnh">
+            <p>Đang tải hình ảnh...</p>
         </div>
-        <a href="javascript:window.history.back()" class="back-btn">Trở lại</a>
+        <div class="info-box">
+        <div class="info-card">
+            <h3>Thông tin sân</h3>
+            <p><strong>Giờ mở cửa:</strong> <span id="gioHoatDong"></span></p>
+            <p><strong>Giá sân:</strong> <span id="giaSan"></span></p>
+            <p><strong>Loại sân:</strong> <span id="loaiSan"></span></p>
+          </div>
+          
+        </div>
+
+        <div class="info-card">
+          <h3>Dịch vụ tiện ích</h3>
+          <p id="dichVu">
+            <p id="wifi"><i class='bx bx-wifi'></i> Wifi</p>
+            <p id="baidoxe"><i class='bx bxs-car-garage'></i> Bãi đỗ xe</p>
+            <p id="cantin"><i class='bx bxs-bowl-hot'></i> Căn tin</p>
+            <p id="douong"><i class='bx bxs-drink'></i> Đồ uống</p>
+            <p id="huanluyenvien"><i class='bx bxs-user-check'></i> Huấn luyện viên</p>
+          </p>
+        </div>
+      </div>
     </div>
-    <script src="../js_file/infoSan.js"></script>
+    <!-- Phần lịch đặt sân -->
+    <div class="schedule-container">
+      <h2>Lịch đặt sân</h2>
+      <table id="scheduleTable">
+        <thead>
+          <tr>
+            <th>Giờ</th>
+            <!-- Các cột ngày sẽ được tạo động bằng JavaScript -->
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Các hàng dữ liệu lịch sẽ được tạo động bằng JavaScript -->
+        </tbody>
+      </table>
+    </div>
+    <a href="javascript:window.history.back()" class="back-btn">Trở lại</a>
+  </div>
+  <script src="../js_file/infoSan.js"></script>
 </body>
 
 </html>

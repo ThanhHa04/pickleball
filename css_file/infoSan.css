@@ -83,3 +83,31 @@ h1 {
 .back-btn:hover {
     background: #0056b3;
 }
+
+.schedule-container {
+    margin-top: 20px;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+
+  .schedule-container h2 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  #scheduleTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  #scheduleTable th,
+  #scheduleTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+
+  #scheduleTable th {
+    background-color: #f2f2f2;
+  }

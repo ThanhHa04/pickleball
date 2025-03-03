@@ -133,7 +133,6 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error('Lỗi khi lấy dữ liệu sân:', error));
 });
 
-// Hàm getPath để xử lý đường dẫn dựa trên môi trường
 function getPath(filename) {
     if (window.location.origin.includes("127.0.0.1:5500")) {
         return `/html_file/${filename}`; 
