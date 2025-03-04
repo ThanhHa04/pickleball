@@ -1,4 +1,6 @@
-// Cấu hình Firebase
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+
 const firebaseConfig = {
     apiKey: "AIzaSyATp-eu8CBatLs04mHpZS4c66FaYw5zLgk",
     authDomain: "pka-pickleball.firebaseapp.com",
@@ -11,8 +13,8 @@ const firebaseConfig = {
 
 // Khởi tạo Firebase
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 async function checkEmailExists(email) {
     const apiKey = "1f3a48c94b7d7239c66e4d008a8c469e"; // Thay bằng API Key mới

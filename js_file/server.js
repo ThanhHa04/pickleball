@@ -1,6 +1,4 @@
 require('dotenv').config();
-console.log("📩 Email:", process.env.EMAIL);
-console.log("🔑 Pass:", process.env.EMAIL_PASS ? "OK" : "Lỗi");
 const express = require('express');
 const admin = require('firebase-admin');
 const cors = require('cors');
@@ -157,19 +155,23 @@ app.get("/san/:id", async (req, res) => {
     }
 });
 
-app.get('/lichsan', async (req, res) => {
+app.get('/lich/:IDSan', async (req, res) => {
+    const { IDSan } = req.params;  // Lấy ID sân từ URL
+    const collectionName = `lich${IDSan}`; // Tạo collection theo sân
+
     try {
-      const snapshot = await db.collection('lichsan').get();
-      let slots = [];
-      snapshot.forEach(doc => {
-        slots.push({ id: doc.id, ...doc.data() });
-      });
-      res.json(slots);
+        const snapshot = await db.collection(collectionName).get();
+        let slots = [];
+        
+        snapshot.forEach(doc => {
+            slots.push({ id: doc.id, ...doc.data() });
+        });
+
+        res.json(slots);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
-  });
-  
+});
 
 const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
