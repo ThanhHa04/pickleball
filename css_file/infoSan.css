@@ -111,3 +111,84 @@ h1 {
   #scheduleTable th {
     background-color: #f2f2f2;
   }
+
+  
+/* 🌟 Tô màu xanh cho các ô trống */
+.highlight {
+  background-color: #c3f7c3; /* Xanh nhạt */
+  border-radius: 5px;
+  text-align: center;
+}
+
+.highlight:hover {
+  background-color: #a5e6a5; /* Màu xanh đậm hơn khi hover */
+}
+
+/* 📅 Ô giờ bên trái */
+.hour-col {
+    font-weight: bold;
+    text-align: center;
+    background-color: #f5f5f5;
+    padding: 10px;
+}
+
+/* ✅ Khung đặt sân */
+.available-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* 🔲 Checkbox đặt sân */
+.booking-checkbox {
+    appearance: none;
+    width: 80%;
+    height: 44px;
+    background-color: #c3f7c3;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    color: #008000;
+    cursor: pointer;
+    border: 1px solid #008000;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 🏷️ Giá hiển thị bên trong checkbox */
+.booking-checkbox::before {
+    content: attr(value);
+    display: block;
+    text-align: center;
+    font-size: 16px;
+    color: #008000;
+}
+
+/* 🎯 Hiệu ứng khi chọn */
+.booking-checkbox:checked {
+    background-color: #008000;
+    color: white;
+}
+
+/* Khi được chọn, giá chuyển thành màu trắng */
+.booking-checkbox:checked::before {
+    color: white;
+}
+
+/* 🔴 Ô đã đặt */
+.booked-slot {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* ⚪ Ô trống */
+.empty-slot {
+    color: gray;
+    text-align: center;
+}
