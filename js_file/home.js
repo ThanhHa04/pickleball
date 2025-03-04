@@ -51,8 +51,6 @@ document.addEventListener("DOMContentLoaded", function () {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
-
-    // ✅ Sửa lỗi khi fetch API - Giờ chỉ dùng http://localhost:3000/locations
     fetch("http://localhost:3000/locations")
         .then(response => response.json())
         .then(locations => {

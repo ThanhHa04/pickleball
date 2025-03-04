@@ -26,7 +26,6 @@ body {
     background: white;
     border-radius: 15px;
     box-shadow: 0 0 20px var(--shadow-color);
-    overflow: hidden;
 }
 
 .profile-header {
@@ -100,7 +99,6 @@ body {
     height: 150px;
     margin: 0 auto;
     border-radius: 50%;
-    overflow: hidden;
     cursor: pointer;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
