@@ -72,60 +72,45 @@ function renderSchedule(dateList, schedule) {
 
   tbody.innerHTML = "";
   const now = new Date();
-  const currentHour = now.getHours();
-for (let h = 6; h <= 22; h++) {
+
+  for (let h = 6; h <= 22; h++) {
     const hourStr = `${h < 10 ? "0" + h : h}:00`;
     const tr = document.createElement("tr");
     tr.innerHTML = `<td class="hour-col">${hourStr}</td>`;
 
     dateList.forEach(date => {
-        const slot = schedule[date]?.[hourStr];
-        const slotTime = new Date(date + "T" + hourStr + ":00"); 
+      const slot = schedule[date]?.[hourStr];
+      const slotTime = new Date(`${date}T${hourStr}:00`);
+      const twoHoursLater = new Date(slotTime.getTime() - 2 * 60 * 60 * 1000); // Slot + 2h
 
-        let cellContent = `<span class="empty-slot">-</span>`;
-        let cellClass = "";
+      let cellContent = `<span class="empty-slot">-</span>`;
+      let cellClass = "";
 
-        tbody.innerHTML = "";
-  const now = new Date();
-  const currentHour = now.getHours();
-for (let h = 6; h <= 22; h++) {
-    const hourStr = `${h < 10 ? "0" + h : h}:00`;
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td class="hour-col">${hourStr}</td>`;
+      if (slot) {
+        if (slot.TrangThai === "Còn trống" && now < twoHoursLater) {
+          cellContent = `<label class="available-slot">
+                          <input type="checkbox" class="booking-checkbox"
+                           data-date="${date}" data-hour="${hourStr}"
+                           data-san="${slot.IDSan}"
+                           value="${formatCurrency(slot.Gia)}đ">
+                        </label>`;
+          cellClass = "highlight"; // Màu xanh nhạt
+        } else if (now >= twoHoursLater) {
+          cellContent = `<span class="past-slot">Hết hạn</span>`; // Đánh dấu hết hạn
+          cellClass = "disabled-slot"; // Màu xám
+        } else {
+          cellContent = `<span class="booked-slot">(${slot.TrangThai})</span>`;
+        }
+      }
 
-    dateList.forEach(date => {
-        const slot = schedule[date]?.[hourStr];
-        const slotTime = new Date(date + "T" + hourStr + ":00"); 
-
-        let cellContent = `<span class="empty-slot">-</span>`;
-        let cellClass = "";
-
-        if (slot) {
-            if (slot.TrangThai === "Còn trống" && slotTime > now) {
-                cellContent = `<label class="available-slot">
-                                <input type="checkbox" class="booking-checkbox"
-                                 data-date="${date}" data-hour="${hourStr}"
-                                 data-san="${slot.IDSan}"
-                                 value="${formatCurrency(slot.Gia)}đ">
-                              </label>`;
-                cellClass = "highlight"; // Màu xanh nhạt
-            } else if (slotTime <= now) {
-                cellContent = `<span class="past-slot">Hết hạn</span>`; // Đánh dấu hết hạn
-                cellClass = "disabled-slot"; // Màu xám
-            } else {
-                cellContent = `<span class="booked-slot">(${slot.TrangThai})</span>`;
-            }
-         }    
-        tr.innerHTML += `<td class="${cellClass}">${cellContent}</td>`;
+      tr.innerHTML += `<td class="${cellClass}">${cellContent}</td>`;
     });
-    tbody.appendChild(tr);
-  }
-        
-        tr.innerHTML += `<td class="${cellClass}">${cellContent}</td>`;
-    });
+
     tbody.appendChild(tr);
   }
 }
+
+
 // 🌟 Format tiền theo chuẩn Việt Nam
 function formatCurrency(amount) {
   return parseFloat(amount).toLocaleString("vi-VN");
