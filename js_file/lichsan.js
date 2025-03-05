@@ -25,7 +25,7 @@ async function createLichSan() {
         for (let i = 0; i < 7; i++) {
             let ngayDat = new Date(today);
             ngayDat.setDate(today.getDate() + i);
-            let ngayDatStr = ngayDat.toISOString().split("T")[0]; // YYYY-MM-DD
+            let ngayDatStr = ngayDat.toISOString().split("T")[0];
 
             for (let san of danhSachSan) {
                 for (let hour = 6; hour < 22; hour++) {
