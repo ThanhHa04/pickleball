@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
           setTextContent("mota", dataChiTiet.MoTa);
           setTextContent("gioHoatDong", dataChiTiet.GioHoatDong);
           setTextContent("giaSan", dataSan.GiaThue ? `${formatCurrency(dataSan.GiaThue)} đ` : "Không có");
-          setTextContent("loaiSan", dataSan.IDLoaiSan);
+          setTextContent("loaiSan", dataSan.MoTa);
           let galleryHtml = "";
           if (dataSan.HinhAnh && typeof dataSan.HinhAnh === "string") {
               galleryHtml = `<img src="${dataSan.HinhAnh}" alt="Hình ảnh sân">`;
