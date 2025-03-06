@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Đăng nhập thành công
             alert("Đăng nhập thành công!");
             localStorage.setItem("userName", userData.HoTen);
+            localStorage.setItem("userRole", userData.role);
             localStorage.setItem("userId", userData.IDNguoiDung);
             window.location.href = "home.html";
 

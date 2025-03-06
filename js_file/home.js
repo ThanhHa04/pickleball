@@ -1,19 +1,51 @@
-// Hàm để chuyển đổi giữa các trang
+// Kiểm tra vai trò của người dùng từ localStorage
+let userName = localStorage.getItem("userName");
+let userId = localStorage.getItem("userId");
+let userRole = localStorage.getItem("userRole");
+
+console.log("User Info:", { userName, userId, userRole });
+console.log("User Role:", userRole);
+
+const allowedPages = {
+    user: ["home", "list-courts", "appointments", "history", "membership", "map"],
+    admin: ["home", "list-courts", "appointments", "manage-users", "statistics", "map"]
+};
+
+// Ẩn/hiện menu theo vai trò
+function updateMenuByRole() {
+    const menuItems = document.querySelectorAll(".below-top a");
+    menuItems.forEach(item => {
+        const onclickAttr = item.getAttribute("onclick");
+        const match = onclickAttr?.match(/showContent\('([^']+)',?\s*this?\)/);
+        if (!match) {
+            console.warn("⚠️ Không tìm thấy thuộc tính onclick hợp lệ:", item);
+            return;
+        }
+        const page = match[1]; 
+        if (!allowedPages[userRole] || !allowedPages[userRole].includes(page)) {
+            item.style.display = "none";
+        } else {
+            item.style.display = "inline-block";
+        }
+    });
+}   
+
+document.addEventListener("DOMContentLoaded", updateMenuByRole);
+
 function showContent(page, element) {
     document.querySelectorAll(".content").forEach(div => div.style.display = "none");
-    if (page === "map") {
-        document.getElementById(page).style.display = "flex";
-    } else {
-        document.getElementById(page).style.display = "block";
+    let targetElement = document.getElementById(page);
+    if (targetElement) {
+        targetElement.style.display = page === "map" ? "flex" : "block";
     }
     document.querySelectorAll(".below-top a").forEach(link => link.classList.remove("active"));
-    element.classList.add("active");
+    if (element) {
+        element.classList.add("active");
+    }
 }
 
 window.onload = function () {
     document.querySelectorAll(".content").forEach(div => div.style.display = "none");
-    const userName = localStorage.getItem("userName");
-    console.log("Tên người dùng:", userName);
 
     if (userName) {
         document.getElementById("user-name").style.display = "block";
@@ -28,10 +60,12 @@ window.onload = function () {
 
     showContent('home', document.querySelector(".below-top a"));
 
-    // ✅ Sửa lỗi không gọi getPath để cập nhật đường dẫn
     document.getElementById("loginLink").setAttribute("href", getPath("Login.html"));
     document.getElementById("signupLink").setAttribute("href", getPath("Signup.html"));
+
+    updateMenuByRole(); // GỌI LẠI HÀM NÀY Ở ĐÂY
 };
+
 
 function getPath(filename) {
     if (window.location.origin.includes("127.0.0.1:5500")) {
@@ -91,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 function cleanAddress(address) {
                     let parts = address.split(", ");
-                    if (parts.length > 6) {
+                    if (parts.length > 7) {
                         return parts.slice(0, 5).join(", ");
                     }
                     return address;
@@ -145,8 +179,9 @@ function manageProfile() {
 
 function logout() {
     if (confirm("Bạn chắc chắn muốn đăng xuất?")) {
-        localStorage.removeItem("userName");
-        window.location.href = window.location.origin + getPath("Login.html");
+        localStorage.removeItem("userInfo"); 
+        sessionStorage.removeItem("userInfo");
+        window.location.href = "login.html"; 
     }
 }
 
