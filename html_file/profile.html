@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý thông tin cá nhân - PKA Pickleball</title>
     <link rel="stylesheet" href="../css_file/profile.css">
+    
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <script type="module">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <!-- <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -14,20 +18,20 @@
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            // Thông tin cấu hình Firebase của bạn
-            apiKey: "your-api-key",
-            authDomain: "your-auth-domain",
-            projectId: "your-project-id",
-            storageBucket: "your-storage-bucket",
-            messagingSenderId: "your-messaging-sender-id",
-            appId: "your-app-id"
-        };
+    apiKey: "AIzaSyATp-eu8CBatLs04mHpZS4c66FaYw5zLgk",
+    authDomain: "pka-pickleball.firebaseapp.com",
+    projectId: "pka-pickleball",
+    storageBucket: "pka-pickleball.appspot.com",
+    messagingSenderId: "38130361867",
+    appId: "1:38130361867:web:f3c1a3940e3c390b11890e",
+    measurementId: "G-0YQ7GKJKRC"
+};
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-    </script>
+    </script> -->
 </head>
 <body>
     <div class="profile-container">
@@ -75,7 +79,7 @@
                     <div class="profile-section">
                         <div class="avatar-section">
                             <div class="avatar-container">
-                                <img src="../images/default-avatar.png" alt="Avatar" id="avatar-preview" class="avatar-img">
+                                <img src="/images/PKA_Pickleball.png" alt="Avatar" id="avatar-preview" class="avatar-img">
                                 <div class="avatar-overlay">
                                     <i class='bx bx-camera'></i>
                                 </div>
@@ -100,7 +104,7 @@
                             <div class="form-group">
                                 <label>Giới tính</label>
                                 <select id="gender">
-                                    <option value="">Chọn giới tính</option>
+                                    <option value="" disabled >Chọn giới tính</option>
                                     <option value="male">Nam</option>
                                     <option value="female">Nữ</option>
                                     <option value="other">Khác</option>
@@ -109,7 +113,7 @@
                             <div class="form-group">
                                 <label>Trình độ chơi</label>
                                 <select id="skillLevel">
-                                    <option value="">Chọn trình độ</option>
+                                    <option value="" disabled>Chọn trình độ</option>
                                     <option value="beginner">Người mới bắt đầu</option>
                                     <option value="intermediate">Trung bình</option>
                                     <option value="advanced">Nâng cao</option>
@@ -118,7 +122,7 @@
                             <div class="form-group">
                                 <label>Phong cách chơi</label>
                                 <select id="playStyle">
-                                    <option value="">Chọn phong cách</option>
+                                    <option value="" disabled>Chọn phong cách</option>
                                     <option value="attack">Tấn công</option>
                                     <option value="defense">Phòng thủ</option>
                                     <option value="balanced">Cân bằng</option>
@@ -152,8 +156,8 @@
                 <div class="tab-content" id="account-info">
                     <div class="info-form" id="account-form">
                         <div class="form-group">
-                            <label>Tên đăng nhập <span class="required">*</span></label>
-                            <input type="text" id="username" required>
+                            <label>Tên đăng nhập</label>
+                            <input type="text" id="username" readonly class="readonly-input">
                         </div>
                         <div class="form-group">
                             <label>Mật khẩu hiện tại <span class="required">*</span></label>
@@ -294,7 +298,6 @@
             </div>
         </div>
     </div>
-    <script type="module" src="../js_file/profile.js"></script>
     <!-- Modal xem ảnh chi tiết -->
     <div id="avatar-modal" class="modal">
         <div class="modal-content">
@@ -302,5 +305,28 @@
             <img id="modal-avatar" src="" alt="Avatar Detail">
         </div>
     </div>
+    <!-- <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Cấu hình Firebase cho ứng dụng web của bạn
+        // Đối với SDK Firebase JS v7.20.0 và sau này, measurementId là tùy chọn
+        const firebaseConfig = {
+          apiKey: "AIzaSyATp-eu8CBatLs04mHpZS4c66FaYw5zLgk",
+          authDomain: "pka-pickleball.firebaseapp.com",
+          projectId: "pka-pickleball",
+          storageBucket: "pka-pickleball.firebasestorage.app",
+          messagingSenderId: "38130361867",
+          appId: "1:38130361867:web:f3c1a3940e3c390b11890e",
+          measurementId: "G-0YQ7GKJKRC"
+        };
+        // Khởi tạo Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script> -->
+    <script type="module" src="../js_file/profile.js"></script>
 </body>
 </html>
