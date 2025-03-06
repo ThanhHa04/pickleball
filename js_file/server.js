@@ -274,6 +274,12 @@ app.get('/reset-password', (req, res) => {
     res.sendFile(path.join(__dirname, '../html_file/ResetPassWord.html'));
 });
 
+app.use(express.static(path.join(__dirname, "html_file")));
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "html_file", "home.html"));
+});
+
 // Lắng nghe trên cổng 3000
 app.listen(port, () => {
     console.log(`Server đang chạy tại http://localhost:${port}`);
