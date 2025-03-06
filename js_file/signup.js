@@ -53,9 +53,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            // Tạo ID mới
-            const newId = `PKA0${querySnapshot.size + 1}`;
+            const usersSnapshot = await getDocs(userRef);
+            let maxId = 0;
+            usersSnapshot.forEach(doc => {
+                const id = doc.data().IDNguoiDung;
+                if (id && id.startsWith("PKA0")) {
+                    const numberPart = id.slice(4);
+                    const num = parseInt(numberPart, 10);
+                    if (!isNaN(num) && num > maxId) {
+                        maxId = num;
+                    }
+                }
+            });
 
+            // Tạo ID mới
+            const newId = `PKA0${usersSnapshot.size + 1}`;
             // Thêm dữ liệu vào collection `nguoidung`
             await addDoc(userRef, {
                 HoTen: hoTen,
