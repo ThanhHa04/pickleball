@@ -143,6 +143,7 @@ const saveButtons = document.querySelectorAll('.save-btn');
 
 saveButtons.forEach(saveButton => {
     saveButton.addEventListener('click', async () => {
+        const avatar = document.getElementById('avatar-preview').src;
         const fullName = document.getElementById('fullName').value;
         const birthDate = document.getElementById('birthDate').value;
         const gender = document.getElementById('gender').value;
@@ -155,6 +156,9 @@ saveButtons.forEach(saveButton => {
 
         if (fullName) {
             updateData.HoTen = fullName;
+        }
+        if (avatar) {
+            updateData.Avt = avatar;
         }
         if (birthDate) {
             updateData.NgaySinh = birthDate;
@@ -187,6 +191,9 @@ saveButtons.forEach(saveButton => {
                     const docData = doc.data(); // Lấy dữ liệu hiện tại của document
 
                     // Kiểm tra và thêm các trường nếu chúng chưa tồn tại
+                    if (avatar && !docData.Avt) {
+                        updateData.Avt = avatar;
+                    }
                     if (fullName && !docData.HoTen) {
                         updateData.HoTen = fullName;
                     }
@@ -212,6 +219,7 @@ saveButtons.forEach(saveButton => {
                     await doc.ref.update(updateData); // Cập nhật document với dữ liệu đã kiểm tra
                 });
                 console.log("✅ Cập nhật thành công!");
+                alert('Cập nhật thành công');
             }
 
             getUserData(userUid);
