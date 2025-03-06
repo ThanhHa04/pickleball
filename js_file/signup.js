@@ -82,8 +82,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+<<<<<<< Updated upstream
             // Lấy tất cả các IDNguoiDung đã có và tìm ID mới
             const usersSnapshot = await userRef.get();
+=======
+            const usersSnapshot = await getDocs(userRef);
+>>>>>>> Stashed changes
             let maxId = 0;
             usersSnapshot.forEach(doc => {
                 const id = doc.data().IDNguoiDung;
@@ -96,10 +100,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
 
+<<<<<<< Updated upstream
             const newId = `PKA0${(maxId + 1).toString()}`; // Tạo ID mới tăng dần mà không giới hạn số chữ số
 
             // Nếu chưa tồn tại, thêm dữ liệu vào collection `nguoidung`
             await userRef.add({
+=======
+            // Tạo ID mới
+            const newId = `PKA0${usersSnapshot.size + 1}`;
+            // Thêm dữ liệu vào collection `nguoidung`
+            await addDoc(userRef, {
+>>>>>>> Stashed changes
                 HoTen: hoTen,
                 Email: email,
                 MatKhau: matKhau,  // 🔴 KHÔNG NÊN lưu mật khẩu trực tiếp, cần mã hóa
