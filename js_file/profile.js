@@ -14,30 +14,28 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-const userUid = localStorage.getItem('userUid');
+const userUid = localStorage.getItem('userId');
 if (userUid) {
-    // Người dùng đã đăng nhập, tiếp tục xử lý
-    console.log('User UID:', userUid);
+getUserData(userUid)
+// Người dùng đã đăng nhập, tiếp tục xử lý
+}
     // ... thực hiện các thao tác khác
-const docRef = doc(db, "nguoidung", userUid);
-const docSnap = await getDoc(docRef);
+// const docRef = doc(db, "nguoidung", userUid);
+// const docSnap = await getDoc(docRef);
 
-if (docSnap.exists()) {
-    const userData = docSnap.data();
-    document.getElementById('name').value = userData.HoTen;
-    document.getElementById('email').value = userData.Email;
-    document.getElementById('phone').value = userData.SoDienThoai;
-    document.getElementById('address').value = userData.DiaChi;
-    document.getElementById('birthDate').value = userData.birthDate;
-    document.getElementById('gender').value = userData.GioiTinh;
-    document.getElementById('skillLevel').value = userData.TrinhDo;
-} else {
-    console.log("Không tìm thấy người dùng với ID:", userUid);
-}
-} else {
+// if (docSnap.exists()) {
+//     const userData = docSnap.data();
+//     document.getElementById('name').value = userData.HoTen;
+//     document.getElementById('email').value = userData.Email;
+//     document.getElementById('phone').value = userData.SoDienThoai;
+//     document.getElementById('address').value = userData.DiaChi;
+//     document.getElementById('birthDate').value = userData.birthDate;
+//     document.getElementById('gender').value = userData.GioiTinh;
+//     document.getElementById('skillLevel').value = userData.TrinhDo;
+// } else {
+//     console.log("Không tìm thấy người dùng với ID:", userUid);
+// }
     // Người dùng chưa đăng nhập, chuyển hướng đến trang đăng nhập
-    //window.location.href = '/login.html';
-}
 
 // const auth = getAuth();
 // const db = getFirestore();
@@ -88,7 +86,6 @@ closeModal.addEventListener('click', () => {
 
 console.log("Firebase Firestore initialized:", db);
 
-
 async function getUserData(userId) {
     try {
         console.log("Checked id:" ,userId);
@@ -101,14 +98,12 @@ async function getUserData(userId) {
             return;
         }
 
-
         
         let userData;
             userQuery.forEach(doc => {
              userData = doc.data();
             });
 
-            console.log(userData)
             // Điền thông tin vào form
             document.getElementById('fullName').value = userData.HoTen || '';
             document.getElementById('birthDate').value = userData.NgaySinh || '';
@@ -126,8 +121,6 @@ async function getUserData(userId) {
         console.error("Lỗi khi lấy thông tin người dùng:", error);
     }
 }
-
-getUserData("PKA04")
 // Lưu thông tin cá nhân
 async function savePersonalInfo(userId) {
     try {
@@ -164,45 +157,6 @@ async function saveContactInfo(userId) {
     }
 }
 
-// Kiểm tra trạng thái đăng nhập và load dữ liệu
-// onAuthStateChanged(auth, (user) => {
-//     if (user) {
-//         getUserData(user.uid);
-        
-//         // Xử lý nút lưu thông tin cá nhân
-//         document.querySelector('#personal-info .save-btn').addEventListener('click', () => {
-//             savePersonalInfo(user.uid);
-//         });
-        
-//         // Xử lý nút lưu thông tin liên hệ
-//         document.querySelector('#contact-info .save-btn').addEventListener('click', () => {
-//             saveContactInfo(user.uid);
-//         });
-        
-//         // Xử lý đổi mật khẩu
-//         document.querySelector('#account-info .save-btn').addEventListener('click', async () => {
-//             const newPassword = document.getElementById('newPassword').value;
-//             const confirmPassword = document.getElementById('confirmPassword').value;
-            
-//             if (newPassword !== confirmPassword) {
-//                 alert("Mật khẩu mới không khớp!");
-//                 return;
-//             }
-            
-//             try {
-//                 await updatePassword(user, newPassword);
-//                 alert("Đã cập nhật mật khẩu thành công!");
-//             } catch (error) {
-//                 console.error("Lỗi khi đổi mật khẩu:", error);
-//                 alert("Có lỗi xảy ra khi đổi mật khẩu!");
-//             }
-//         });
-//     } else {
-//         window.location.href = '/html_file/login.html';
-//     }
-// });
-
-// userId là gì , để e thử gọi 
 
 
 // Lưu dữ liệu lên Firebase
@@ -230,21 +184,32 @@ saveButtons.forEach(saveButton => {
             updateData.DiaChi = address;
         }
 
-        if (auth.currentUser) { // Kiểm tra trạng thái đăng nhập
-            try {
-                const userId = auth.currentUser.uid;
-                const userDocRef = doc(db, 'nguoidung', userId);
-                await updateDoc(userDocRef, updateData);
-                alert('Cập nhật thông tin thành công!');
-            } catch (error) {
-                console.error('Lỗi khi cập nhật thông tin:', error);
-                alert('Có lỗi xảy ra khi cập nhật thông tin.');
+       
+        try {
+            const userQuerySnapshot = await db.collection("nguoidung")
+                .where("IDNguoiDung", "==", userUid)
+                .get();
+        
+            if (userQuerySnapshot.empty) {
+                console.log(" Không tìm thấy tài liệu!");
+            } else {
+                userQuerySnapshot.forEach(async (doc) => {
+                    await doc.ref.update({
+                        HoTen: fullName,
+                        NgaySinh: birthDate,
+                        Email: email,
+                        DiaChi: address
+                    });
+                });
+                console.log("✅ Cập nhật thành công!");
             }
-        } else {
-            alert('Bạn cần đăng nhập để cập nhật thông tin.');
-            // Hoặc chuyển hướng người dùng đến trang đăng nhập:
-            // window.location.href = '/html_file/Login.html';
+        
+            getUserData(userUid)
+        } catch (error) {
+            console.error('Lỗi khi cập nhật thông tin:', error);
+            alert('Có lỗi xảy ra khi cập nhật thông tin.');
         }
+       
     });
 });
 
