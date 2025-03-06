@@ -33,6 +33,14 @@ window.onload = function () {
     document.getElementById("signupLink").setAttribute("href", getPath("Signup.html"));
 };
 
+function getPath(filename) {
+    if (window.location.origin.includes("127.0.0.1:5500")) {
+        return `/html_file/${filename}`; // Live Server (VS Code)
+    }
+    return `/${filename}`; // Node.js (Express)
+}
+
+
 function toggleChat() {
     let chatBox = document.querySelector(".chat-box");
     let chatIcon = document.querySelector(".chat-icon");
@@ -119,14 +127,6 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     locateButton.addTo(map);
 });
-
-// ✅ Sửa lỗi trong getPath: Loại bỏ code thừa và sử dụng đúng logic
-function getPath(filename) {
-    if (window.location.origin.includes("127.0.0.1:5500")) {
-        return `/html_file/${filename}`; // Live Server (VS Code)
-    }
-    return `/${filename}`; // Node.js server
-}
 
 function toggleUserDropdown(event) {
     var dropdown = document.getElementById("user-dropdown");
