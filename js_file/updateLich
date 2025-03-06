@@ -1,0 +1,24 @@
+const fs = require("fs");
+
+async function updateSchedule() {
+    const today = new Date();
+    const dateList = generateDateList(today, 3); // Cập nhật từ hôm nay + 3 ngày
+
+    console.log("📅 Danh sách ngày cập nhật:", dateList);
+
+    fs.writeFileSync("schedule.json", JSON.stringify({ dates: dateList }, null, 2));
+    console.log("✅ Lịch sân đã cập nhật!");
+}
+
+// Hàm tạo danh sách ngày
+function generateDateList(startDate, daysCount) {
+    const result = [];
+    for (let i = 0; i < daysCount; i++) {
+        const d = new Date(startDate);
+        d.setDate(startDate.getDate() + i);
+        result.push(d.toISOString().split("T")[0]);
+    }
+    return result;
+}
+
+updateSchedule().catch(console.error);

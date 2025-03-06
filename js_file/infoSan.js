@@ -73,7 +73,7 @@ function renderSchedule(dateList, schedule) {
   tbody.innerHTML = "";
   const now = new Date();
   const currentHour = now.getHours();
-for (let h = 6; h <= 21; h++) {
+for (let h = 6; h <= 22; h++) {
     const hourStr = `${h < 10 ? "0" + h : h}:00`;
     const tr = document.createElement("tr");
     tr.innerHTML = `<td class="hour-col">${hourStr}</td>`;
@@ -88,7 +88,7 @@ for (let h = 6; h <= 21; h++) {
         tbody.innerHTML = "";
   const now = new Date();
   const currentHour = now.getHours();
-for (let h = 6; h <= 21; h++) {
+for (let h = 6; h <= 22; h++) {
     const hourStr = `${h < 10 ? "0" + h : h}:00`;
     const tr = document.createElement("tr");
     tr.innerHTML = `<td class="hour-col">${hourStr}</td>`;
