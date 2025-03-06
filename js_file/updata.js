@@ -14,7 +14,7 @@ async function createScheduleForNext3Days() {
   const today = new Date();
   const timeSlots = [];
 
-  for (let i = 1; i <= 3; i++) {
+  for (let i = -1; i <= 1; i++) {
     let futureDate = new Date(today);
     futureDate.setDate(today.getDate() + i);
     let formattedDate = futureDate.toISOString().split("T")[0]; // YYYY-MM-DD

@@ -31,6 +31,9 @@ document.addEventListener("DOMContentLoaded", function () {
             userQuery.forEach(doc => {
                 userData = doc.data();
             });
+
+            console.log(userData)
+
             if (userData.MatKhau !== password) {
                 toastr.error("Mật khẩu không đúng!");
                 return;
