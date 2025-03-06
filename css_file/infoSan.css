@@ -11,7 +11,7 @@ body {
 }
 
 .container {
-    width:100%;
+    max-width: 1500px;
     margin: auto;
     background: white;
     padding: 20px;
@@ -33,7 +33,9 @@ h1 {
     display: flex;
     justify-content: space-between;
 }
-
+.mota{
+    padding: 1% 0%;
+}
 .gallery {
     gap: 10px;
     width:50%;
@@ -44,9 +46,12 @@ h1 {
     object-fit: cover;
     border-radius: 5px;
 }
+.info-left{
+    display: flex;
 
+}
 .info-box {
-    width:45%;
+    width:48%;
     height:100%;
     gap:20px;
 }
@@ -56,7 +61,7 @@ h1 {
     padding: 5%;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 80%;
+    width: 100%;
     margin-bottom: 20px;
 }
 
@@ -112,23 +117,27 @@ h1 {
     background-color: #f2f2f2;
   }
 
+  
+/* 🌟 Tô màu xanh cho các ô trống */
 .highlight {
-  background-color: #c3f7c3; 
+  background-color: #c3f7c3; /* Xanh nhạt */
   border-radius: 5px;
   text-align: center;
 }
 
 .highlight:hover {
-  background-color: #a5e6a5; 
+  background-color: #a5e6a5; /* Màu xanh đậm hơn khi hover */
 }
 
-/*Lich san */
+/* 📅 Ô giờ bên trái */
 .hour-col {
     font-weight: bold;
     text-align: center;
     background-color: #f5f5f5;
     padding: 10px;
 }
+
+/* ✅ Khung đặt sân */
 .available-slot {
     display: flex;
     align-items: center;
@@ -137,6 +146,8 @@ h1 {
     width: 100%;
     cursor: pointer;
 }
+
+/* 🔲 Checkbox đặt sân */
 .booking-checkbox {
     appearance: none;
     width: 80%;
@@ -153,6 +164,8 @@ h1 {
     align-items: center;
     justify-content: center;
 }
+
+/* 🏷️ Giá hiển thị bên trong checkbox */
 .booking-checkbox::before {
     content: attr(value);
     display: block;
@@ -160,18 +173,26 @@ h1 {
     font-size: 16px;
     color: #008000;
 }
+
+/* 🎯 Hiệu ứng khi chọn */
 .booking-checkbox:checked {
     background-color: #008000;
     color: white;
 }
+
+/* Khi được chọn, giá chuyển thành màu trắng */
 .booking-checkbox:checked::before {
     color: white;
 }
+
+/* 🔴 Ô đã đặt */
 .booked-slot {
     color: red;
     font-weight: bold;
     text-align: center;
 }
+
+/* ⚪ Ô trống */
 .empty-slot {
     color: gray;
     text-align: center;
