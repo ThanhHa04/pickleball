@@ -16,29 +16,8 @@ const db = firebase.firestore();
 
 const userUid = localStorage.getItem('userId');
 if (userUid) {
-getUserData(userUid)
-// Người dùng đã đăng nhập, tiếp tục xử lý
+    getUserData(userUid)
 }
-    // ... thực hiện các thao tác khác
-// const docRef = doc(db, "nguoidung", userUid);
-// const docSnap = await getDoc(docRef);
-
-// if (docSnap.exists()) {
-//     const userData = docSnap.data();
-//     document.getElementById('name').value = userData.HoTen;
-//     document.getElementById('email').value = userData.Email;
-//     document.getElementById('phone').value = userData.SoDienThoai;
-//     document.getElementById('address').value = userData.DiaChi;
-//     document.getElementById('birthDate').value = userData.birthDate;
-//     document.getElementById('gender').value = userData.GioiTinh;
-//     document.getElementById('skillLevel').value = userData.TrinhDo;
-// } else {
-//     console.log("Không tìm thấy người dùng với ID:", userUid);
-// }
-    // Người dùng chưa đăng nhập, chuyển hướng đến trang đăng nhập
-
-// const auth = getAuth();
-// const db = getFirestore();
 
 // Xử lý chuyển tab
 document.querySelectorAll('.profile-nav li').forEach(tab => {
@@ -166,6 +145,9 @@ saveButtons.forEach(saveButton => {
     saveButton.addEventListener('click', async () => {
         const fullName = document.getElementById('fullName').value;
         const birthDate = document.getElementById('birthDate').value;
+        const gender = document.getElementById('gender').value;
+        const skillLevel = document.getElementById('skillLevel').value;
+        const playStyle = document.getElementById('playStyle').value;
         const email = document.getElementById('email').value;
         const address = document.getElementById('address').value;
 
@@ -177,6 +159,15 @@ saveButtons.forEach(saveButton => {
         if (birthDate) {
             updateData.NgaySinh = birthDate;
         }
+        if (gender) {
+            updateData.GioiTinh = gender;
+        }
+        if (skillLevel) {
+            updateData.TrinhDo = skillLevel;
+        }
+        if (playStyle) {
+            updateData.PhongCach = playStyle;
+        }
         if (email) {
             updateData.Email = email;
         }
@@ -184,32 +175,51 @@ saveButtons.forEach(saveButton => {
             updateData.DiaChi = address;
         }
 
-       
         try {
             const userQuerySnapshot = await db.collection("nguoidung")
                 .where("IDNguoiDung", "==", userUid)
                 .get();
-        
+
             if (userQuerySnapshot.empty) {
                 console.log(" Không tìm thấy tài liệu!");
             } else {
                 userQuerySnapshot.forEach(async (doc) => {
-                    await doc.ref.update({
-                        HoTen: fullName,
-                        NgaySinh: birthDate,
-                        Email: email,
-                        DiaChi: address
-                    });
+                    const docData = doc.data(); // Lấy dữ liệu hiện tại của document
+
+                    // Kiểm tra và thêm các trường nếu chúng chưa tồn tại
+                    if (fullName && !docData.HoTen) {
+                        updateData.HoTen = fullName;
+                    }
+                    if (birthDate && !docData.NgaySinh) {
+                        updateData.NgaySinh = birthDate;
+                    }
+                    if (gender && !docData.GioiTinh) {
+                        updateData.GioiTinh = gender;
+                    }
+                    if (skillLevel && !docData.TrinhDo) {
+                        updateData.TrinhDo = skillLevel;
+                    }
+                    if (playStyle && !docData.PhongCach) {
+                        updateData.PhongCach = playStyle;
+                    }
+                    if (email && !docData.Email) {
+                        updateData.Email = email;
+                    }
+                    if (address && !docData.DiaChi) {
+                        updateData.DiaChi = address;
+                    }
+
+                    await doc.ref.update(updateData); // Cập nhật document với dữ liệu đã kiểm tra
                 });
                 console.log("✅ Cập nhật thành công!");
             }
-        
-            getUserData(userUid)
+
+            getUserData(userUid);
         } catch (error) {
             console.error('Lỗi khi cập nhật thông tin:', error);
             alert('Có lỗi xảy ra khi cập nhật thông tin.');
         }
-       
+
     });
 });
 
