@@ -76,7 +76,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 SDT: sdt,
                 DiaChi: diaChi,
                 IDNguoiDung: newId,
-                NgayTao: new Date()
+                NgayTao: new Date(),
+                role:"user"
             });
 
             alert("Đăng ký thành công!");
