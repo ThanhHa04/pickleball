@@ -12,13 +12,32 @@ body {
 
 .container {
     max-width: 1500px;
+    background: linear-gradient(to bottom, #EAF8E6, #C8E6C9);
     margin: auto;
-    background: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
+h1#tensan {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    color: #2c3e50;
+    padding: 1%;
+    width: 15%;
+    border: 1px solid rgb(108, 224, 108);
+    text-transform: uppercase;
 
+    /* 🟢 Tạo hiệu ứng nổi */
+    background: #cbf7d1;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2), 
+                -5px -5px 10px rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+}
+
+#diachi{
+    padding-bottom:1%;
+}
 h1 {
     font-size: 24px;
     margin-bottom: 10px;
@@ -66,13 +85,13 @@ h1 {
 }
 
 .info-card h3 {
-    margin-bottom: 10px;
-    font-size: 18px;
+    margin-bottom: 15px;
+    font-size:20px;
 }
 
 .info-card p {
-    font-size: 14px;
-    margin-bottom: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
 }
 
 .back-btn {

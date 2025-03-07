@@ -177,11 +177,17 @@ function manageProfile() {
     alert("Quản lý thông tin cá nhân");
 }
 
+function isRunningOnLiveServer() {
+    return window.location.origin.includes("127.0.0.1:5500");
+}
 function logout() {
     if (confirm("Bạn chắc chắn muốn đăng xuất?")) {
-        localStorage.removeItem("userInfo"); 
-        sessionStorage.removeItem("userInfo");
-        window.location.href = "login.html"; 
+        localStorage.clear();
+        sessionStorage.clear();
+
+        setTimeout(() => {
+            window.location.href = isRunningOnLiveServer() ? "/html_file/login.html" : "login.html";
+        }, 100); // Đợi 100ms để đảm bảo localStorage đã được xóa
     }
 }
 
@@ -234,5 +240,21 @@ async function loadPickleballData() {
         console.error("🚨 Lỗi khi tải dữ liệu:", error);
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const elements = document.querySelectorAll(".ql-images, .tk-images,.intro-content, .intro-image,.cards .card");
+
+    function checkScroll() {
+        const triggerBottom = window.innerHeight * 0.9;
+        elements.forEach(el => {
+            if (el.getBoundingClientRect().top < triggerBottom) {
+                el.classList.add("show");
+            }
+        });
+    }
+    window.addEventListener("scroll", checkScroll);
+    checkScroll();
+});
+
 
 document.addEventListener("DOMContentLoaded", loadPickleballData);

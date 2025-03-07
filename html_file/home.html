@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/toastr@latest/toastr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="https://unpkg.com/toastr@latest/build/toastr.min.css">
-    <meta http-equiv="Content-Security-Policy"content="default-src 'self' https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://fonts.googleapis.com; connect-src 'self' http://localhost:3000 https://nominatim.openstreetmap.org ; img-src * data:font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;;">
+    <meta http-equiv="Content-Security-Policy"content="default-src 'self' https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://fonts.googleapis.com; connect-src 'self' http://localhost:3000 https://nominatim.openstreetmap.org ; img-src * data:; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com;">
     <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -35,8 +35,8 @@
                         <span id="user-name-text" onclick="toggleUserDropdown(event)">User</span>
                         <div id="user-dropdown" class="user-dropdown" style="display: none;">
                             <ul>
-                                <li><a href="/html_file/profile.html" >Quản lý thông tin cá nhân</a></li>
-                                <li id="logouLink"><a href="/html_file/Login.html" onclick="logout()">Đăng xuất</a></li>
+                                <li><a href="profile.html" >Quản lý thông tin cá nhân</a></li>
+                                <li id="logouLink"><a href="Login.html" onclick="logout()">Đăng xuất</a></li>
                             </ul>
                         </div>
                     </li>
@@ -47,11 +47,11 @@
             <div class="below-top">
                 <a href="javascript:void(0);" onclick="showContent('home', this)"><i class='bx bxs-home'></i></a>
                 <a href="javascript:void(0);" onclick="showContent('list-courts', this)">Danh sách sân</a>
+                <a href="javascript:void(0);" onclick="showContent('membership', this)">Gói hội viên</a>
                 <a href="javascript:void(0);" onclick="showContent('appointments', this)">Quản lý lịch hẹn</a>
                 <a href="javascript:void(0);" onclick="showContent('history', this)">Lịch sử giao dịch</a>
-                <a href="javascript:void(0);" onclick="showContent('membership', this)" class="user-only">Gói hội viên</a>
-                <a href="javascript:void(0);" onclick="showContent('manage-users', this)" class="admin-only">Quản lý người dùng</a>
-                <a href="javascript:void(0);" onclick="showContent('statistics', this)" class="admin-only">Thống kê</a>
+                <a href="javascript:void(0);" onclick="showContent('manage-users', this)">Quản lý người dùng</a>
+                <a href="javascript:void(0);" onclick="showContent('statistics', this)">Thống kê</a>
                 <a href="javascript:void(0);" onclick="showContent('map', this)">Map</a>
             </div>            
         </div>

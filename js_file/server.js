@@ -15,7 +15,6 @@ app.use(express.static(path.resolve(__dirname, '../html_file')));
 
 
 const { FieldValue } = admin.firestore;
-// Kết nối Firebase
 const serviceAccount = require('../firebase-config.json');
 
 admin.initializeApp({
@@ -137,21 +136,6 @@ app.get('/locations/:id', async (req, res) => {
         res.json(foundLocation);
     } catch (err) {
         res.status(500).json({ error: 'Lỗi server' });
-    }
-});
-
-app.get("/san/:id", async (req, res) => {
-    try {
-        const courtId = req.params.id;
-
-        const snapshot = await db.collection("san").where("IDSan", "==", courtId).get();
-        if (snapshot.empty) {
-            return res.status(404).json({ message: "Không tìm thấy sân." });
-        }
-        const court = snapshot.docs[0];
-        res.json({ id: court.id, ...court.data() });
-    } catch (err) {
-        res.status(500).json({ error: "Lỗi server" });
     }
 });
 

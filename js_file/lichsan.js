@@ -1,7 +1,7 @@
 const { initializeApp } = require("firebase/app");
-const { getFirestore, collection, doc, setDoc, deleteDoc } = require("firebase/firestore");
+const { getFirestore, collection, doc, setDoc, deleteDoc, getDocs } = require("firebase/firestore"); // 🔹 Thêm getDocs để lấy danh sách tài liệu
 
-// Cấu hình Firebase (Thay thông tin của bạn vào đây)
+// 🔹 Cấu hình Firebase (Thông tin cần được bảo mật khi triển khai thực tế)
 const firebaseConfig = {
     apiKey: "AIzaSyATp-eu8CBatLs04mHpZS4c66FaYw5zLgk",
     authDomain: "pka-pickleball.firebaseapp.com",
@@ -12,11 +12,11 @@ const firebaseConfig = {
     measurementId: "G-0YQ7GKJKRC"
 };
 
-// Khởi tạo Firebase
+// 🔹 Khởi tạo Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Hàm tạo lịch sân
+// 🔹 Hàm tạo lịch sân
 async function createLichSan() {
     try {
         const danhSachSan = Array.from({ length: 16 }, (_, i) => `S${(i + 1).toString().padStart(2, "0")}`);
@@ -32,7 +32,9 @@ async function createLichSan() {
                     let gioBatDau = `${hour.toString().padStart(2, "0")}:00`;
                     let gioKetThuc = `${(hour + 1).toString().padStart(2, "0")}:00`;
 
-                    let docRef = doc(db, "lichsan", `${san}_${ngayDatStr}_${gioBatDau}`);
+                    let idLich = `${san}_${ngayDatStr}_${gioBatDau}`; // 🔹 Đảm bảo ID đúng format
+                    let docRef = doc(db, "lichsan", idLich);
+
                     await setDoc(docRef, {
                         IDSan: san,
                         NgayDat: ngayDatStr,
@@ -43,24 +45,26 @@ async function createLichSan() {
                 }
             }
         }
+        console.log("✅ Lịch sân đã được tạo thành công!"); // 🔹 Thêm log xác nhận
     } catch (error) {
         console.error("❌ Lỗi khi tạo lịch sân:", error);
     }
 }
 
-// Xóa toàn bộ lịch cũ trước khi tạo mới
+// 🔹 Xóa toàn bộ lịch cũ trước khi tạo mới
 async function resetLichSan() {
     try {
         console.log("🗑️ Đang xóa dữ liệu cũ...");
-        const querySnapshot = await getDocs(collection(db, "lichsan"));
-        querySnapshot.forEach(async (doc) => {
-            await deleteDoc(doc.ref);
-        });
+        const querySnapshot = await getDocs(collection(db, "lichsan")); // 🔹 Lấy danh sách tài liệu hiện có
+        for (let document of querySnapshot.docs) {
+            await deleteDoc(document.ref);
+        }
+        console.log("✅ Dữ liệu cũ đã bị xóa!"); // 🔹 Thêm log xác nhận
         await createLichSan();
     } catch (error) {
         console.error("❌ Lỗi khi xóa dữ liệu cũ:", error);
     }
 }
 
-// Chạy script
+// 🔹 Chạy script
 createLichSan();
