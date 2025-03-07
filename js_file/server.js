@@ -157,6 +157,30 @@ app.get('/lich/:IDSan', async (req, res) => {
     }
 });
 
+app.get('/nguoidung/:userId', async (req, res) => {
+    const { userId } = req.params;  
+
+    try {
+        const snapshot = await db.collection('nguoidung')
+            .where("IDNguoiDung", "==", userId)
+            .get();
+
+        if (snapshot.empty) {
+            return res.status(404).json({ error: "Không tìm thấy người dùng" });
+        }
+
+        let userData = {};
+        snapshot.forEach(doc => {
+            userData = { id: doc.id, ...doc.data() };
+        });
+
+        res.json(userData);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
 const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",

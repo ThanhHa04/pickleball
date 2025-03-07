@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
             let currentPage = 1;
             const itemsPerPage = 8;
             let locations = {};
-
             function getLocationName(locationId) {
                 if (locations[locationId]) {
                     return Promise.resolve(locations[locationId]);
@@ -135,6 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 function getPath(filename) {
+<<<<<<< HEAD
     const isLocalhost = window.location.hostname === "localhost" || 
                         window.location.hostname === "127.0.0.1";
     
@@ -142,4 +142,8 @@ function getPath(filename) {
         return `/html_file/${filename}`; // Đường dẫn khi chạy cục bộ (localhost)
     }
     return `/${filename}`; // Đường dẫn khi chạy trên môi trường live
+=======
+    const isLiveServer = window.location.origin.includes("127.0.0.1:5501"); // Kiểm tra Live Server
+    return isLiveServer ? `/html_file/${filename}` : `/${filename}`;
+>>>>>>> Yoo
 }
