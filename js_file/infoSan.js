@@ -5,45 +5,68 @@ document.addEventListener("DOMContentLoaded", function () {
   const idSan = urlParams.get("idSan");
 
   if (!idSan) {
-      document.querySelector(".container").innerHTML = "<p>Không tìm thấy ID sân trong URL!</p>";
-      console.error("❌ Không tìm thấy idSan trong URL.");
-      return;
+    document.querySelector(".container").innerHTML = "<p>Không tìm thấy ID sân trong URL!</p>";
+    console.error("❌ Không tìm thấy idSan trong URL.");
+    return;
   }
 
-  const fetchChiTietSan = fetch(`http://localhost:3000/chitietsan/${idSan}`).then(res => res.json());
+  // Truy vấn thông tin sân để lấy location_id
   const fetchSan = fetch(`http://localhost:3000/san/${idSan}`).then(res => res.json());
 
-  Promise.all([fetchChiTietSan, fetchSan])
-      .then(([dataChiTiet, dataSan]) => {
+  fetchSan
+    .then(dataSan => {
+      if (!dataSan || !dataSan.location_id) {
+        document.querySelector(".container").innerHTML = "<p>Không tìm thấy location_id cho sân.</p>";
+        console.error("❌ Không tìm thấy location_id.");
+        return;
+      }
+
+      // Sau khi có location_id, tiếp tục gọi API để lấy thông tin địa điểm
+      const location_id = dataSan.location_id;
+      const fetchLocation = fetch(`http://localhost:3000/locations/${location_id}`).then(res => res.json());
+
+      // Tiến hành xử lý dữ liệu
+      const fetchChiTietSan = fetch(`http://localhost:3000/chitietsan/${idSan}`).then(res => res.json());
+
+      Promise.all([fetchChiTietSan, fetchSan, fetchLocation])
+        .then(([dataChiTiet, dataSan, dataLocation]) => { // 🔹 Sửa 'fetchLocation' thành 'dataLocation' để đúng logic.
           if (!dataChiTiet || !dataChiTiet.IDSan) {
-              document.querySelector(".container").innerHTML = "<p>Không có thông tin chi tiết sân.</p>";
-              return;
+            document.querySelector(".container").innerHTML = "<p>Không có thông tin chi tiết sân.</p>";
+            return;
           }
           if (!dataSan) {
-              document.querySelector(".container").innerHTML = "<p>Không có dữ liệu sân từ API /san.</p>";
-              return;
+            document.querySelector(".container").innerHTML = "<p>Không có dữ liệu sân từ API /san.</p>";
+            return;
           }
           setTextContent("tensan", dataSan.TenSan);
+          setTextContent("diachi", dataLocation.address);
           setTextContent("mota", dataChiTiet.MoTa);
           setTextContent("gioHoatDong", dataChiTiet.GioHoatDong);
           setTextContent("giaSan", dataSan.GiaThue ? `${formatCurrency(dataSan.GiaThue)} đ` : "Không có");
           setTextContent("loaiSan", dataSan.MoTa);
+          
           let galleryHtml = "";
           if (dataSan.HinhAnh && typeof dataSan.HinhAnh === "string") {
-              galleryHtml = `<img src="${dataSan.HinhAnh}" alt="Hình ảnh sân">`;
+            galleryHtml = `<img src="${dataSan.HinhAnh}" alt="Hình ảnh sân">`;
           } else if (Array.isArray(dataSan.HinhAnh) && dataSan.HinhAnh.length > 0) {
-              galleryHtml = dataSan.HinhAnh.map(img => `<img src="${img}" alt="Hình ảnh sân">`).join("");
+            galleryHtml = dataSan.HinhAnh.map(img => `<img src="${img}" alt="Hình ảnh sân">`).join("");
           } else {
-              galleryHtml = "<p>Không có hình ảnh.</p>";
+            galleryHtml = "<p>Không có hình ảnh.</p>";
           }
           document.getElementById("hinhAnh").innerHTML = galleryHtml;
           loadSchedule(idSan);
-      })
-      .catch(error => {
+        })
+        .catch(error => {
           console.error("❌ Lỗi khi lấy thông tin sân:", error);
           document.querySelector(".container").innerHTML = "<p>Lỗi khi lấy thông tin sân.</p>";
-      });
+        });
+    })
+    .catch(error => {
+      console.error("❌ Lỗi khi lấy dữ liệu sân:", error);
+    });
 });
+
+
 
 async function loadSchedule(idSan) {
   console.log("🔄 Đang tải lịch...");
@@ -53,7 +76,7 @@ async function loadSchedule(idSan) {
 
     const data = await response.json();
     const schedule = organizeSchedule(data);
-    const dateList = generateDateList(Object.keys(schedule)[0], 3);
+    const dateList = generateDateList(Object.keys(schedule)[0] || new Date().toISOString().split("T")[0], 3); // 🔹 Fix lỗi khi schedule rỗng.
     renderSchedule(dateList, schedule);
   } catch (error) {
     console.error("⚠️ Lỗi tải lịch:", error);
@@ -73,59 +96,42 @@ function renderSchedule(dateList, schedule) {
   tbody.innerHTML = "";
   const now = new Date();
   const currentHour = now.getHours();
-for (let h = 6; h <= 21; h++) {
+  
+  for (let h = 6; h <= 21; h++) {
     const hourStr = `${h < 10 ? "0" + h : h}:00`;
     const tr = document.createElement("tr");
     tr.innerHTML = `<td class="hour-col">${hourStr}</td>`;
 
     dateList.forEach(date => {
-        const slot = schedule[date]?.[hourStr];
-        const slotTime = new Date(date + "T" + hourStr + ":00"); 
+      const slot = schedule[date]?.[hourStr];
+      const slotTime = new Date(`${date}T${hourStr}:00`);
 
-        let cellContent = `<span class="empty-slot">-</span>`;
-        let cellClass = "";
+      let cellContent = `<span class="empty-slot">-</span>`;
+      let cellClass = "";
 
-        tbody.innerHTML = "";
-  const now = new Date();
-  const currentHour = now.getHours();
-for (let h = 6; h <= 21; h++) {
-    const hourStr = `${h < 10 ? "0" + h : h}:00`;
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td class="hour-col">${hourStr}</td>`;
+      if (slot) {
+        if (slot.TrangThai === "Còn trống" && slotTime > now) {
+          cellContent = `<label class="available-slot">
+                          <input type="checkbox" class="booking-checkbox"
+                          data-date="${date}" data-hour="${hourStr}"
+                          data-san="${slot.IDSan}"
+                          value="${formatCurrency(slot.Gia)} đ">
+                        </label>`;
+          cellClass = "highlight";
+        } else if (slotTime <= now) {
+          cellContent = `<span class="past-slot">Hết hạn</span>`;
+          cellClass = "disabled-slot";
+        } else {
+          cellContent = `<span class="booked-slot">(${slot.TrangThai})</span>`;
+        }
+      }
 
-    dateList.forEach(date => {
-        const slot = schedule[date]?.[hourStr];
-        const slotTime = new Date(date + "T" + hourStr + ":00"); 
-
-        let cellContent = `<span class="empty-slot">-</span>`;
-        let cellClass = "";
-
-        if (slot) {
-            if (slot.TrangThai === "Còn trống" && slotTime > now) {
-                cellContent = `<label class="available-slot">
-                                <input type="checkbox" class="booking-checkbox"
-                                 data-date="${date}" data-hour="${hourStr}"
-                                 data-san="${slot.IDSan}"
-                                 value="${formatCurrency(slot.Gia)}đ">
-                              </label>`;
-                cellClass = "highlight"; // Màu xanh nhạt
-            } else if (slotTime <= now) {
-                cellContent = `<span class="past-slot">Hết hạn</span>`; // Đánh dấu hết hạn
-                cellClass = "disabled-slot"; // Màu xám
-            } else {
-                cellContent = `<span class="booked-slot">(${slot.TrangThai})</span>`;
-            }
-         }    
-        tr.innerHTML += `<td class="${cellClass}">${cellContent}</td>`;
-    });
-    tbody.appendChild(tr);
-  }
-        
-        tr.innerHTML += `<td class="${cellClass}">${cellContent}</td>`;
+      tr.innerHTML += `<td class="${cellClass}">${cellContent}</td>`;
     });
     tbody.appendChild(tr);
   }
 }
+
 // 🌟 Format tiền theo chuẩn Việt Nam
 function formatCurrency(amount) {
   return parseFloat(amount).toLocaleString("vi-VN");

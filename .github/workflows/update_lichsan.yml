@@ -2,7 +2,7 @@ name: Update Firebase Lichsan
 
 on:
   schedule:
-    - cron: '14 4 * * *'  # Mỗi ngày vào lúc 04:14 UTC (chú ý múi giờ)
+    - cron: '0 0 * * *'  # Mỗi ngày vào lúc 04:14 UTC (chú ý múi giờ)
   workflow_dispatch: # Cho phép chạy thủ công
 
 jobs:

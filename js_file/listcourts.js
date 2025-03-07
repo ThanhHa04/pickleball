@@ -133,9 +133,13 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error('Lỗi khi lấy dữ liệu sân:', error));
 });
 
+
 function getPath(filename) {
-    if (window.location.origin.includes("127.0.0.1:5500")) {
-        return `/html_file/${filename}`; 
+    const isLocalhost = window.location.hostname === "localhost" || 
+                        window.location.hostname === "127.0.0.1";
+    
+    if (isLocalhost) {
+        return `/html_file/${filename}`; // Đường dẫn khi chạy cục bộ (localhost)
     }
-    return `/${filename}`;
+    return `/${filename}`; // Đường dẫn khi chạy trên môi trường live
 }
