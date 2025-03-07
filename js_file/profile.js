@@ -80,7 +80,7 @@ async function getUserData(userId) {
         
         let userData;
             userQuery.forEach(doc => {
-             userData = doc.data();
+                userData = doc.data();
             });
 
             // Điền thông tin vào form
@@ -231,3 +231,55 @@ saveButtons.forEach(saveButton => {
     });
 });
 
+
+const savePassWord = document.querySelector('.pw-save-btn');
+
+savePassWord.addEventListener('click', async () => {
+
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+
+    const updateData = {};
+
+        if (confirmPassword == newPassword) {
+            updateData.MatKhau = newPassword;
+        }
+        else {
+            alert('Mật khẩu không khớp!');
+            return;
+        }
+
+        try {
+            const userQuerySnapshot = await db.collection("nguoidung")
+                .where("IDNguoiDung", "==", userUid)
+                .get();
+
+                if (userQuerySnapshot.empty) {
+                    console.log(" Không tìm thấy tài liệu!");
+                } else {
+                    userQuerySnapshot.forEach(async (doc) => {
+                        const docData = doc.data(); // Lấy dữ liệu hiện tại của document
+
+                        if (currentPassword != docData.MatKhau) {
+                            alert('Mật khẩu hiện tại không đúng!');
+                            return;
+                        }
+                        if (newPassword == currentPassword) {
+                            alert('Mật khẩu mới không được trùng với mật khẩu hiện tại!');
+                            return;
+                        }
+                        else {
+                            updateData.MatKhau = newPassword;
+                            await doc.ref.update(updateData);
+                            alert('Đã cập nhật mật khẩu thành công!');
+                        }
+                    });
+                }
+        }
+        catch (error) {
+            console.error('Lỗi khi cập nhật mật khẩu:', error);
+            alert('Có lỗi xảy ra khi cập nhật mật khẩu.');
+        }
+});
