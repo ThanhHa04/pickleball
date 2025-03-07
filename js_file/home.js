@@ -8,7 +8,7 @@ console.log("User Role:", userRole);
 
 const allowedPages = {
     user: ["home", "list-courts", "appointments", "history", "membership", "map"],
-    admin: ["home", "list-courts", "appointments", "manage-users", "statistics", "map"]
+    admin: ["home", "appointments", "manage-users", "statistics", "map"]
 };
 
 // Ẩn/hiện menu theo vai trò
@@ -177,17 +177,11 @@ function manageProfile() {
     alert("Quản lý thông tin cá nhân");
 }
 
-function isRunningOnLiveServer() {
-    return window.location.origin.includes("127.0.0.1:5500");
-}
 function logout() {
     if (confirm("Bạn chắc chắn muốn đăng xuất?")) {
-        localStorage.clear();
-        sessionStorage.clear();
-
-        setTimeout(() => {
-            window.location.href = isRunningOnLiveServer() ? "/html_file/login.html" : "login.html";
-        }, 100); // Đợi 100ms để đảm bảo localStorage đã được xóa
+        localStorage.removeItem("userInfo"); 
+        sessionStorage.removeItem("userInfo");
+        window.location.href = "login.html"; 
     }
 }
 
