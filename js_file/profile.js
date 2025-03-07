@@ -151,11 +151,15 @@ saveButtons.forEach(saveButton => {
         const playStyle = document.getElementById('playStyle').value;
         const email = document.getElementById('email').value;
         const address = document.getElementById('address').value;
+        const phone = document.getElementById('phone').value;
 
         const updateData = {};
 
         if (fullName) {
             updateData.HoTen = fullName;
+        }
+        if (phone) {
+            updateData.SDT = phone;
         }
         if (avatar) {
             updateData.Avt = avatar;
@@ -193,6 +197,9 @@ saveButtons.forEach(saveButton => {
                     // Kiểm tra và thêm các trường nếu chúng chưa tồn tại
                     if (avatar && !docData.Avt) {
                         updateData.Avt = avatar;
+                    }
+                    if ( phone && !docData.SDT) {
+                        updateData.SDT = phone;
                     }
                     if (fullName && !docData.HoTen) {
                         updateData.HoTen = fullName;
