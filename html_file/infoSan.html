@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <title>Chi tiết sân bóng</title>
   <link rel="stylesheet" href="../css_file/infoSan.css">
 </head>
@@ -41,13 +42,24 @@
       <div class="booking-info">
         <h2>Thông tin đặt sân</h2>
         <div id="selected-fields"></div>
-        <p><strong>Tổng giá:</strong> <span id="total-price">0</span> đ</p>
-        <label for="payment-method">Phương thức thanh toán:</label>
-        <select id="payment-method">
-          <option value="cash">Tiền mặt</option>
-          <option value="bank">Chuyển khoản</option>
-          <option value="momo">MoMo</option>
-        </select>
+          <div class="paid">    
+            <div class="method">
+              <label for="payment-method">Phương thức thanh toán:</label>
+              <select id="payment-method">
+                <option value="cash">Tiền mặt</option>
+                <option value="bank">Chuyển khoản</option>
+                <option value="momo">MoMo</option>
+              </select>
+            </div>
+            <div class="mat-tien">
+              <p><span id="total-price">0</span></p>
+              <button class="pay-btn" id="pay-btn">Thanh toán</button>
+            </div>
+          </div>            
+          <div id="qr-form" style="display: none;">
+            <h3>Quét mã QR để thanh toán</h3>
+            <div id="qrcode"></div>
+          </div>       
       </div>
       <div class="schedule-container">
         <h2>Lịch đặt sân</h2>
@@ -55,11 +67,9 @@
           <thead>
             <tr>
               <th>Giờ</th>
-              <!-- Các cột ngày sẽ được tạo động bằng JavaScript -->
             </tr>
           </thead>
           <tbody>
-            <!-- Các hàng dữ liệu lịch sẽ được tạo động bằng JavaScript -->
           </tbody>
         </table>
       </div>

@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
   console.log("✅ DOM đã sẵn sàng!");
 
@@ -44,6 +45,20 @@ document.addEventListener("DOMContentLoaded", function () {
           document.querySelector(".container").innerHTML = "<p>Lỗi khi lấy thông tin sân.</p>";
       });
 });
+
+async function getUserInfo(userId) {
+  try {
+    const response = await fetch(`http://localhost:3000/nguoidung/${userId}`);
+    if (!response.ok) {
+      throw new Error("Lỗi khi lấy thông tin người dùng");
+    }
+    const userData = await response.json();
+    return userData;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
 
 async function loadSchedule(idSan) {
   console.log("🔄 Đang tải lịch...");
@@ -151,7 +166,6 @@ function setTextContent(id, value) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Lắng nghe sự kiện tick vào checkbox
   document.addEventListener("change", function (event) {
       if (event.target.classList.contains("booking-checkbox")) {
           updateBookingInfo();
@@ -159,9 +173,37 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-function updateBookingInfo() {
+async function getUserInfo(userId) {
+  try {
+      const response = await fetch(`http://localhost:3000/nguoidung/${userId}`);
+      const data = await response.json();
+
+      if (response.ok) {
+          return data;
+      } else {
+          throw new Error(data.error || "Lỗi không xác định");
+      }
+  } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+      return null;
+  }
+}
+
+
+async function updateBookingInfo() {
   const selectedFields = document.getElementById("selected-fields");
   const totalPriceElement = document.getElementById("total-price");
+  const userId = localStorage.getItem("userId");
+  if (userId) {
+    getUserInfo(userId).then(userInfo => {
+      if (userInfo) {
+        console.log("Thông tin người dùng:", userInfo);
+      }
+    });
+  }
+  const userInfo = await getUserInfo(userId);
+  if (!userInfo) return;
+
   let total = 0;
   selectedFields.innerHTML = "";
 
@@ -169,15 +211,68 @@ function updateBookingInfo() {
       const date = checkbox.getAttribute("data-date");
       const hour = checkbox.getAttribute("data-hour");
       const price = parseInt(checkbox.value.replace(/\D/g, ""));
-
       total += price;
 
-      const fieldInfo = document.createElement("p");
-      fieldInfo.textContent = `Ngày: ${date} - Giờ: ${hour} - Giá: ${formatCurrency(price)}đ`;
+      const fieldInfo = document.createElement("div");
+      fieldInfo.classList.add("personal-info");
+      fieldInfo.innerHTML = `
+        <div class="info-container">
+            <div class="left-column">
+                <p><strong>Ngày:</strong> ${date}</p>
+                <p><strong>Giờ:</strong> ${hour}</p>
+                <p><strong>Giá:</strong> ${formatCurrency(price)}đ</p>
+            </div>
+            <div class="right-column">
+                <p><strong>Người đặt:</strong> ${userInfo.HoTen}</p>
+                <p><strong>Email:</strong> ${userInfo.Email}</p>
+                <p><strong>SĐT:</strong> ${userInfo.SDT}</p>
+            </div>
+        </div>
+      `;
       selectedFields.appendChild(fieldInfo);
   });
+  totalPriceElement.textContent = `Tổng giá: ${formatCurrency(total)}đ`;
+}
 
-  totalPriceElement.textContent = formatCurrency(total);
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("pay-btn").addEventListener("click", function() {
+        let paymentMethod = document.getElementById("payment-method").value;
+        let qrForm = document.getElementById("qr-form");
+
+        if (paymentMethod === "bank") {
+            qrForm.style.display = "block"; // Hiện mã QR khi chọn chuyển khoản
+        } else {
+            qrForm.style.display = "none"; // Ẩn nếu chọn phương thức khác
+        }
+    });
+});
+
+function generateQRCode() {
+  let qrContainer = document.getElementById("qrcode");
+  qrContainer.innerHTML = ""; // Xóa mã QR cũ
+
+  let totalAmount = document.getElementById("total-price").innerText.trim() || "100000"; // Giá mặc định
+  let accountNumber = "0123456789"; // STK
+  let accountName = "TRAN HA"; // Chủ tài khoản
+  let bankCode = "VCB"; // Vietcombank
+
+  // 🔥 Tạo dữ liệu QR theo chuẩn Napas
+  let qrData = `00020101021238560010A00000072701240006970407${bankCode}0110${accountNumber}0210${accountName}530370454054${totalAmount}6304`;
+
+  console.log("QR Length:", qrData.length); // Debug độ dài
+
+  if (qrData.length > 990) {
+      console.error("❌ Dữ liệu QR quá dài! Rút gọn...");
+      qrData = qrData.substring(0, 988); // Cắt ngắn nếu cần
+  }
+
+  // 🔹 Tạo mã QR với sửa lỗi thấp
+  new QRCode(qrContainer, {
+      text: qrData,
+      width: 180,
+      height: 180,
+      correctLevel: QRCode.CorrectLevel.L // Giảm sửa lỗi xuống mức L
+  });
 }
 
 
