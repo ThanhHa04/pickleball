@@ -150,6 +150,37 @@ function setTextContent(id, value) {
   }
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+  // Lắng nghe sự kiện tick vào checkbox
+  document.addEventListener("change", function (event) {
+      if (event.target.classList.contains("booking-checkbox")) {
+          updateBookingInfo();
+      }
+  });
+});
+
+function updateBookingInfo() {
+  const selectedFields = document.getElementById("selected-fields");
+  const totalPriceElement = document.getElementById("total-price");
+  let total = 0;
+  selectedFields.innerHTML = "";
+
+  document.querySelectorAll(".booking-checkbox:checked").forEach(checkbox => {
+      const date = checkbox.getAttribute("data-date");
+      const hour = checkbox.getAttribute("data-hour");
+      const price = parseInt(checkbox.value.replace(/\D/g, ""));
+
+      total += price;
+
+      const fieldInfo = document.createElement("p");
+      fieldInfo.textContent = `Ngày: ${date} - Giờ: ${hour} - Giá: ${formatCurrency(price)}đ`;
+      selectedFields.appendChild(fieldInfo);
+  });
+
+  totalPriceElement.textContent = formatCurrency(total);
+}
+
+
 // 📅 Tạo danh sách ngày từ ngày bắt đầu
 function generateDateList(startDateStr, daysCount) {
   const result = [];

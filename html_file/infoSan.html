@@ -37,19 +37,32 @@
       </div>
     </div>
     <!-- Phần lịch đặt sân -->
-    <div class="schedule-container">
-      <h2>Lịch đặt sân</h2>
-      <table id="scheduleTable">
-        <thead>
-          <tr>
-            <th>Giờ</th>
-            <!-- Các cột ngày sẽ được tạo động bằng JavaScript -->
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Các hàng dữ liệu lịch sẽ được tạo động bằng JavaScript -->
-        </tbody>
-      </table>
+     <div class="small-container">
+      <div class="booking-info">
+        <h2>Thông tin đặt sân</h2>
+        <div id="selected-fields"></div>
+        <p><strong>Tổng giá:</strong> <span id="total-price">0</span> đ</p>
+        <label for="payment-method">Phương thức thanh toán:</label>
+        <select id="payment-method">
+          <option value="cash">Tiền mặt</option>
+          <option value="bank">Chuyển khoản</option>
+          <option value="momo">MoMo</option>
+        </select>
+      </div>
+      <div class="schedule-container">
+        <h2>Lịch đặt sân</h2>
+        <table id="scheduleTable">
+          <thead>
+            <tr>
+              <th>Giờ</th>
+              <!-- Các cột ngày sẽ được tạo động bằng JavaScript -->
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Các hàng dữ liệu lịch sẽ được tạo động bằng JavaScript -->
+          </tbody>
+        </table>
+      </div>
     </div>
     <a href="javascript:window.history.back()" class="back-btn">Trở lại</a>
   </div>
