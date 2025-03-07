@@ -27,6 +27,7 @@ h1#tensan {
     width: 15%;
     border: 1px solid rgb(108, 224, 108);
     text-transform: uppercase;
+<<<<<<< HEAD
 
     /* 🟢 Tạo hiệu ứng nổi */
     background: #cbf7d1;
@@ -35,6 +36,14 @@ h1#tensan {
     border-radius: 10px;
 }
 
+=======
+    background: #cbf7d1;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2), 
+                -5px -5px 10px rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+}
+
+>>>>>>> Yoo
 #diachi{
     padding-bottom:1%;
 }
@@ -56,32 +65,47 @@ h1 {
     padding: 1% 0%;
 }
 .gallery {
-    gap: 10px;
-    width:50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    padding: 0px 20px;
+    width:40%;
 }
 
 .gallery img {
-    width:100%;
+    width: 100%;
+    border-radius: 10px;
     object-fit: cover;
-    border-radius: 5px;
 }
+
 .info-left{
     display: flex;
 
 }
 .info-box {
-    width:48%;
-    height:100%;
+    width:58%;
+    height:90%;
     gap:20px;
 }
 
 .info-card {
     background: #fff;
-    padding: 5%;
+    padding: 3%;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
-    margin-bottom: 20px;
+}
+
+.info-card {
+    background: #fff;
+    padding: 3%;
+    margin-bottom:2%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
 }
 
 .info-card h3 {
@@ -107,48 +131,63 @@ h1 {
 .back-btn:hover {
     background: #0056b3;
 }
+.schedule-container h2, .booking-info h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #13560c;
+    text-align: center;
+    text-transform: uppercase;
+    padding: 10px;
+    width:100%;
+    background: linear-gradient(135deg, #dbfbe0, #d1eaff);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    margin-bottom: 0 auto 20px auto;
+    transition: all 0.3s ease-in-out;
+}
 
 .schedule-container {
-    margin-top: 20px;
+    margin: 20px 0px;
     background: #fff;
-    border: 1px solid #ccc;
-    padding: 10px;
-  }
+    width: 58%;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease-in-out;
+}
 
-  .schedule-container h2 {
+.schedule-container h2 {
     text-align: center;
     margin-bottom: 10px;
-  }
+}
 
-  #scheduleTable {
+#scheduleTable {
     width: 100%;
     border-collapse: collapse;
-  }
+}
 
-  #scheduleTable th,
-  #scheduleTable td {
+#scheduleTable th,
+#scheduleTable td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
-  }
+}
 
-  #scheduleTable th {
+#scheduleTable th {
     background-color: #f2f2f2;
-  }
+}
 
-  
-/* 🌟 Tô màu xanh cho các ô trống */
 .highlight {
-  background-color: #c3f7c3; /* Xanh nhạt */
+  background-color: #c3f7c3; 
   border-radius: 5px;
   text-align: center;
 }
 
 .highlight:hover {
-  background-color: #a5e6a5; /* Màu xanh đậm hơn khi hover */
+  background-color: #a5e6a5;
 }
 
-/* 📅 Ô giờ bên trái */
 .hour-col {
     font-weight: bold;
     text-align: center;
@@ -156,7 +195,6 @@ h1 {
     padding: 10px;
 }
 
-/* ✅ Khung đặt sân */
 .available-slot {
     display: flex;
     align-items: center;
@@ -166,7 +204,6 @@ h1 {
     cursor: pointer;
 }
 
-/* 🔲 Checkbox đặt sân */
 .booking-checkbox {
     appearance: none;
     width: 80%;
@@ -184,7 +221,6 @@ h1 {
     justify-content: center;
 }
 
-/* 🏷️ Giá hiển thị bên trong checkbox */
 .booking-checkbox::before {
     content: attr(value);
     display: block;
@@ -193,26 +229,190 @@ h1 {
     color: #008000;
 }
 
-/* 🎯 Hiệu ứng khi chọn */
 .booking-checkbox:checked {
     background-color: #008000;
     color: white;
 }
 
-/* Khi được chọn, giá chuyển thành màu trắng */
 .booking-checkbox:checked::before {
     color: white;
 }
 
-/* 🔴 Ô đã đặt */
 .booked-slot {
     color: red;
     font-weight: bold;
     text-align: center;
 }
 
-/* ⚪ Ô trống */
 .empty-slot {
     color: gray;
     text-align: center;
+}
+
+.small-container{
+    display:flex;
+    justify-content: space-between;
+}
+
+.booking-info {
+    background: #ffffff;
+    padding: 20px;
+    width:40%;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    margin-top: 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+.booking-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f9f9f9;
+    margin-bottom: 5px;
+}
+
+.user-info {
+    text-align: left;
+    flex: 1;
+}
+
+.field-info {
+    text-align: right;
+    flex: 1;
+}
+
+.personal-info{
+    width:100%;
+    font-size: 14px;
+    padding: 1%;
+    background: linear-gradient(135deg, #f5fef4, #e7f8f9);
+    border-left: 5px solid #107020;
+    border-radius: 6px;
+    margin: 2% 0px;
+    transition: transform 0.2s ease-in-out;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    border:0.5px solid rgb(169, 231, 246);
+}
+
+#selected-fields p {
+    font-size: 15px;
+    padding: 5px;
+}
+
+#selected-fields p:hover {
+    transform: scale(1.02);
+    background: linear-gradient(135deg, #b2ebf2, #80deea);
+}
+
+.booking-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+    background: #fff3e0;
+    border-radius: 6px;
+    box-shadow: inset 0 0 10px rgba(255, 183, 77, 0.2);
+}
+
+#total-price {
+    color: #ff5733;
+    font-size: 18px;
+}
+.paid{
+    display: flex;
+    justify-content:space-between;
+    padding:5px;
+}
+.mat-tien {
+    width: 50%;
+    min-height: 50px;
+    align-items: center;
+    text-align: center;
+}
+.mat-tien p{
+    padding:11px 0px 8px 0px;
+}
+.method{
+    min-height: 50px;
+    width:40%;
+    padding-top:10px;
+}
+
+.payment-section label {
+    font-size: 16px;
+    margin: 15px 5px;
+}
+.pay-btn {
+    width: 100%;
+    padding: 11px;
+    background: linear-gradient(135deg, #28a745, #218838);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); 
+    transform: perspective(1px) translateZ(0); 
+}
+
+.pay-btn:hover, .booking-checkbox:hover {
+    transform: scale(1.1) translateY(-1px); 
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); 
+}
+
+.pay-btn:active, .booking-checkbox:active {
+    transform: scale(0.95); 
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#payment-method {
+    width: 85%;
+    padding: 11px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #ffffff;
+    margin-top:10px;
+    transition: all 0.3s ease;
+}
+
+#payment-method:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 8px rgba(0, 122, 255, 0.3);
+}
+
+.info-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.left-column{
+    width: 40%;
+}
+.right-column{
+    width: 60%;
+}
+
+.qr-container {
+    display: none; 
+    text-align: center;
+    margin-top: 15px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.qr-container img {
+    width: 150px;
+    height: auto;
 }
