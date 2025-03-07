@@ -67,9 +67,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-<<<<<<< HEAD
-
-=======
 async function getUserInfo(userId) {
   try {
     const response = await fetch(`http://localhost:3000/nguoidung/${userId}`);
@@ -83,7 +80,6 @@ async function getUserInfo(userId) {
     return null;
   }
 }
->>>>>>> Yoo
 
 async function loadSchedule(idSan) {
   console.log("🔄 Đang tải lịch...");
