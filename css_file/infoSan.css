@@ -38,7 +38,7 @@ h1 {
 }
 .gallery {
     gap: 10px;
-    width:50%;
+    width:40%;
 }
 
 .gallery img {
@@ -51,7 +51,7 @@ h1 {
 
 }
 .info-box {
-    width:48%;
+    width:58%;
     height:100%;
     gap:20px;
 }
@@ -90,46 +90,45 @@ h1 {
 }
 
 .schedule-container {
+    width:58%;
     margin-top: 20px;
     background: #fff;
     border: 1px solid #ccc;
     padding: 10px;
-  }
+}
 
-  .schedule-container h2 {
-    text-align: center;
-    margin-bottom: 10px;
-  }
+.schedule-container h2 {
+text-align: center;
+margin-bottom: 10px;
+}
 
-  #scheduleTable {
-    width: 100%;
-    border-collapse: collapse;
-  }
+#scheduleTable {
+width: 100%;
+border-collapse: collapse;
+}
 
-  #scheduleTable th,
-  #scheduleTable td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-  }
+#scheduleTable th,
+#scheduleTable td {
+border: 1px solid #ddd;
+padding: 5px;
+text-align: center;
+}
 
-  #scheduleTable th {
-    background-color: #f2f2f2;
-  }
+#scheduleTable th {
+background-color: #f2f2f2;
+}
 
-  
-/* 🌟 Tô màu xanh cho các ô trống */
+
 .highlight {
-  background-color: #c3f7c3; /* Xanh nhạt */
+  background-color: #c3f7c3;
   border-radius: 5px;
   text-align: center;
 }
 
 .highlight:hover {
-  background-color: #a5e6a5; /* Màu xanh đậm hơn khi hover */
+  background-color: #a5e6a5; 
 }
 
-/* 📅 Ô giờ bên trái */
 .hour-col {
     font-weight: bold;
     text-align: center;
@@ -137,7 +136,6 @@ h1 {
     padding: 10px;
 }
 
-/* ✅ Khung đặt sân */
 .available-slot {
     display: flex;
     align-items: center;
@@ -147,7 +145,6 @@ h1 {
     cursor: pointer;
 }
 
-/* 🔲 Checkbox đặt sân */
 .booking-checkbox {
     appearance: none;
     width: 80%;
@@ -165,7 +162,6 @@ h1 {
     justify-content: center;
 }
 
-/* 🏷️ Giá hiển thị bên trong checkbox */
 .booking-checkbox::before {
     content: attr(value);
     display: block;
@@ -174,26 +170,112 @@ h1 {
     color: #008000;
 }
 
-/* 🎯 Hiệu ứng khi chọn */
 .booking-checkbox:checked {
     background-color: #008000;
     color: white;
 }
 
-/* Khi được chọn, giá chuyển thành màu trắng */
 .booking-checkbox:checked::before {
     color: white;
 }
 
-/* 🔴 Ô đã đặt */
 .booked-slot {
     color: red;
     font-weight: bold;
     text-align: center;
 }
 
-/* ⚪ Ô trống */
 .empty-slot {
     color: gray;
     text-align: center;
+}
+
+.small-container{
+    display:flex;
+}
+
+.booking-info {
+    background: #ffffff;
+    padding: 20px;
+    width:40%;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    margin-top: 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+.booking-info h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+#selected-fields {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    border-radius: 6px;
+    background: #f5f5f5;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+}
+
+#selected-fields p {
+    font-size: 14px;
+    padding: 10px;
+    background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+    border-left: 4px solid #007aff;
+    border-radius: 6px;
+    margin: 5px 0;
+    transition: transform 0.2s ease-in-out;
+}
+
+#selected-fields p:hover {
+    transform: scale(1.02);
+    background: linear-gradient(135deg, #b2ebf2, #80deea);
+}
+
+.booking-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+    background: #fff3e0;
+    border-radius: 6px;
+    box-shadow: inset 0 0 10px rgba(255, 183, 77, 0.2);
+}
+
+#total-price {
+    color: #ff5733;
+    font-size: 20px;
+}
+
+.payment-section {
+    margin-top: 15px;
+}
+
+.payment-section label {
+    font-size: 16px;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 5px;
+}
+
+#payment-method {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #ffffff;
+    transition: all 0.3s ease;
+}
+
+#payment-method:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 8px rgba(0, 122, 255, 0.3);
 }

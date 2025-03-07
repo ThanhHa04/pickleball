@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
             let currentPage = 1;
             const itemsPerPage = 8;
             let locations = {};
-
             function getLocationName(locationId) {
                 if (locations[locationId]) {
                     return Promise.resolve(locations[locationId]);
@@ -134,8 +133,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function getPath(filename) {
-    if (window.location.origin.includes("127.0.0.1:5500")) {
-        return `/html_file/${filename}`; 
-    }
-    return `/${filename}`;
+    const isLiveServer = window.location.origin.includes("127.0.0.1:5501"); // Kiểm tra Live Server
+    return isLiveServer ? `/html_file/${filename}` : `/${filename}`;
 }

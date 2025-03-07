@@ -68,10 +68,8 @@ window.onload = function () {
 
 
 function getPath(filename) {
-    if (window.location.origin.includes("127.0.0.1:5500")) {
-        return `/html_file/${filename}`; // Live Server (VS Code)
-    }
-    return `/${filename}`; // Node.js (Express)
+    const isLiveServer = window.location.protocol === "file:";
+    return isLiveServer ? `/html_file/${filename}` : `/${filename}`;
 }
 
 
