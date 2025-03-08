@@ -39,60 +39,50 @@
       </div>
     </div>
     <!-- Phần lịch đặt sân -->
-    <div class="container_below"></div>
-    <div class="schedule-container">
-      <h2>Lịch đặt sân</h2>
-      <table id="scheduleTable">
-        <thead>
-          <tr>
-            <th>Giờ</th>
-            <!-- Các cột ngày sẽ được tạo động bằng JavaScript -->
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Các hàng dữ liệu lịch sẽ được tạo động bằng JavaScript -->
-        </tbody>
-      </table>
-     <div class="small-container">
-      <div class="booking-info">
-        <h2>Thông tin đặt sân</h2>
-        <div id="selected-fields"></div>
-          <div class="paid">    
-            <div class="method">
-              <label for="payment-method">Phương thức thanh toán:</label>
-              <select id="payment-method">
-                <option value="cash">Tiền mặt</option>
-                <option value="bank">Chuyển khoản</option>
-                <option value="momo">MoMo</option>
-              </select>
+    <div class="container_below">
+      <div class="small-container">
+        <div class="booking-info">
+          <h2>Thông tin đặt sân</h2>
+          <div id="selected-fields"></div>
+            <div class="paid">    
+              <div class="method">
+                <label for="payment-method">Phương thức thanh toán:</label>
+                <select id="payment-method">
+                  <option value="cash">Tiền mặt</option>
+                  <option value="bank">Chuyển khoản</option>
+                  <option value="momo">MoMo</option>
+                </select>
+              </div>
+              <div class="mat-tien">
+                <p><span id="total-price">0</span></p>
+                <button class="pay-btn" id="pay-btn">Thanh toán</button>
+              </div>
+            </div>            
+            <div id="qr-form" class="qr-container" style="display:none;">
+              <p>Quét mã để thanh toán:</p>
+              <div id="qrcode"></div> <!-- Thêm container QR -->
             </div>
-            <div class="mat-tien">
-              <p><span id="total-price">0</span></p>
-              <button class="pay-btn" id="pay-btn">Thanh toán</button>
-            </div>
-          </div>            
-          <div id="qr-form" style="display: none;">
-            <h3>Quét mã QR để thanh toán</h3>
-            <div id="qrcode"></div>
-          </div>       
+          </div>
       </div>
-      <div class="schedule-container">
-        <h2>Lịch đặt sân</h2>
-        <table id="scheduleTable">
-          <thead>
-            <tr>
-              <th>Giờ</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
+        <div class="schedule-container">
+          <h2>Lịch đặt sân</h2>
+          <table id="scheduleTable">
+            <thead>
+              <tr>
+                <th>Giờ</th>
+                <!-- Các cột ngày sẽ được tạo động bằng JavaScript -->
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Các hàng dữ liệu lịch sẽ được tạo động bằng JavaScript -->
+            </tbody>
+          </table>
+        </div>      
       </div>
->>>>>>> Yoo
-    </div>
     <a href="javascript:window.history.back()" class="back-btn">Trở lại</a>
   </div>
   <script src="../js_file/infoSan.js"></script>
+  <script src="../js_file/qrcode.min.js"></script>
 </body>
 
 </html>
