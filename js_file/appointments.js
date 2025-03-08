@@ -179,16 +179,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // Xử lý thanh toán
     function handlePayment(button) {
         const card = button.closest('.payment-card');
-        if (confirm('Xác nhận thanh toán?')) {
-            const status = card.querySelector('.payment-status');
-            status.textContent = 'Đã thanh toán';
-            status.className = 'payment-status paid';
-            
-            const actions = card.querySelector('.payment-actions');
-            actions.innerHTML = '<button class="btn-view-receipt">Xem hóa đơn</button>';
-            
-            showNotification('Thanh toán thành công!', 'success');
-        }
+        const qrOverlay = document.createElement('div');
+        qrOverlay.className = 'qr-overlay';
+        qrOverlay.innerHTML = `
+            <div class="qr-content">
+                <button class="btn-close-qr">X</button>
+                <img src="../images/QRcode.png" alt="QR Code" class="qr-image">
+            </div>
+        `;
+        document.body.appendChild(qrOverlay);
+
+        // Đóng QR code
+        qrOverlay.querySelector('.btn-close-qr').addEventListener('click', () => {
+            qrOverlay.remove();
+        });
+
+        showNotification('Thanh toán thành công!', 'success');
     }
 
     // Xử lý xem hóa đơn
