@@ -225,19 +225,24 @@ async function updateBookingInfo() {
       fieldInfo.classList.add("personal-info");
       fieldInfo.innerHTML = `
             <div class="left-column">
-                <p><strong>Ngày:</strong> ${date}</p>
-                <p><strong>Giờ:</strong> ${hour}</p>
-                <p><strong>Giá:</strong> ${formatCurrency(price)}đ</p>
+                <div id="NgayDatSan"><strong>Ngày:</strong> ${date}</div>
+                <div id="GioDatSan"><strong>Giờ:</strong> ${hour}</div>
+                <div id="GiaDatSan"><strong>Giá:</strong> ${formatCurrency(price)}đ</div>
             </div>
             <div class="right-column">
-                <p><strong>Người đặt:</strong> ${userInfo.HoTen}</p>
-                <p><strong>Email:</strong> ${userInfo.Email}</p>
-                <p><strong>SĐT:</strong> ${userInfo.SDT}</p>
+                <div id="NguoiDatSan"><strong>Người đặt:</strong> ${userInfo.HoTen}</div>
+                <div id="EmailDatSan"><strong>Email:</strong> ${userInfo.Email}</div>
+                <div id="SdtDatSan"><strong>SĐT:</strong> ${userInfo.SDT}</div>
             </div>
       `;
       selectedFields.appendChild(fieldInfo);
   });
   totalPriceElement.textContent = `Tổng giá: ${formatCurrency(total)}đ`;
+}
+
+function formatHour(hour) {
+  let formattedHour = hour.toString().padStart(2, "0"); 
+  return `${formattedHour}:00`;
 }
 
 function formatDate(dateStr) {
