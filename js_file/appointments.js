@@ -13,6 +13,23 @@ document.addEventListener('DOMContentLoaded', function() {
             button.classList.add('active');
             const tabId = button.getAttribute('data-tab');
             document.getElementById(tabId).classList.add('active');
+
+            // Thay đổi nội dung của status filter theo tab
+            if (tabId === 'bookings') {
+                statusFilter.innerHTML = `
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="pending">Chờ xác nhận</option>
+                    <option value="confirmed">Đã xác nhận</option>
+                    <option value="completed">Đã hoàn thành</option>
+                    <option value="cancelled">Đã hủy</option>
+                `;
+            } else if (tabId === 'payments') {
+                statusFilter.innerHTML = `
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="unpaid">Chưa thanh toán</option>
+                    <option value="paid">Đã thanh toán</option>
+                `;
+            }
         });
     });
 
@@ -26,54 +43,124 @@ document.addEventListener('DOMContentLoaded', function() {
         const statusValue = statusFilter.value;
         const dateValue = dateFilter.value;
 
+        const activeTab = document.querySelector('.tab-button.active').getAttribute('data-tab');
         const appointments = document.querySelectorAll('.appointment-card');
-        appointments.forEach(appointment => {
-            let show = true;
+        const payments = document.querySelectorAll('.payment-card');
 
-            // Lọc theo từ khóa
-            const courtName = appointment.querySelector('.court-details h3').textContent.toLowerCase();
-            const courtAddress = appointment.querySelector('.court-details p').textContent.toLowerCase();
-            if (!courtName.includes(searchTerm) && !courtAddress.includes(searchTerm)) {
-                show = false;
-            }
+        if (activeTab === 'bookings') {
+            appointments.forEach(appointment => {
+                let show = true;
 
-            // Lọc theo trạng thái
-            if (statusValue !== 'all') {
-                const status = appointment.querySelector('.appointment-status').classList[1];
-                if (status !== statusValue) {
+                // Lọc theo từ khóa
+                const courtName = appointment.querySelector('.court-details h3').textContent.toLowerCase();
+                const courtAddress = appointment.querySelector('.court-details p').textContent.toLowerCase();
+                if (!courtName.includes(searchTerm) && !courtAddress.includes(searchTerm)) {
                     show = false;
                 }
-            }
 
-            // Lọc theo ngày
-            if (dateValue !== 'all') {
-                const appointmentDate = appointment.querySelector('.appointment-info p:first-child').textContent;
-                const today = new Date();
-                const tomorrow = new Date(today);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-
-                switch(dateValue) {
-                    case 'today':
-                        if (!appointmentDate.includes(formatDate(today))) {
-                            show = false;
-                        }
-                        break;
-                    case 'tomorrow':
-                        if (!appointmentDate.includes(formatDate(tomorrow))) {
-                            show = false;
-                        }
-                        break;
-                    case 'week':
-                        // Thêm logic lọc theo tuần
-                        break;
-                    case 'month':
-                        // Thêm logic lọc theo tháng
-                        break;
+                // Lọc theo trạng thái
+                if (statusValue !== 'all') {
+                    const status = appointment.querySelector('.appointment-status').classList[1];
+                    if (status !== statusValue) {
+                        show = false;
+                    }
                 }
-            }
 
-            appointment.style.display = show ? 'block' : 'none';
-        });
+                // Lọc theo ngày
+                if (dateValue !== 'all') {
+                    const appointmentDate = new Date(appointment.querySelector('.appointment-info p:first-child').textContent.split(': ')[1]);
+                    const today = new Date();
+                    const tomorrow = new Date(today);
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+
+                    switch(dateValue) {
+                        case 'today':
+                            if (appointmentDate.toDateString() !== today.toDateString()) {
+                                show = false;
+                            }
+                            break;
+                        case 'tomorrow':
+                            if (appointmentDate.toDateString() !== tomorrow.toDateString()) {
+                                show = false;
+                            }
+                            break;
+                        case 'week':
+                            const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
+                            const weekEnd = new Date(weekStart);
+                            weekEnd.setDate(weekEnd.getDate() + 6);
+                            if (appointmentDate < weekStart || appointmentDate > weekEnd) {
+                                show = false;
+                            }
+                            break;
+                        case 'month':
+                            const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+                            const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                            if (appointmentDate < monthStart || appointmentDate > monthEnd) {
+                                show = false;
+                            }
+                            break;
+                    }
+                }
+
+                appointment.style.display = show ? 'block' : 'none';
+            });
+        } else if (activeTab === 'payments') {
+            payments.forEach(payment => {
+                let show = true;
+
+                // Lọc theo từ khóa
+                const paymentTitle = payment.querySelector('.payment-title h3').textContent.toLowerCase();
+                if (!paymentTitle.includes(searchTerm)) {
+                    show = false;
+                }
+
+                // Lọc theo trạng thái
+                if (statusValue !== 'all') {
+                    const status = payment.querySelector('.payment-status').classList[1];
+                    if (status !== statusValue) {
+                        show = false;
+                    }
+                }
+
+                // Lọc theo ngày
+                if (dateValue !== 'all') {
+                    const paymentDate = new Date(payment.querySelector('.payment-info p:first-child').textContent.split(': ')[1]);
+                    const today = new Date();
+                    const tomorrow = new Date(today);
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+
+                    switch(dateValue) {
+                        case 'today':
+                            if (paymentDate.toDateString() !== today.toDateString()) {
+                                show = false;
+                            }
+                            break;
+                        case 'tomorrow':
+                            if (paymentDate.toDateString() !== tomorrow.toDateString()) {
+                                show = false;
+                            }
+                            break;
+                        case 'week':
+                            const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
+                            const weekEnd = new Date(weekStart);
+                            weekEnd.setDate(weekEnd.getDate() + 6);
+                            if (paymentDate < weekStart || paymentDate > weekEnd) {
+                                show = false;
+                            }
+                            break;
+                        case 'month':
+                            const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+                            const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                            if (paymentDate < monthStart || paymentDate > monthEnd) {
+                                show = false;
+                            }
+                            break;
+                    }
+                }
+
+                payment.style.display = show ? 'block' : 'none';
+            });
+        }
     }
 
     // Thêm event listeners cho bộ lọc
