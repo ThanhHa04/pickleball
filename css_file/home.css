@@ -1438,6 +1438,7 @@ footer {
 }
 
 .receipt-content {
+    position: relative;
     background: white;
     padding: 20px;
     border-radius: 10px;
@@ -1457,9 +1458,11 @@ footer {
 }
 
 .btn-close-receipt {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background: #4adb60;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    background: #dc3545;
     color: white;
     border: none;
     border-radius: 5px;
@@ -1468,7 +1471,7 @@ footer {
 }
 
 .btn-close-receipt:hover {
-    background: #3cae50;
+    background: #c82333;
 }
 
 /* Hiển thị QR code */
