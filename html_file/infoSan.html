@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
   <title>Chi tiết sân bóng</title>
   <link rel="stylesheet" href="../css_file/infoSan.css">
 </head>
@@ -60,7 +61,8 @@
             </div>            
             <div id="qr-form" class="qr-container" style="display:none;">
               <p>Quét mã để thanh toán:</p>
-              <div id="qrcode"></div> <!-- Thêm container QR -->
+              <div id="qrcode"></div>
+              <button id="paid-btn" style="display: none;">Đã thanh toán</button>
             </div>
           </div>
       </div>
@@ -82,7 +84,7 @@
     <a href="javascript:window.history.back()" class="back-btn">Trở lại</a>
   </div>
   <script src="../js_file/infoSan.js"></script>
-  <script src="../js_file/thanhtoan.js"></script>
+  <script type="module" src="../js_file/thanhtoan.js"></script>
 </body>
 
 </html>
