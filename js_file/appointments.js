@@ -200,7 +200,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // Xử lý xem hóa đơn
     function handleViewReceipt(button) {
         // Thêm logic xem hóa đơn
-        alert('Chức năng xem hóa đơn đang được phát triển');
+
+        const receiptOverlay = document.createElement('div');
+        receiptOverlay.className = 'receipt-overlay';
+        receiptOverlay.innerHTML = ` 
+            <div class="receipt-content">
+                <button class="btn-close-receipt">X</button>
+                <h2>Hóa đơn Thanh toán</h2>
+                <p><strong>Số hóa đơn:</strong> #123456</p>
+                <p><strong>Ngày thanh toán:</strong> 13/03/2024</p>
+                <p><strong>Sân Pickleball:</strong> Sân Pickleball Số 2</p>
+                <p><strong>Thời gian đặt:</strong> 08:00 - 10:00 (16/03/2024)</p>
+                <p><strong>Số tiền:</strong> 300.000đ</p>
+                <p><strong>Trạng thái:</strong> Đã thanh toán</p>
+            </div>
+        `;
+        document.body.appendChild(receiptOverlay);
+
+        // Đóng hóa đơn
+        receiptOverlay.querySelector('.btn-close-receipt').addEventListener('click', () => {
+            receiptOverlay.remove();
+        });
+
     }
 
     // Xử lý phân trang
