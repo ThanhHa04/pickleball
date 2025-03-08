@@ -351,8 +351,45 @@
         </div>
 
         <div id="history" class="content">
-            <h2>Lịch sử giao dịch</h2>
-            <p>Các giao dịch đã thực hiện...</p>
+            <div class="history-container">
+                <h1>Lịch Sử Giao Dịch</h1>
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Ngày</th>
+                            <th>Mô tả</th>
+                            <th>Số tiền</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>15/03/2024</td>
+                            <td>Thanh toán tiền sân Pickleball Số 1</td>
+                            <td>500.000đ</td>
+                            <td class="status paid">Đã thanh toán</td>
+                        </tr>
+                        <tr>
+                            <td>14/03/2024</td>
+                            <td>Thanh toán tiền sân Pickleball Số 2</td>
+                            <td>300.000đ</td>
+                            <td class="status unpaid">Chưa thanh toán</td>
+                        </tr>
+                        <!-- Thêm các dòng khác tương tự -->
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <button class="btn-prev"><i class='bx bx-chevron-left'></i></button>
+                    <div class="page-numbers">
+                        <span class="active">1</span>
+                        <span>2</span>
+                        <span>3</span>
+                        <span>...</span>
+                        <span>10</span>
+                    </div>
+                    <button class="btn-next"><i class='bx bx-chevron-right'></i></button>
+                </div>
+            </div>
         </div>
 
         <div id="membership" class="content">
