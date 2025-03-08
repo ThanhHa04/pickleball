@@ -240,6 +240,50 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentPage < totalPages) goToPage(currentPage + 1);
     });
 
+    // Xử lý phân trang cho lịch sử giao dịch
+    function updateHistoryPagination() {
+        const itemsPerPage = 5;
+        let currentPage = 1;
+
+        const rows = document.querySelectorAll('.history-table tbody tr');
+        const totalPages = Math.ceil(rows.length / itemsPerPage);
+
+        function goToPage(page) {
+            currentPage = page;
+            rows.forEach((row, index) => {
+                const shouldShow = index >= (page - 1) * itemsPerPage && index < page * itemsPerPage;
+                row.style.display = shouldShow ? 'table-row' : 'none';
+            });
+            updatePageNumbers();
+        }
+
+        function updatePageNumbers() {
+            const pageNumbers = document.querySelector('.history-container .page-numbers');
+            pageNumbers.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const span = document.createElement('span');
+                span.textContent = i;
+                if (i === currentPage) span.classList.add('active');
+                span.addEventListener('click', () => goToPage(i));
+                pageNumbers.appendChild(span);
+            }
+
+            document.querySelector('.history-container .btn-prev').disabled = currentPage === 1;
+            document.querySelector('.history-container .btn-next').disabled = currentPage === totalPages;
+        }
+
+        document.querySelector('.history-container .btn-prev').addEventListener('click', () => {
+            if (currentPage > 1) goToPage(currentPage - 1);
+        });
+
+        document.querySelector('.history-container .btn-next').addEventListener('click', () => {
+            if (currentPage < totalPages) goToPage(currentPage + 1);
+        });
+
+        goToPage(1);
+    }
+
     // Helper functions
     function formatDate(date) {
         return date.toLocaleDateString('vi-VN');
@@ -275,4 +319,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Khởi tạo ban đầu
     updatePagination();
     goToPage(1);
+
+    // Khởi tạo phân trang cho lịch sử giao dịch
+    updateHistoryPagination();
 }); 
