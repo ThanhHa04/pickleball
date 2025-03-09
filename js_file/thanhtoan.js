@@ -36,7 +36,7 @@ function generateQRCode() {
 // Hàm xử lý thanh toán
 async function handlePayment() {
     let userId = localStorage.getItem("userId");
-    
+
     let selectedDate = document.getElementById("NgayDatSan").innerText.split(":")[1]?.trim();
     let selectedTime = document.getElementById("GioDatSan").innerText.split(":").slice(1).join(":").trim();
     let onePrice = document.getElementById("GiaDatSan").innerText.split(":")[1]?.trim();
@@ -96,13 +96,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     let payButton = document.getElementById("pay-btn");
     let paidButton = document.getElementById("paid-btn");
-    
+
     if (payButton) {
         payButton.addEventListener("click", generateQRCode);
     } else {
         console.error("Không tìm thấy nút thanh toán!");
     }
-    
+
     if (paidButton) {
         paidButton.addEventListener("click", handlePayment);
     } else {
