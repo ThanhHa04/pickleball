@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function () {
   console.log("✅ DOM đã sẵn sàng!");
 
@@ -6,65 +5,44 @@ document.addEventListener("DOMContentLoaded", function () {
   const idSan = urlParams.get("idSan");
 
   if (!idSan) {
-    document.querySelector(".container").innerHTML = "<p>Không tìm thấy ID sân trong URL!</p>";
-    console.error("❌ Không tìm thấy idSan trong URL.");
-    return;
+      document.querySelector(".container").innerHTML = "<p>Không tìm thấy ID sân trong URL!</p>";
+      console.error("❌ Không tìm thấy idSan trong URL.");
+      return;
   }
 
-  // Truy vấn thông tin sân để lấy location_id
+  const fetchChiTietSan = fetch(`http://localhost:3000/chitietsan/${idSan}`).then(res => res.json());
   const fetchSan = fetch(`http://localhost:3000/san/${idSan}`).then(res => res.json());
 
-  fetchSan
-    .then(dataSan => {
-      if (!dataSan || !dataSan.location_id) {
-        document.querySelector(".container").innerHTML = "<p>Không tìm thấy location_id cho sân.</p>";
-        console.error("❌ Không tìm thấy location_id.");
-        return;
-      }
-
-      // Sau khi có location_id, tiếp tục gọi API để lấy thông tin địa điểm
-      const location_id = dataSan.location_id;
-      const fetchLocation = fetch(`http://localhost:3000/locations/${location_id}`).then(res => res.json());
-
-      // Tiến hành xử lý dữ liệu
-      const fetchChiTietSan = fetch(`http://localhost:3000/chitietsan/${idSan}`).then(res => res.json());
-
-      Promise.all([fetchChiTietSan, fetchSan, fetchLocation])
-        .then(([dataChiTiet, dataSan, dataLocation]) => { // 🔹 Sửa 'fetchLocation' thành 'dataLocation' để đúng logic.
+  Promise.all([fetchChiTietSan, fetchSan])
+      .then(([dataChiTiet, dataSan]) => {
           if (!dataChiTiet || !dataChiTiet.IDSan) {
-            document.querySelector(".container").innerHTML = "<p>Không có thông tin chi tiết sân.</p>";
-            return;
+              document.querySelector(".container").innerHTML = "<p>Không có thông tin chi tiết sân.</p>";
+              return;
           }
           if (!dataSan) {
-            document.querySelector(".container").innerHTML = "<p>Không có dữ liệu sân từ API /san.</p>";
-            return;
+              document.querySelector(".container").innerHTML = "<p>Không có dữ liệu sân từ API /san.</p>";
+              return;
           }
           setTextContent("tensan", dataSan.TenSan);
-          setTextContent("diachi", dataLocation.address);
           setTextContent("mota", dataChiTiet.MoTa);
           setTextContent("gioHoatDong", dataChiTiet.GioHoatDong);
           setTextContent("giaSan", dataSan.GiaThue ? `${formatCurrency(dataSan.GiaThue)} đ` : "Không có");
           setTextContent("loaiSan", dataSan.MoTa);
-          
           let galleryHtml = "";
           if (dataSan.HinhAnh && typeof dataSan.HinhAnh === "string") {
-            galleryHtml = `<img src="${dataSan.HinhAnh}" alt="Hình ảnh sân">`;
+              galleryHtml = `<img src="${dataSan.HinhAnh}" alt="Hình ảnh sân">`;
           } else if (Array.isArray(dataSan.HinhAnh) && dataSan.HinhAnh.length > 0) {
-            galleryHtml = dataSan.HinhAnh.map(img => `<img src="${img}" alt="Hình ảnh sân">`).join("");
+              galleryHtml = dataSan.HinhAnh.map(img => `<img src="${img}" alt="Hình ảnh sân">`).join("");
           } else {
-            galleryHtml = "<p>Không có hình ảnh.</p>";
+              galleryHtml = "<p>Không có hình ảnh.</p>";
           }
           document.getElementById("hinhAnh").innerHTML = galleryHtml;
           loadSchedule(idSan);
-        })
-        .catch(error => {
+      })
+      .catch(error => {
           console.error("❌ Lỗi khi lấy thông tin sân:", error);
           document.querySelector(".container").innerHTML = "<p>Lỗi khi lấy thông tin sân.</p>";
-        });
-    })
-    .catch(error => {
-      console.error("❌ Lỗi khi lấy dữ liệu sân:", error);
-    });
+      });
 });
 
 async function getUserInfo(userId) {
@@ -89,7 +67,7 @@ async function loadSchedule(idSan) {
 
     const data = await response.json();
     const schedule = organizeSchedule(data);
-    const dateList = generateDateList(Object.keys(schedule)[0] || new Date().toISOString().split("T")[0], 3); // 🔹 Fix lỗi khi schedule rỗng.
+    const dateList = generateDateList(Object.keys(schedule)[0], 3);
     renderSchedule(dateList, schedule);
   } catch (error) {
     console.error("⚠️ Lỗi tải lịch:", error);
@@ -109,48 +87,60 @@ function renderSchedule(dateList, schedule) {
   tbody.innerHTML = "";
   const now = new Date();
   const currentHour = now.getHours();
-  
-  for (let h = 6; h <= 21; h++) {
+for (let h = 6; h <= 21; h++) {
     const hourStr = `${h < 10 ? "0" + h : h}:00`;
     const tr = document.createElement("tr");
     tr.innerHTML = `<td class="hour-col">${hourStr}</td>`;
 
     dateList.forEach(date => {
-      const slot = schedule[date]?.[hourStr];
-      const slotTime = new Date(`${date}T${hourStr}:00`);
+        const slot = schedule[date]?.[hourStr];
+        const slotTime = new Date(date + "T" + hourStr + ":00"); 
 
-      let cellContent = `<span class="empty-slot">-</span>`;
-      let cellClass = "";
+        let cellContent = `<span class="empty-slot">-</span>`;
+        let cellClass = "";
 
-      if (slot) {
-        if (slot.TrangThai === "Còn trống" && slotTime > now) {
-          cellContent = `<label class="available-slot">
-                          <input type="checkbox" class="booking-checkbox"
-                          data-date="${date}" data-hour="${hourStr}"
-                          data-san="${slot.IDSan}"
-                          value="${formatCurrency(slot.Gia)} đ">
-                        </label>`;
-          cellClass = "highlight";
-        } else if (slotTime <= now) {
-          cellContent = `<span class="past-slot">Hết hạn</span>`;
-          cellClass = "disabled-slot";
-        } else {
-          cellContent = `<span class="booked-slot">(${slot.TrangThai})</span>`;
-        }
-      }
+        tbody.innerHTML = "";
+  const now = new Date();
+  const currentHour = now.getHours();
+for (let h = 6; h <= 21; h++) {
+    const hourStr = `${h < 10 ? "0" + h : h}:00`;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td class="hour-col">${hourStr}</td>`;
 
-      tr.innerHTML += `<td class="${cellClass}">${cellContent}</td>`;
+    dateList.forEach(date => {
+        const slot = schedule[date]?.[hourStr];
+        const slotTime = new Date(date + "T" + hourStr + ":00"); 
+
+        let cellContent = `<span class="empty-slot">-</span>`;
+        let cellClass = "";
+
+        if (slot) {
+            if (slot.TrangThai === "Còn trống" && slotTime > now) {
+                cellContent = `<label class="available-slot">
+                                <input type="checkbox" class="booking-checkbox"
+                                 data-date="${date}" data-hour="${hourStr}"
+                                 data-san="${slot.IDSan}"
+                                 value="${formatCurrency(slot.Gia)}đ">
+                              </label>`;
+                cellClass = "highlight"; // Màu xanh nhạt
+            } else if (slotTime <= now) {
+                cellContent = `<span class="past-slot">Hết hạn</span>`; // Đánh dấu hết hạn
+                cellClass = "disabled-slot"; // Màu xám
+            } else {
+                cellContent = `<span class="booked-slot">(${slot.TrangThai})</span>`;
+            }
+         }    
+        tr.innerHTML += `<td class="${cellClass}">${cellContent}</td>`;
+    });
+    tbody.appendChild(tr);
+  }
+        
+        tr.innerHTML += `<td class="${cellClass}">${cellContent}</td>`;
     });
     tbody.appendChild(tr);
   }
 }
 
-// 🌟 Format tiền theo chuẩn Việt Nam
-function formatCurrency(amount) {
-  return parseFloat(amount).toLocaleString("vi-VN");
-}
-
-// 📅 Sắp xếp lịch từ dữ liệu
 function organizeSchedule(data) {
   const schedule = {};
   data.forEach(({ NgayDat, GioBatDau, IDSan, Gia, TrangThai }) => {
@@ -158,6 +148,21 @@ function organizeSchedule(data) {
     schedule[NgayDat][GioBatDau] = { IDSan, Gia, TrangThai };
   });
   return schedule;
+}
+
+function generateDateList(startDateStr, daysCount) {
+  const result = [];
+  const startDate = new Date(startDateStr);
+  for (let i = 0; i < daysCount; i++) {
+    const d = new Date(startDate);
+    d.setDate(startDate.getDate() + i);
+    result.push(d.toISOString().split("T")[0]);
+  }
+  return result;
+}
+
+function formatCurrency(amount) {
+  return parseFloat(amount).toLocaleString("vi-VN");
 }
 
 function setTextContent(id, value) {
@@ -193,7 +198,6 @@ async function getUserInfo(userId) {
   }
 }
 
-
 async function updateBookingInfo() {
   const selectedFields = document.getElementById("selected-fields");
   const totalPriceElement = document.getElementById("total-price");
@@ -220,79 +224,27 @@ async function updateBookingInfo() {
       const fieldInfo = document.createElement("div");
       fieldInfo.classList.add("personal-info");
       fieldInfo.innerHTML = `
-        <div class="info-container">
             <div class="left-column">
-                <p><strong>Ngày:</strong> ${date}</p>
-                <p><strong>Giờ:</strong> ${hour}</p>
-                <p><strong>Giá:</strong> ${formatCurrency(price)}đ</p>
+                <div id="NgayDatSan"><strong>Ngày:</strong> ${date}</div>
+                <div id="GioDatSan"><strong>Giờ:</strong> ${hour}</div>
+                <div id="GiaDatSan"><strong>Giá:</strong> ${formatCurrency(price)}đ</div>
             </div>
             <div class="right-column">
-                <p><strong>Người đặt:</strong> ${userInfo.HoTen}</p>
-                <p><strong>Email:</strong> ${userInfo.Email}</p>
-                <p><strong>SĐT:</strong> ${userInfo.SDT}</p>
+                <div id="NguoiDatSan"><strong>Người đặt:</strong> ${userInfo.HoTen}</div>
+                <div id="EmailDatSan"><strong>Email:</strong> ${userInfo.Email}</div>
+                <div id="SdtDatSan"><strong>SĐT:</strong> ${userInfo.SDT}</div>
             </div>
-        </div>
       `;
       selectedFields.appendChild(fieldInfo);
   });
   totalPriceElement.textContent = `Tổng giá: ${formatCurrency(total)}đ`;
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("pay-btn").addEventListener("click", function() {
-        let paymentMethod = document.getElementById("payment-method").value;
-        let qrForm = document.getElementById("qr-form");
-
-        if (paymentMethod === "bank") {
-            qrForm.style.display = "block"; // Hiện mã QR khi chọn chuyển khoản
-        } else {
-            qrForm.style.display = "none"; // Ẩn nếu chọn phương thức khác
-        }
-    });
-});
-
-function generateQRCode() {
-  let qrContainer = document.getElementById("qrcode");
-  qrContainer.innerHTML = ""; // Xóa mã QR cũ
-
-  let totalAmount = document.getElementById("total-price").innerText.trim() || "100000"; // Giá mặc định
-  let accountNumber = "0123456789"; // STK
-  let accountName = "TRAN HA"; // Chủ tài khoản
-  let bankCode = "VCB"; // Vietcombank
-
-  // 🔥 Tạo dữ liệu QR theo chuẩn Napas
-  let qrData = `00020101021238560010A00000072701240006970407${bankCode}0110${accountNumber}0210${accountName}530370454054${totalAmount}6304`;
-
-  console.log("QR Length:", qrData.length); // Debug độ dài
-
-  if (qrData.length > 990) {
-      console.error("❌ Dữ liệu QR quá dài! Rút gọn...");
-      qrData = qrData.substring(0, 988); // Cắt ngắn nếu cần
-  }
-
-  // 🔹 Tạo mã QR với sửa lỗi thấp
-  new QRCode(qrContainer, {
-      text: qrData,
-      width: 180,
-      height: 180,
-      correctLevel: QRCode.CorrectLevel.L // Giảm sửa lỗi xuống mức L
-  });
+function formatHour(hour) {
+  let formattedHour = hour.toString().padStart(2, "0"); 
+  return `${formattedHour}:00`;
 }
 
-
-// 📅 Tạo danh sách ngày từ ngày bắt đầu
-function generateDateList(startDateStr, daysCount) {
-  const result = [];
-  const startDate = new Date(startDateStr);
-  for (let i = 0; i < daysCount; i++) {
-    const d = new Date(startDate);
-    d.setDate(startDate.getDate() + i);
-    result.push(d.toISOString().split("T")[0]);
-  }
-  return result;
-}
-
-// 🗓️ Định dạng ngày DD/MM
 function formatDate(dateStr) {
   const [year, month, day] = dateStr.split("-");
   return `${day}/${month}`;

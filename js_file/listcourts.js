@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    fetch('http://localhost:3000/san')  
+    fetch('http://localhost:3000/san')
         .then(response => response.json())
         .then(San => {
             console.log(San);
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     updatedCourts.forEach(court => {
                         const courtItem = document.createElement("div");
                         courtItem.classList.add("court-item");
-                        courtItem.dataset.idSan = court.IDSan; 
+                        courtItem.dataset.idSan = court.IDSan;
 
                         let giaThue = court.GiaThue % 1 === 0 ? Math.floor(court.GiaThue) : court.GiaThue;
                         let imageUrl = court.HinhAnh || "default-image.jpg";
@@ -134,16 +134,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 function getPath(filename) {
-<<<<<<< HEAD
-    const isLocalhost = window.location.hostname === "localhost" || 
-                        window.location.hostname === "127.0.0.1";
-    
+    const isLocalhost = window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1";
+
     if (isLocalhost) {
         return `/html_file/${filename}`; // Đường dẫn khi chạy cục bộ (localhost)
     }
     return `/${filename}`; // Đường dẫn khi chạy trên môi trường live
-=======
     const isLiveServer = window.location.origin.includes("127.0.0.1:5501"); // Kiểm tra Live Server
     return isLiveServer ? `/html_file/${filename}` : `/${filename}`;
->>>>>>> Yoo
+
 }
