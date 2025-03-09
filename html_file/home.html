@@ -456,6 +456,63 @@
                 <input type="text" class="chat-input" placeholder="Nhập tin nhắn...">
             </div>
         </div>
+
+        <div id="manage-users" class="content">
+            <h2>Quản lý người dùng</h2>
+            <div class="user-search">
+                <input type="text" id="user-search-input" placeholder="Tìm kiếm theo tên hoặc số điện thoại...">
+                <button id="user-search-button">Tìm kiếm</button>
+            </div>
+            <table class="user-management-table">
+                <thead>
+                    <tr>
+                        <th>Tên người dùng</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
+                        <th>Tình trạng hội viên</th>
+                        <th>Ngày tạo tài khoản</th>
+                        <th>Vai trò</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="user-table-body">
+                    <tr>
+                        <td>Nguyễn Văn A</td>
+                        <td>nguyenvana@example.com</td>
+                        <td>0123456789</td>
+                        <td>Đã kích hoạt</td>
+                        <td>01/01/2023</td>
+                        <td>Người dùng</td>
+                        <td>
+                            <button class="btn-edit-user">Chỉnh sửa</button>
+                            <button class="btn-delete-user">Xóa</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Trần Thị B</td>
+                        <td>tranthib@example.com</td>
+                        <td>0987654321</td>
+                        <td>Chưa kích hoạt</td>
+                        <td>15/02/2023</td>
+                        <td>Quản trị viên</td>
+                        <td>
+                            <button class="btn-edit-user">Chỉnh sửa</button>
+                            <button class="btn-delete-user">Xóa</button>
+                        </td>
+                    </tr>
+                    <!-- Thêm dữ liệu mẫu khác nếu cần -->
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button class="btn-prev-user"><i class='bx bx-chevron-left'></i></button>
+                <div class="user-page-numbers">
+                    <span class="active">1</span>
+                    <!-- Thêm số trang nếu cần -->
+                </div>
+                <button class="btn-next-user"><i class='bx bx-chevron-right'></i></button>
+            </div>
+        </div>
+
     </div>
     <footer>
         <div class="footer-container">
@@ -502,6 +559,8 @@
     <script src="../js_file/home.js"></script>
     <script src="../js_file/appointments.js"></script>
     <script src="../js_file/listcourts.js"></script>
+    <script src="../js_file/manageUsers.js"></script>
+
 </body>
 
 </html>

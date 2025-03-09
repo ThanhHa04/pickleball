@@ -1521,3 +1521,115 @@ footer {
     background: #c82333;
 }
 
+/* Styles for User Management Section */
+.user-management-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.user-management-table th, .user-management-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.user-management-table th {
+    background-color: #f2f2f2;
+    color: black;
+}
+
+.user-management-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.user-management-table tr:hover {
+    background-color: #ddd;
+}
+
+.btn-edit-user, .btn-delete-user {
+    padding: 5px 10px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-edit-user {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-delete-user {
+    background-color: #f44336;
+    color: white;
+}
+
+.user-search {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+#user-search-input {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+#user-search-input:focus {
+    border-color: #007bff;
+}
+
+#user-search-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#user-search-button:hover {
+    background-color: #0056b3;
+}
+
+.user-page-numbers span {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-page-numbers span.active {
+    background: #4adb60;
+    color: white;
+}
+
+.btn-prev-user, .btn-next-user {
+    width: 35px;
+    height: 35px;
+    border: none;
+    background: #f5f5f5;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.btn-prev-user:hover, .btn-next-user:hover {
+    background: #4adb60;
+    color: white;
+}
+
