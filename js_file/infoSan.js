@@ -1,49 +1,81 @@
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("✅ DOM đã sẵn sàng!");
+    console.log("✅ DOM đã sẵn sàng!");
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const idSan = urlParams.get("idSan");
+    const urlParams = new URLSearchParams(window.location.search);
+    const idSan = urlParams.get("idSan");
 
-  if (!idSan) {
-      document.querySelector(".container").innerHTML = "<p>Không tìm thấy ID sân trong URL!</p>";
-      console.error("❌ Không tìm thấy idSan trong URL.");
-      return;
-  }
+    if (!idSan) {
+        document.querySelector(".container").innerHTML = "<p>Không tìm thấy ID sân trong URL!</p>";
+        console.error("❌ Không tìm thấy idSan trong URL.");
+        return;
+    }
 
-  const fetchChiTietSan = fetch(`http://localhost:3000/chitietsan/${idSan}`).then(res => res.json());
-  const fetchSan = fetch(`http://localhost:3000/san/${idSan}`).then(res => res.json());
+    const fetchChiTietSan = fetch(`http://localhost:3000/chitietsan/${idSan}`).then(res => res.json());
+    const fetchSan = fetch(`http://localhost:3000/san/${idSan}`).then(res => res.json());
 
-  Promise.all([fetchChiTietSan, fetchSan])
-      .then(([dataChiTiet, dataSan]) => {
-          if (!dataChiTiet || !dataChiTiet.IDSan) {
-              document.querySelector(".container").innerHTML = "<p>Không có thông tin chi tiết sân.</p>";
-              return;
-          }
-          if (!dataSan) {
-              document.querySelector(".container").innerHTML = "<p>Không có dữ liệu sân từ API /san.</p>";
-              return;
-          }
-          setTextContent("tensan", dataSan.TenSan);
-          setTextContent("mota", dataChiTiet.MoTa);
-          setTextContent("gioHoatDong", dataChiTiet.GioHoatDong);
-          setTextContent("giaSan", dataSan.GiaThue ? `${formatCurrency(dataSan.GiaThue)} đ` : "Không có");
-          setTextContent("loaiSan", dataSan.MoTa);
-          let galleryHtml = "";
-          if (dataSan.HinhAnh && typeof dataSan.HinhAnh === "string") {
-              galleryHtml = `<img src="${dataSan.HinhAnh}" alt="Hình ảnh sân">`;
-          } else if (Array.isArray(dataSan.HinhAnh) && dataSan.HinhAnh.length > 0) {
-              galleryHtml = dataSan.HinhAnh.map(img => `<img src="${img}" alt="Hình ảnh sân">`).join("");
-          } else {
-              galleryHtml = "<p>Không có hình ảnh.</p>";
-          }
-          document.getElementById("hinhAnh").innerHTML = galleryHtml;
-          loadSchedule(idSan);
-      })
-      .catch(error => {
-          console.error("❌ Lỗi khi lấy thông tin sân:", error);
-          document.querySelector(".container").innerHTML = "<p>Lỗi khi lấy thông tin sân.</p>";
-      });
+    Promise.all([fetchChiTietSan, fetchSan])
+        .then(([dataChiTiet, dataSan]) => {
+            if (!dataChiTiet || !dataChiTiet.IDSan) {
+                document.querySelector(".container").innerHTML = "<p>Không có thông tin chi tiết sân.</p>";
+                return;
+            }
+            if (!dataSan) {
+                document.querySelector(".container").innerHTML = "<p>Không có dữ liệu sân từ API /san.</p>";
+                return;
+            }
+
+            setTextContent("tensan", dataSan.TenSan);
+            setTextContent("mota", dataChiTiet.MoTa);
+            setTextContent("gioHoatDong", dataChiTiet.GioHoatDong);
+            setTextContent("giaSan", dataSan.GiaThue ? `${formatCurrency(dataSan.GiaThue)} đ` : "Không có");
+            setTextContent("loaiSan", dataSan.MoTa);
+
+            const location_id = dataSan.location_id;
+            if (!location_id) {
+                console.error("❌ Không tìm thấy location_id trong dữ liệu sân.");
+                return;
+            }
+            return fetch(`http://localhost:3000/locations/${location_id}`)
+                .then(res => res.json())
+                .then(dataLocations => {
+                    if (!dataLocations) {
+                        console.error("❌ Không có dữ liệu từ API /locations.");
+                        return;
+                    }
+                    setTextContent("diachi", dataLocations.address); // Đổi từ `id` thành `diaChi`
+                })
+                .catch(error => {
+                    console.error("❌ Lỗi khi lấy thông tin địa chỉ sân:", error);
+                });
+        })
+        .then(() => {
+            let galleryHtml = "";
+            if (idSan) {
+                fetch(`http://localhost:3000/san/${idSan}`)
+                    .then(res => res.json())
+                    .then(dataSan => {
+                        if (dataSan.HinhAnh && typeof dataSan.HinhAnh === "string") {
+                            galleryHtml = `<img src="${dataSan.HinhAnh}" alt="Hình ảnh sân">`;
+                        } else if (Array.isArray(dataSan.HinhAnh) && dataSan.HinhAnh.length > 0) {
+                            galleryHtml = dataSan.HinhAnh.map(img => `<img src="${img}" alt="Hình ảnh sân">`).join("");
+                        } else {
+                            galleryHtml = "<p>Không có hình ảnh.</p>";
+                        }
+                        document.getElementById("hinhAnh").innerHTML = galleryHtml;
+                    })
+                    .catch(error => {
+                        console.error("❌ Lỗi khi tải hình ảnh sân:", error);
+                    });
+            }
+
+            loadSchedule(idSan);
+        })
+        .catch(error => {
+            console.error("❌ Lỗi khi lấy thông tin sân:", error);
+            document.querySelector(".container").innerHTML = "<p>Lỗi khi lấy thông tin sân.</p>";
+        });
 });
+
 
 async function getUserInfo(userId) {
   try {
