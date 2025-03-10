@@ -15,7 +15,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Hàm tạo mã QR
 function generateQRCode() {
     let qrContainer = document.getElementById("qrcode");
     let paidButton = document.getElementById("paid-btn");
@@ -30,13 +29,17 @@ function generateQRCode() {
         document.getElementById("qr-form").style.display = "block";
         paidButton.style.display = "block";
     }
-
 }
 
 // Hàm xử lý thanh toán
 async function handlePayment() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const idSan = urlParams.get("idSan");
+    if (!idSan) {
+        console.error("❌ Không tìm thấy idSan trong URL!");
+        return;
+    }
     let userId = localStorage.getItem("userId");
-
     let selectedDate = document.getElementById("NgayDatSan").innerText.split(":")[1]?.trim();
     let selectedTime = document.getElementById("GioDatSan").innerText.split(":").slice(1).join(":").trim();
     let onePrice = document.getElementById("GiaDatSan").innerText.split(":")[1]?.trim();
@@ -45,10 +48,10 @@ async function handlePayment() {
     let userPhone = document.getElementById("SdtDatSan").innerText.split(":")[1]?.trim();
     let fieldName = document.getElementById("tensan").innerText;
     let fieldAddress = document.getElementById("diachi").innerText;
-    let totalPrice = document.getElementById("total-price").innerText;
+    let totalPrice = parseInt(document.getElementById("total-price").innerText.replace(/\D/g, ""), 10);
     let paymentTime = new Date().toLocaleString();
-    let docId = `${userId}_${selectedDate}_${fieldName}_${paymentTime}`;
-    let docIdd = `${userId}_${selectedDate}_${fieldName}_${selectedTime}`;
+    let docId = `${userId}_${selectedDate}_${idSan}_${selectedTime}`;
+    let docIdd = `${userId}_${selectedDate}_${idSan}_${selectedTime}`;
 
     let batch = writeBatch(db);
 
@@ -61,8 +64,12 @@ async function handlePayment() {
         sdt: userPhone,
         soTien: totalPrice,
         tenSan: fieldName,
+        idSan:idSan,
         diaChiSan: fieldAddress,
-        thoiGianThanhToan: paymentTime
+        khungGio: selectedTime,
+        thoiGianThanhToan: paymentTime,
+        trangThaiThanhToan: "Thành công",
+        tienTrinh: "Chưa diễn ra"
     });
 
     // Thêm lịch sử đặt sân
@@ -71,12 +78,19 @@ async function handlePayment() {
         userId,
         tenNguoiDung: userName,
         sdt: userPhone,
+        idSan:idSan,
         ngayDatSan: selectedDate,
         khungGio: selectedTime,
         tenSan: fieldName,
         diaChiSan: fieldAddress,
         giaSan: onePrice
     });
+    // Cập nhật trạng thái sân thành "Đã đặt"
+    let fieldRef = doc(db, `lich${idSan}`, `${idSan}_${selectedDate}_${selectedTime}`);
+    batch.update(fieldRef, { TrangThai: "Đã đặt" });
+    console.log("🟢 idSan:", idSan);
+    console.log("🟢 selectedDate:", selectedDate);
+    console.log("🟢 selectedTime:", selectedTime);
 
     try {
         await batch.commit();
@@ -85,6 +99,7 @@ async function handlePayment() {
         console.error("Lỗi khi lưu:", error);
         alert("Có lỗi xảy ra khi lưu thông tin thanh toán!");
     }
+    location.reload();
 }
 
 // Lắng nghe sự kiện

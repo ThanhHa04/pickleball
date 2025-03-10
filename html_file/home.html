@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://unpkg.com/toastr@latest/toastr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="https://unpkg.com/toastr@latest/build/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <meta http-equiv="Content-Security-Policy"content="default-src 'self' https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://fonts.googleapis.com; connect-src 'self' http://localhost:3000 https://nominatim.openstreetmap.org ; img-src * data:; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com;">
     <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -226,65 +228,10 @@
                 </div>
 
                 <div id="bookings" class="tab-content active">
-                    <div class="appointments-list">
-                        <!-- Card lịch hẹn 1 -->
-                        <div class="appointment-card">
-                            <div class="appointment-header">
-                                <div class="final">
-                                    <img src="../images/icon11.webp" alt="Sân Pickleball">
-                                    <div class="court-details">
-                                        <h3>Sân Pickleball Số 1</h3>
-                                        <p><i class='bx bx-map'></i> 123 Đường ABC, Quận XYZ</p>
-                                    </div>
-                                </div>
-                                <div class="appointment-status pending">
-                                    Chờ xác nhận
-                                </div>
-                            </div>
-                            <div class="appointment-body">
-                                <div class="appointment-info">
-                                    <p><i class='bx bx-calendar'></i> Ngày: 15/03/2024</p>
-                                    <p><i class='bx bx-time'></i> Thời gian: 15:00 - 17:00</p>
-                                    <p><i class='bx bx-user'></i> Số người: 4</p>
-                                    <p><i class='bx bx-money'></i> Tổng tiền: 500.000đ</p>
-                                </div>
-                                <div class="appointment-actions">
-                                    <button class="btn-confirm">Xác nhận</button>
-                                    <button class="btn-cancel">Hủy lịch</button>
-                                    <button class="btn-reschedule">Đổi lịch</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card lịch hẹn 2 -->
-                        <div class="appointment-card">
-                            <div class="appointment-header">
-                                <div class="final">
-                                    <img src="../images/icon2.webp" alt="Sân Pickleball">
-                                    <div class="court-details">
-                                        <h3>Sân Pickleball Số 2</h3>
-                                        <p><i class='bx bx-map'></i> 456 Đường DEF, Quận UVW</p>
-                                    </div>
-                                </div>
-                                <div class="appointment-status confirmed">
-                                    Đã xác nhận
-                                </div>
-                            </div>
-                            <div class="appointment-body">
-                                <div class="appointment-info">
-                                    <p><i class='bx bx-calendar'></i> Ngày: 16/03/2024</p>
-                                    <p><i class='bx bx-time'></i> Thời gian: 08:00 - 10:00</p>
-                                    <p><i class='bx bx-user'></i> Số người: 2</p>
-                                    <p><i class='bx bx-money'></i> Tổng tiền: 300.000đ</p>
-                                </div>
-                                <div class="appointment-actions">
-                                    <button class="btn-cancel">Hủy lịch</button>
-                                    <button class="btn-reschedule">Đổi lịch</button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="appointments-list" id="booking-list">
                     </div>
                 </div>
+                
 
                 <div id="payments" class="tab-content">
                     <div class="payments-list">
