@@ -1,3 +1,66 @@
+document.addEventListener("DOMContentLoaded", async () => {
+    async function fetchData(url) {
+        try {
+            const response = await fetch(url);
+            return await response.json();
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu:", error);
+            return null;
+        }
+    }
+
+    async function updateBookingData(bookings) {
+        const userId = localStorage.getItem("userId");
+        const bookingList = document.getElementById("booking-list");
+        bookingList.innerHTML = "";
+
+        for (const booking of bookings) {
+            const sanData = await fetchData(`http://localhost:3000/san/${booking.idSan}`);
+            const hinhAnh = sanData?.HinhAnh || "../images/default.webp";
+            // Tạo card lịch hẹn
+            const card = document.createElement("div");
+            card.classList.add("appointment-card");
+            card.dataset.idsan = booking.idSan;
+            card.dataset.ngay = booking.ngayDatSan;
+            card.dataset.gio = booking.khungGio;
+            card.dataset.userid = userId;
+            card.innerHTML = `
+                <div class="appointment-header">
+                    <div class="final">
+                        <img src="${hinhAnh}" alt="Sân Pickleball">
+                        <div class="court-details">
+                            <h3>${booking.tenSan}</h3>
+                            <p><i class='bx bx-map'></i> ${booking.diaChiSan}</p>
+                        </div>
+                    </div>
+                    <div class="appointment-status ${booking.trangthai}">
+                        ${booking.trangthai === "pending" ? "Chờ xác nhận" : "Đã xác nhận"}
+                    </div>
+                </div>
+                <div class="appointment-body">
+                    <div class="appointment-info">
+                        <p><i class='bx bx-calendar'></i> Ngày: ${booking.ngayDatSan}</p>
+                        <p><i class='bx bx-time'></i> Thời gian: ${booking.khungGio}</p>
+                        <p><i class='bx bxs-caret-right-circle'></i> Trạng thái: ${booking.tienTrinh}</p>
+                        <p><i class='bx bx-money'></i> Tổng tiền: ${booking.giaSan}</p>
+                    </div>
+                    <div class="appointment-actions">
+                        <button class="btn-cancel">Hủy lịch</button>
+                        <button class="btn-reschedule">Đổi lịch</button>
+                    </div>
+                </div>
+            `;
+
+            bookingList.appendChild(card);
+        }
+    }
+
+    const bookings = await fetchData("http://localhost:3000/lichsudatsan");
+    if (bookings) {
+        await updateBookingData(bookings);
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     // Xử lý chuyển tab
     const tabButtons = document.querySelectorAll('.tab-button');
@@ -19,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 statusFilter.innerHTML = `
                     <option value="all">Tất cả trạng thái</option>
                     <option value="pending">Chờ xác nhận</option>
-                    <option value="confirmed">Đã xác nhận</option>
                     <option value="completed">Đã hoàn thành</option>
                     <option value="cancelled">Đã hủy</option>
                 `;
@@ -170,45 +232,75 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Xử lý các nút hành động
     document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('btn-confirm')) {
-            handleConfirmAppointment(e.target);
+        if (e.target.classList.contains('btn-view-receipt')) {
+            handleViewReceipt(e.target);
         } else if (e.target.classList.contains('btn-cancel')) {
             handleCancelAppointment(e.target);
         } else if (e.target.classList.contains('btn-reschedule')) {
             handleRescheduleAppointment(e.target);
         } else if (e.target.classList.contains('btn-pay')) {
             handlePayment(e.target);
-        } else if (e.target.classList.contains('btn-view-receipt')) {
-            handleViewReceipt(e.target);
-        }
+        } 
     });
 
-    // Xử lý xác nhận lịch hẹn
-    function handleConfirmAppointment(button) {
-        const card = button.closest('.appointment-card');
-        const status = card.querySelector('.appointment-status');
-        
-        if (confirm('Xác nhận lịch hẹn này?')) {
-            status.textContent = 'Đã xác nhận';
-            status.className = 'appointment-status confirmed';
-            button.remove();
-            showNotification('Đã xác nhận lịch hẹn thành công!', 'success');
-        }
-    }
-
     // Xử lý hủy lịch hẹn
-    function handleCancelAppointment(button) {
-        const card = button.closest('.appointment-card');
-        const status = card.querySelector('.appointment-status');
+    async function handleCancelAppointment(button) {
+        const card = button.closest(".appointment-card");
+        const status = card.querySelector(".appointment-status");
+    
+        const idSan = card.dataset.idsan;
+        const ngayDatSan = card.dataset.ngay;
+        const khungGio = card.dataset.gio;
+        const userId = localStorage.getItem("userId"); 
+    
+        if (confirm("Bạn có chắc chắn muốn hủy lịch hẹn này?")) {
+            try {
+                const documentId = `${idSan}_${ngayDatSan}_${khungGio}`;
+                const updateURL = `http://localhost:3000/lich/${idSan}/${documentId}`;
+
+                const bookingResponse = await fetch(updateURL, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ trangthai: "Còn trống" })
+                });
+
+    
+                const historyId = `${userId}_${ngayDatSan}_${idSan}_${khungGio}`;
+                const response = await fetch(`http://localhost:3000/lichsudatsan/${historyId}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ tienTrinh: "Đã hủy" })
+                });
+                
+                const historyResponse = await fetch(historyURL, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ TienTrinh: "Đã hủy" })  
+                });
         
-        if (confirm('Bạn có chắc chắn muốn hủy lịch hẹn này?')) {
-            status.textContent = 'Đã hủy';
-            status.className = 'appointment-status cancelled';
-            const actions = card.querySelector('.appointment-actions');
-            actions.innerHTML = '<button class="btn-reschedule">Đặt lại</button>';
-            showNotification('Đã hủy lịch hẹn thành công!', 'info');
+                if (!historyResponse.ok) {
+                    const errorText = await historyResponse.text();
+                    throw new Error(`Lỗi khi cập nhật lịch sử đặt sân: ${errorText}`);
+                }
+                console.log("Cập nhật lịch sử đặt sân thành công!");
+                
+    
+                if (bookingResponse.ok && historyResponse.ok) {
+                    status.textContent = "Đã hủy";
+                    status.className = "appointment-status cancelled";
+                    card.querySelector(".appointment-actions").innerHTML = '<button class="btn-reschedule">Đặt lại</button>';
+                    toastr.success("Đã hủy lịch hẹn thành công!", "Thông báo");
+                } else {
+                    toastr.error("Lỗi khi cập nhật dữ liệu. Vui lòng thử lại!", "Lỗi");
+                }
+            } catch (error) {
+                console.error("Lỗi khi hủy lịch hẹn:", error);
+                toastr.error("Lỗi hệ thống. Vui lòng thử lại!", "Lỗi");
+            }
         }
     }
+    
+    
 
     // Xử lý đổi lịch hẹn
     function handleRescheduleAppointment(button) {
