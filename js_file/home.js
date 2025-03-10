@@ -204,28 +204,19 @@ async function loadPickleballData() {
         const locations = await locationsRes.json();
         const sanRes = await fetch('http://localhost:3000/san');
         const sanList = await sanRes.json();
-
         let courtCount = {};
-
-        // Đếm số sân theo location_id
         sanList.forEach(san => {
             let locationId = san.location_id;
             courtCount[locationId] = (courtCount[locationId] || 0) + 1;
         });
-
-        // Sắp xếp danh sách locations theo id tăng dần
         locations.sort((a, b) => a.id - b.id);
 
         let htmlContent = `<p>Có ${locations.length} cơ sở:</p><ul>`;
-
-        // Tạo danh sách hiển thị
         locations.forEach(loc => {
             let numCourts = courtCount[loc.id] || 0;
             htmlContent += `<li>${loc.name}: có ${numCourts} sân</li>`;
         });
         htmlContent += `</ul>`;
-
-        // Hiển thị nội dung lên trang web
         document.getElementById("pickleball-courts").innerHTML = htmlContent;
 
     } catch (error) {

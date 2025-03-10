@@ -148,30 +148,25 @@ h1 {
 
 #scheduleTable th,
 #scheduleTable td {
-    border: 1px solid #ddd;
+    border: 1px solid #757272;
     padding: 8px;
     text-align: center;
 }
 
 #scheduleTable th {
-    background-color: #f2f2f2;
+    background-color: #c2c8c5;
 }
 
-
-/* 🌟 Tô màu xanh cho các ô trống */
 .highlight {
     background-color: #c3f7c3;
-    /* Xanh nhạt */
     border-radius: 5px;
     text-align: center;
 }
 
 .highlight:hover {
     background-color: #a5e6a5;
-    /* Màu xanh đậm hơn khi hover */
 }
 
-/* 📅 Ô giờ bên trái */
 .hour-col {
     font-weight: bold;
     text-align: center;
@@ -179,7 +174,6 @@ h1 {
     padding: 10px;
 }
 
-/* ✅ Khung đặt sân */
 .available-slot {
     display: flex;
     align-items: center;
@@ -189,7 +183,6 @@ h1 {
     cursor: pointer;
 }
 
-/* 🔲 Checkbox đặt sân */
 .booking-checkbox {
     appearance: none;
     width: 80%;
@@ -216,25 +209,36 @@ h1 {
     color: #008000;
 }
 
-/* 🎯 Hiệu ứng khi chọn */
 .booking-checkbox:checked {
-    background-color: #008000;
+    background-color: #017501;
     color: white;
 }
 
-/* Khi được chọn, giá chuyển thành màu trắng */
 .booking-checkbox:checked::before {
     color: white;
 }
 
-/* 🔴 Ô đã đặt */
 .booked-slot {
-    color: red;
+    color: #1f3821;
     font-weight: bold;
-    text-align: center;
+    border: 2px solid #005f73; 
+    padding: 2px 5px;
+    border-radius: 5px;
+    background:#a1c0a6;
+    display: inline-block;
 }
 
-/* ⚪ Ô trống */
+
+.past-slot {
+    color: #5e646c;
+    font-weight: bold;
+}
+
+.disabled-slot {
+    background-color: #c3f7c3;
+    opacity: 0.7;
+}
+
 .empty-slot {
     color: gray;
     text-align: center;

@@ -49,6 +49,77 @@ app.get('/locations', async (req, res) => {
     }
 });
 
+app.get('/lichsudatsan', async (req, res) => {
+    try {
+        const snapshot = await db.collection('lichsudatsan').get();
+        if (snapshot.empty) {
+            return res.status(404).json({ message: 'Không có lịch sử đặt sân nào.' });
+        }
+
+        let locations = [];
+        snapshot.forEach(doc => {
+            locations.push({ id: doc.id, ...doc.data() });
+        });
+
+        res.json(locations);
+    } catch (err) {
+        res.status(500).json({ error: 'Lỗi server' });
+    }
+});
+
+app.get('/lichsudatsan/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const docRef = db.collection('lichsudatsan').doc(id);
+        const docSnap = await docRef.get();
+
+        if (!docSnap.exists) {
+            return res.status(404).json({ message: 'Không tìm thấy lịch sử đặt sân.' });
+        }
+
+        res.json({ id: docSnap.id, ...docSnap.data() });
+    } catch (err) {
+        res.status(500).json({ error: 'Lỗi server' });
+    }
+});
+
+app.patch('/lichsudatsan/:id', async (req, res) => {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    try {
+        const docRef = db.collection('lichsudatsan').doc(id);
+        const docSnap = await docRef.get();
+
+        if (!docSnap.exists) {
+            return res.status(404).json({ error: "Không tìm thấy lịch sử đặt sân." });
+        }
+
+        await docRef.update(updateData);
+        res.json({ message: "Cập nhật thành công!" });
+    } catch (err) {
+        res.status(500).json({ error: 'Lỗi server' });
+    }
+});
+
+app.get('/lichsuthanhtoan', async (req, res) => {
+    try {
+        const snapshot = await db.collection('lichsuthanhtoan').get();
+        if (snapshot.empty) {
+            return res.status(404).json({ message: 'Không có lịch sử thanh toán nào.' });
+        }
+
+        let locations = [];
+        snapshot.forEach(doc => {
+            locations.push({ id: doc.id, ...doc.data() });
+        });
+
+        res.json(locations);
+    } catch (err) {
+        res.status(500).json({ error: 'Lỗi server' });
+    }
+});
+
 // API lấy danh sách sân từ 'san'
 app.get('/san', async (req, res) => {
     try {
@@ -156,6 +227,45 @@ app.get('/lich/:IDSan', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+app.get('/lich/:IDSan/:documentId', async (req, res) => {
+    const { IDSan, documentId } = req.params;  
+    const collectionName = `lich${IDSan}`; 
+
+    try {
+        const docRef = db.collection(collectionName).doc(documentId);
+        const docSnap = await docRef.get();
+
+        if (!docSnap.exists) {
+            return res.status(404).json({ error: "Không tìm thấy lịch đặt sân." });
+        }
+
+        res.json({ id: docSnap.id, ...docSnap.data() });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.patch('/lich/:IDSan/:documentId', async (req, res) => {
+    const { IDSan, documentId } = req.params;
+    const updateData = req.body;
+    const collectionName = `lich${IDSan}`;
+
+    try {
+        const docRef = db.collection(collectionName).doc(documentId);
+        const docSnap = await docRef.get();
+
+        if (!docSnap.exists) {
+            return res.status(404).json({ error: "Không tìm thấy lịch đặt sân." });
+        }
+
+        await docRef.update(updateData);
+        res.json({ message: "Cập nhật thành công!" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 app.get('/nguoidung/:userId', async (req, res) => {
     const { userId } = req.params;  

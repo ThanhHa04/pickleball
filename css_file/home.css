@@ -1011,11 +1011,13 @@ footer {
 /* Quản lý lịch hẹn */
 .appointments-container {
     padding: 20px;
-    max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
 }
 
 .appointments-header {
+    width:90%;
+    margin:auto;
     margin-bottom: 30px;
 }
 
@@ -1061,10 +1063,15 @@ footer {
 /* Tabs */
 .appointments-tabs {
     display: flex;
+    width:90%;
     gap: 10px;
-    margin-bottom: 20px;
+    margin: auto;
+    margin-bottom:20px;
 }
-
+#bookings{
+    width:90%;
+    margin:auto;
+}
 .tab-button {
     padding: 12px 24px;
     border: none;
@@ -1123,9 +1130,9 @@ footer {
     gap: 15px;
 }
 
-.court-info img {
-    width: 60px;
-    height: 60px;
+.final img {
+    width: 30%;
+    height: auto;
     border-radius: 8px;
     object-fit: cover;
 }
@@ -1143,6 +1150,7 @@ footer {
 }
 
 .appointment-status, .payment-status {
+    width:30%;
     padding: 6px 12px;
     border-radius: 20px;
     font-size: 14px;
