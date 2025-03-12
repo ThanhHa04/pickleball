@@ -68,8 +68,7 @@ async function handlePayment() {
         diaChiSan: fieldAddress,
         khungGio: selectedTime,
         thoiGianThanhToan: paymentTime,
-        trangThaiThanhToan: "Thành công",
-        tienTrinh: "Chưa diễn ra"
+        trangThaiThanhToan: "Thành công"
     });
 
     // Thêm lịch sử đặt sân
@@ -83,7 +82,8 @@ async function handlePayment() {
         khungGio: selectedTime,
         tenSan: fieldName,
         diaChiSan: fieldAddress,
-        giaSan: onePrice
+        giaSan: onePrice,
+        tienTrinh: "Chưa diễn ra"
     });
     // Cập nhật trạng thái sân thành "Đã đặt"
     let fieldRef = doc(db, `lich${idSan}`, `${idSan}_${selectedDate}_${selectedTime}`);
