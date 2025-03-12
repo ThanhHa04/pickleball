@@ -460,6 +460,132 @@
             </div>
         </div>
 
+        <div id="statistics" class="content">
+            <h2>Thống kê</h2>
+            <div class="stats-menu">
+                <button class="stats-tab active" data-tab="overview">Tổng quan</button>
+                <button class="stats-tab" data-tab="users">Người dùng</button>
+                <button class="stats-tab" data-tab="courts">Sân</button>
+                <button class="stats-tab" data-tab="revenue">Doanh thu</button>
+                <button class="stats-tab" data-tab="bookings">Đặt sân</button>
+                <button class="stats-tab" data-tab="geographical">Phân bố</button>
+            </div>
+
+            <div id="overview" class="stats-content active">
+                <div class="overview-cards">
+                    <div class="stats-card">
+                        <div class="stats-icon"><i class='bx bx-user'></i></div>
+                        <div class="stats-info">
+                            <h3>Tổng người dùng</h3>
+                            <p class="stats-number">1,250</p>
+                            <p class="stats-growth positive">+15% so với tháng trước</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon"><i class='bx bx-tennis-ball'></i></div>
+                        <div class="stats-info">
+                            <h3>Tổng sân</h3>
+                            <p class="stats-number">34</p>
+                            <p class="stats-growth positive">+5 sân mới</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon"><i class='bx bx-calendar-check'></i></div>
+                        <div class="stats-info">
+                            <h3>Đặt sân tháng này</h3>
+                            <p class="stats-number">458</p>
+                            <p class="stats-growth positive">+23% so với tháng trước</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon"><i class='bx bx-money'></i></div>
+                        <div class="stats-info">
+                            <h3>Doanh thu tháng này</h3>
+                            <p class="stats-number">258.500.000 đ</p>
+                            <p class="stats-growth positive">+18% so với tháng trước</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-container">
+                        <h3>Doanh thu (6 tháng gần đây)</h3>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Top 5 sân được đặt nhiều nhất</h3>
+                        <canvas id="topCourtsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="users" class="stats-content">
+                <div class="chart-container full-width">
+                    <h3>Người dùng mới theo tháng</h3>
+                    <canvas id="userChart"></canvas>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-container">
+                        <h3>Phân bố người dùng theo độ tuổi</h3>
+                        <canvas id="userAgeChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Phân bố người dùng theo loại</h3>
+                        <canvas id="userTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="courts" class="stats-content">
+                <div class="chart-container">
+                    <h3>Số giờ sử dụng theo sân</h3>
+                    <canvas id="courtUsageChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Tỷ lệ lấp đầy theo sân</h3>
+                    <canvas id="courtOccupancyChart"></canvas>
+                </div>
+            </div>
+
+            <div id="revenue" class="stats-content">
+                <div class="chart-container full-width">
+                    <h3>Doanh thu theo tháng</h3>
+                    <canvas id="monthlyRevenueChart"></canvas>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-container">
+                        <h3>Doanh thu theo loại sân</h3>
+                        <canvas id="courtTypeRevenueChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Doanh thu theo khung giờ</h3>
+                        <canvas id="timeSlotRevenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="bookings" class="stats-content">
+                <div class="chart-container full-width">
+                    <h3>Số lượng đặt sân theo tháng</h3>
+                    <canvas id="bookingTrendChart"></canvas>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-container">
+                        <h3>Đặt sân theo ngày trong tuần</h3>
+                        <canvas id="bookingByDayChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Đặt sân theo khung giờ</h3>
+                        <canvas id="bookingByTimeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="geographical" class="stats-content">
+                <h3>Phân bố người dùng theo khu vực</h3>
+                <div id="choroplethChart" style="width: 100%; height: 500px;"></div>
+            </div>
+        </div>
+
     </div>
     <footer>
         <div class="footer-container">

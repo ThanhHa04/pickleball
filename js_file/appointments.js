@@ -118,9 +118,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const courtAddress = appointment.querySelector('.court-details p').textContent.toLowerCase();
                 if (!courtName.includes(searchTerm) && !courtAddress.includes(searchTerm)) {
                     show = false;
-                }
+            }
 
-                // Lọc theo trạng thái
+            // Lọc theo trạng thái
                 if (statusValue !== 'all') {
                     const status = appointment.querySelector('.appointment-status').classList[1];
                     if (status !== statusValue) {
@@ -187,9 +187,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Lọc theo ngày
                 if (dateValue !== 'all') {
                     const paymentDate = new Date(payment.querySelector('.payment-info p:first-child').textContent.split(': ')[1]);
-                    const today = new Date();
-                    const tomorrow = new Date(today);
-                    tomorrow.setDate(tomorrow.getDate() + 1);
+        const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
 
                     switch(dateValue) {
                         case 'today':
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 show = false;
                             }
                             break;
-                        case 'week':
+            case 'week':
                             const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
                             const weekEnd = new Date(weekStart);
                             weekEnd.setDate(weekEnd.getDate() + 6);
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 show = false;
                             }
                             break;
-                        case 'month':
+            case 'month':
                             const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
                             const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
                             if (paymentDate < monthStart || paymentDate > monthEnd) {
@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
             handleRescheduleAppointment(e.target);
         } else if (e.target.classList.contains('btn-pay')) {
             handlePayment(e.target);
-        } 
+        }
     });
 
     // Xử lý hủy lịch hẹn
