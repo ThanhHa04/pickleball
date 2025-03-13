@@ -259,3 +259,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+document.querySelectorAll('.register-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        let item = this.closest('.membership-item');
+        let name = item.querySelector('.name').textContent;
+        let description = item.querySelector('.des').textContent;
+        
+        document.getElementById('modal-title').textContent = name;
+        document.getElementById('modal-description').textContent = description;
+        document.getElementById('membership-modal').style.display = 'block';
+    });
+});
+
+document.querySelector('.close-btn').addEventListener('click', function() {
+    document.getElementById('membership-modal').style.display = 'none';
+});
