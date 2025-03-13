@@ -241,3 +241,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 document.addEventListener("DOMContentLoaded", loadPickleballData);
+
+document.addEventListener('DOMContentLoaded', function() {
+    const statTabs = document.querySelectorAll('.stats-tab');
+    const statContents = document.querySelectorAll('.stats-content');
+
+    statTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Xóa class active khỏi tất cả các tab và nội dung
+            statTabs.forEach(t => t.classList.remove('active'));
+            statContents.forEach(content => content.classList.remove('active'));
+
+            // Thêm class active vào tab và nội dung được chọn
+            this.classList.add('active');
+            const activeContent = document.getElementById(this.getAttribute('data-tab'));
+            activeContent.classList.add('active');
+        });
+    });
+});
+document.querySelectorAll('.register-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        let item = this.closest('.membership-item');
+        let name = item.querySelector('.name').textContent;
+        let description = item.querySelector('.des').textContent;
+        
+        document.getElementById('modal-title').textContent = name;
+        document.getElementById('modal-description').textContent = description;
+        document.getElementById('membership-modal').style.display = 'block';
+    });
+});
+
+document.querySelector('.close-btn').addEventListener('click', function() {
+    document.getElementById('membership-modal').style.display = 'none';
+});
