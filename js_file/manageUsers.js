@@ -1,3 +1,10 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { firebaseConfig } from "./config.js";
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 document.addEventListener('DOMContentLoaded', function() {
     const userTableBody = document.getElementById('user-table-body');
     const userSearchInput = document.getElementById('user-search-input');
@@ -5,26 +12,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentPage = 1;
     let allUsers = [];
 
-    // Initialize Firebase
-    const firebaseConfig = {
-        apiKey: "AIzaSyATp-eu8CBatLs04mHpZS4c66FaYw5zLgk",
-        authDomain: "pka-pickleball.firebaseapp.com",
-        projectId: "pka-pickleball",
-        storageBucket: "pka-pickleball.appspot.com",
-        messagingSenderId: "38130361867",
-        appId: "1:38130361867:web:f3c1a3940e3c390b11890e",
-        measurementId: "G-0YQ7GKJKRC"
-    };
-    firebase.initializeApp(firebaseConfig);
-
-    const db = firebase.firestore();
-
-    function fetchUsers() {
-        db.collection('nguoidung').get().then((querySnapshot) => {
-            allUsers = querySnapshot.docs.map(doc => {
-                const data = doc.data();
+    async function fetchUsers() {
+        try {
+            const nguoidungCol = collection(db, 'nguoidung');
+            const querySnapshot = await getDocs(nguoidungCol);
+            allUsers = querySnapshot.docs.map(docSnapshot => {
+                const data = docSnapshot.data();
                 return {
-                    id: doc.id,
+                    id: docSnapshot.id,
                     name: data.HoTen || '-',
                     email: data.Email || '-',
                     phone: data.IDNguoiDung || '-',
@@ -33,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     role: data.role || 'user'
                 };
             });
+            // Sắp xếp: admin trước, sau đó theo thứ tự tên
             allUsers.sort((a, b) => {
                 if (a.role === b.role) {
                     return a.name.localeCompare(b.name);
@@ -40,7 +36,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 return a.role === 'admin' ? -1 : 1;
             });
             filterUsers();
-        });
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu người dùng:", error);
+        }
     }
 
     function filterUsers() {
@@ -52,32 +50,38 @@ document.addEventListener('DOMContentLoaded', function() {
         displayUsers(filteredUsers);
     }
 
-    function handleEditUser(user) {
+    async function handleEditUser(user) {
         alert(`Chỉnh sửa thông tin người dùng: ${user.name}`);
-        const userRef = db.collection('nguoidung').doc(user.id);
+        const userRef = doc(db, 'nguoidung', user.id);
         const newName = prompt('Nhập tên mới:', user.name);
         const newEmail = prompt('Nhập email mới:', user.email);
         const newPhone = prompt('Nhập số điện thoại mới:', user.phone);
-        const newMembershipStatus = confirm('Kích hoạt hiển thị thông tin?') ? true : false;
+        const newMembershipStatus = confirm('Kích hoạt hiển thị thông tin?');
         const newRole = prompt('Nhập vai trò mới:', user.role);
         
-        if (newName) userRef.update({ HoTen: newName });
-        if (newEmail) userRef.update({ Email: newEmail });
-        if (newPhone) userRef.update({ IDNguoiDung: newPhone });
-        userRef.update({ HienThiThongTin: newMembershipStatus });
-        if (newRole) userRef.update({ role: newRole });
-        
-        alert('Thông tin người dùng đã được cập nhật.');
-        fetchUsers();
+        try {
+            if (newName) await updateDoc(userRef, { HoTen: newName });
+            if (newEmail) await updateDoc(userRef, { Email: newEmail });
+            if (newPhone) await updateDoc(userRef, { IDNguoiDung: newPhone });
+            await updateDoc(userRef, { HienThiThongTin: newMembershipStatus });
+            if (newRole) await updateDoc(userRef, { role: newRole });
+            alert('Thông tin người dùng đã được cập nhật.');
+            fetchUsers();
+        } catch (error) {
+            console.error("Lỗi cập nhật người dùng:", error);
+        }
     }
 
-    function handleDeleteUser(user) {
+    async function handleDeleteUser(user) {
         if (confirm(`Bạn có chắc chắn muốn xóa người dùng: ${user.name}?`)) {
-            const userRef = db.collection('nguoidung').doc(user.id);
-            userRef.delete().then(() => {
+            const userRef = doc(db, 'nguoidung', user.id);
+            try {
+                await deleteDoc(userRef);
                 alert(`Người dùng ${user.name} đã được xóa.`);
                 fetchUsers();
-            });
+            } catch (error) {
+                console.error("Lỗi xóa người dùng:", error);
+            }
         }
     }
 
@@ -145,4 +149,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     fetchUsers();
-}); 
+});

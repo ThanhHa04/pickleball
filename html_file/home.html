@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/toastr@latest/build/toastr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <meta http-equiv="Content-Security-Policy"content="default-src 'self' https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://fonts.googleapis.com; connect-src 'self' http://localhost:3000 https://nominatim.openstreetmap.org ; img-src * data:; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com;">
+    <meta http-equiv="Content-Security-Policy"content="default-src 'self' https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://fonts.googleapis.com; connect-src 'self' http://localhost:3000 https://nominatim.openstreetmap.org https://firestore.googleapis.com; img-src * data:; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com;">
     <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -197,7 +197,6 @@
         <div id="appointments" class="content">
             <div class="appointments-container">
                 <div class="appointments-header">
-                    <h1>Quản Lý Lịch Hẹn</h1>
                     <div class="filter-section">
                         <div class="search-box">
                             <input type="text" id="appointment-search" placeholder="Tìm kiếm lịch hẹn...">
@@ -302,27 +301,14 @@
                 <table class="history-table">
                     <thead>
                         <tr>
-                            <th>Ngày</th>
-                            <th>Mô tả</th>
+                            <th>Địa chỉ</th>
+                            <th>Tên sân</th>
                             <th>Số tiền</th>
                             <th>Trạng thái</th>
+                            <th>Thời gian</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>15/03/2024</td>
-                            <td>Thanh toán tiền sân Pickleball Số 1</td>
-                            <td>500.000đ</td>
-                            <td class="status paid">Đã thanh toán</td>
-                        </tr>
-                        <tr>
-                            <td>14/03/2024</td>
-                            <td>Thanh toán tiền sân Pickleball Số 2</td>
-                            <td>300.000đ</td>
-                            <td class="status unpaid">Chưa thanh toán</td>
-                        </tr>
-                        <!-- Thêm các dòng khác tương tự -->
-                    </tbody>
+                    <tbody id="history-body"></tbody>
                 </table>
                 <div class="pagination">
                     <button class="btn-prev"><i class='bx bx-chevron-left'></i></button>
@@ -384,11 +370,6 @@
                 <button id="confirm-btn">Xác nhận</button>
             </div>
         </div>        
-
-        <div id="profile" class="content">
-            <h2>Quản lý thông tin</h2>
-            <p>Cập nhật thông tin cá nhân...</p>
-        </div>
 
         <div id="map" class="content">
             <div class="left-content">
@@ -637,9 +618,9 @@
     </footer>
     
     <script src="../js_file/home.js"></script>
-    <script src="../js_file/appointments.js"></script>
+    <script type="module" src="../js_file/appointments.js"></script>
     <script src="../js_file/listcourts.js"></script>
-    <script src="../js_file/manageUsers.js"></script>
+    <script type="module" src="../js_file/manageUsers.js"></script>
 
 </body>
 

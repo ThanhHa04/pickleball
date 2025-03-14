@@ -1,12 +1,34 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { query, getFirestore, collection, doc, getDocs, getDoc, where  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { firebaseConfig } from "./config.js";
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 document.addEventListener("DOMContentLoaded", async () => {
-    async function fetchData(url) {
-        try {
-            const response = await fetch(url);
-            return await response.json();
-        } catch (error) {
-            console.error("Lỗi khi lấy dữ liệu:", error);
-            return null;
-        }
+
+    async function getBookings() {
+        const userId = localStorage.getItem("userId");
+        const bookingsCol = collection(db, "lichsudatsan");
+        const q = query(bookingsCol, where("userId", "==", userId));
+    
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(docSnap => ({
+            ...docSnap.data(),
+            id: docSnap.id
+        }));
+    }
+
+    async function getSanById(idSan) {
+        const sanRef = doc(db, "san", idSan);
+        const sanSnap = await getDoc(sanRef);
+        return sanSnap.exists() ? sanSnap.data() : null;
+    }
+
+    async function getHistoryById(historyId) {
+        const historyRef = doc(db, "lichsudatsan", historyId);
+        const historySnap = await getDoc(historyRef);
+        return historySnap.exists() ? historySnap.data() : null;
     }
 
     async function updateBookingData(bookings) {
@@ -15,10 +37,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         bookingList.innerHTML = "";
 
         for (const booking of bookings) {
-            const sanData = await fetchData(`http://localhost:3000/san/${booking.idSan}`);
-            const historyData = await fetchData(`http://localhost:3000/lichsudatsan/${booking.historyId}`);
-            const hinhAnh = sanData?.HinhAnh || "../images/default.webp";
+            const computedHistoryId = `${userId}_${booking.ngayDatSan}_${booking.idSan}_${booking.khungGio}`;
+            console.log("Computed historyId:", computedHistoryId);
+            const sanData = await getSanById(booking.idSan);
+            const historyData = await getHistoryById(computedHistoryId);
+            const hinhAnh = sanData?.HinhAnh;
             const tienTrinh = historyData?.tienTrinh || "Không xác định";
+
+            // Xác định class trạng thái
+            let statusClass = "pending";
+            if (tienTrinh === "Đã xác nhận") {
+                statusClass = "confirmed";
+            } else if (tienTrinh === "Đã hủy") {
+                statusClass = "cancelled";
+            }
+            
+            let actionsHTML = "";
+            if (statusClass !== "cancelled") {
+                actionsHTML = `
+                    <div class="appointment-actions">
+                        <button class="btn-cancel">Hủy lịch</button>
+                    </div>
+                `;
+            }
             // Tạo card lịch hẹn
             const card = document.createElement("div");
             card.classList.add("appointment-card");
@@ -26,41 +67,99 @@ document.addEventListener("DOMContentLoaded", async () => {
             card.dataset.ngay = booking.ngayDatSan;
             card.dataset.gio = booking.khungGio;
             card.dataset.userid = userId;
+
             card.innerHTML = `
                 <div class="appointment-header">
                     <div class="final">
-                        <img src="${hinhAnh}" alt="Sân Pickleball">
+                        <img src="${hinhAnh}" alt="Sân">
                         <div class="court-details">
                             <h3>${booking.tenSan}</h3>
                             <p><i class='bx bx-map'></i> ${booking.diaChiSan}</p>
                         </div>
                     </div>
-                    <div class="appointment-status ${tienTrinh}">
-                        ${tienTrinh === "pending" ? "Chờ xác nhận" : "Đã xác nhận"}
+                    <div class="appointment-status">
+                        ${tienTrinh}
                     </div>
                 </div>
                 <div class="appointment-body">
                     <div class="appointment-info">
                         <p><i class='bx bx-calendar'></i> Ngày: ${booking.ngayDatSan}</p>
                         <p><i class='bx bx-time'></i> Thời gian: ${booking.khungGio}</p>
-                        <p><i class='bx bxs-caret-right-circle'></i> Trạng thái: ${booking.tienTrinh}</p>
+                        <p><i class='bx bxs-caret-right-circle'></i> Trạng thái: ${tienTrinh}</p>
                         <p><i class='bx bx-money'></i> Tổng tiền: ${booking.giaSan}</p>
                     </div>
-                    <div class="appointment-actions">
-                        <button class="btn-cancel">Hủy lịch</button>
-                        <button class="btn-reschedule">Đổi lịch</button>
-                    </div>
+                    ${actionsHTML}
                 </div>
             `;
+
+            // Cập nhật class cho phần tử trạng thái
+            const statusElement = card.querySelector(".appointment-status");
+            statusElement.classList.add(statusClass);
 
             bookingList.appendChild(card);
         }
     }
 
-    const bookings = await fetchData("http://localhost:3000/lichsudatsan");
+    const bookings = await getBookings();
     if (bookings) {
         await updateBookingData(bookings);
     }
+});
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+    async function getTransactionHistory() {
+        console.log("✅ Hàm getTransactionHistory() đã được gọi!");
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+            console.error("❌ Không tìm thấy userId trong localStorage!");
+            return [];
+        }
+
+        const historyRef = collection(db, "lichsuthanhtoan");
+        const q = query(historyRef, where("userId", "==", userId));
+        const snapshot = await getDocs(q);
+        
+        if (snapshot.empty) {
+            console.warn("⚠️ Không có giao dịch nào cho userId:", userId);
+            return [];
+        }
+
+        const transactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        console.log(`📌 Giao dịch của userId=${userId}:`, transactions);
+        return transactions;
+    }
+
+    async function updateHistoryTable() {
+        const historyBody = document.getElementById("history-body");
+        if (!historyBody) {
+            console.error("❌ Không tìm thấy phần tử history-body trong HTML!");
+            return;
+        }
+        historyBody.innerHTML = "";
+    
+        const transactions = await getTransactionHistory();
+        console.log("📌 Transactions Data:", transactions);
+    
+        if (!transactions.length) {
+            historyBody.innerHTML = "<tr><td colspan='5' style='text-align:center'>Không có giao dịch nào</td></tr>";
+            return;
+        }
+    
+        transactions.forEach(transaction => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${transaction.diaChiSan || "N/A"}</td>
+                <td>${transaction.tenSan || "N/A"}</td>
+                <td>${transaction.soTien ? transaction.soTien + "đ" : "N/A"}</td>
+                <td>${transaction.trangThaiThanhToan || "Chưa rõ"}</td>
+                <td>${transaction.thoiGianThanhToan || "N/A"}</td>
+            `;
+            historyBody.appendChild(row);
+        });
+    }
+
+    await updateHistoryTable();
 });
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -180,18 +279,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Lọc theo trạng thái
                 if (statusValue !== 'all') {
-                    const status = payment.querySelector('.payment-status').classList[1];
-                    if (status !== statusValue) {
-                        show = false;
+                    const statusText = appointment.querySelector('.appointment-status').textContent.trim(); // Lấy nội dung trạng thái
+
+                    if (statusValue === "cancelled") {
+                        if (statusText !== "Đã hủy") {
+                            show = false;
+                        }
+                    } else if (statusValue === "upcoming") {
+                        if (statusText !== "Chưa diễn ra") {
+                            show = false;
+                        }
+                    } else if (statusValue === "ongoing") {
+                        if (statusText !== "Đã diễn ra") {
+                            show = false;
+                        }
                     }
                 }
 
                 // Lọc theo ngày
                 if (dateValue !== 'all') {
                     const paymentDate = new Date(payment.querySelector('.payment-info p:first-child').textContent.split(': ')[1]);
-        const today = new Date();
-                const tomorrow = new Date(today);
-                tomorrow.setDate(tomorrow.getDate() + 1);
+                    const today = new Date();
+                    const tomorrow = new Date(today);
+                    tomorrow.setDate(tomorrow.getDate() + 1);
 
                     switch(dateValue) {
                         case 'today':
@@ -204,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 show = false;
                             }
                             break;
-            case 'week':
+                        case 'week':
                             const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
                             const weekEnd = new Date(weekStart);
                             weekEnd.setDate(weekEnd.getDate() + 6);
@@ -212,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 show = false;
                             }
                             break;
-            case 'month':
+                        case 'month':
                             const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
                             const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
                             if (paymentDate < monthStart || paymentDate > monthEnd) {
@@ -247,113 +357,48 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Xử lý hủy lịch hẹn
     async function handleCancelAppointment(button) {
-    const card = button.closest(".appointment-card");
-    const status = card.querySelector(".appointment-status");
-
-    const idSan = card.dataset.idsan;
-    const ngayDatSan = card.dataset.ngay;
-    const khungGio = card.dataset.gio;
-    const userId = localStorage.getItem("userId"); 
-
-    if (confirm("Bạn có chắc chắn muốn hủy lịch hẹn này?")) {
-        try {
-            const documentId = `${idSan}_${ngayDatSan}_${khungGio}`;
-            const updateURL = `http://localhost:3000/lich/${idSan}/${documentId}`;
-
-            // Cập nhật trạng thái lịch sân
-            const bookingResponse = await fetch(updateURL, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ trangthai: "Còn trống" })
-            });
-
-            if (!bookingResponse.ok) {
-                throw new Error(`Lỗi khi cập nhật lịch sân: ${await bookingResponse.text()}`);
-            }
-
-            // Cập nhật lịch sử đặt sân
-            const historyId = `${userId}_${ngayDatSan}_${idSan}_${khungGio}`;
-            const historyURL = `http://localhost:3000/lichsudatsan/${historyId}`;
-
-            const historyResponse = await fetch(historyURL, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ tienTrinh: "Đã hủy" })
-            });
-
-            if (!historyResponse.ok) {
-                throw new Error(`Lỗi khi cập nhật lịch sử đặt sân: ${await historyResponse.text()}`);
-            }
-
-            console.log("✅ Cập nhật lịch sân & lịch sử đặt sân thành công!");
-
-            // Cập nhật giao diện
-            status.textContent = "Đã hủy";
-            status.className = "appointment-status cancelled";
-            card.querySelector(".appointment-actions").innerHTML = '<button class="btn-reschedule">Đặt lại</button>';
-            toastr.success("Đã hủy lịch hẹn thành công!", "Thông báo");
-
-        } catch (error) {
-            console.error("❌ Lỗi khi hủy lịch hẹn:", error);
-            toastr.error("Lỗi hệ thống. Vui lòng thử lại!", "Lỗi");
-        }
-    }
-}  
+        const card = button.closest(".appointment-card");
+        const status = card.querySelector(".appointment-status");
+        const actions = card.querySelector(".appointment-actions");
     
-
-    // Xử lý đổi lịch hẹn
-    function handleRescheduleAppointment(button) {
-        const card = button.closest('.appointment-card');
-        
-        // Tạo form đổi lịch
-        const form = document.createElement('div');
-        form.className = 'reschedule-form';
-        form.innerHTML = `
-            <h3>Chọn thời gian mới</h3>
-            <input type="date" id="new-date" min="${formatDateForInput(new Date())}">
-            <select id="new-time">
-                <option value="">Chọn giờ</option>
-                <option value="08:00">08:00 - 10:00</option>
-                <option value="10:00">10:00 - 12:00</option>
-                <option value="14:00">14:00 - 16:00</option>
-                <option value="16:00">16:00 - 18:00</option>
-            </select>
-            <div class="form-actions">
-                <button class="btn-confirm-reschedule">Xác nhận</button>
-                <button class="btn-cancel-reschedule">Hủy</button>
-            </div>
-        `;
-        
-        card.appendChild(form);
-        
-        // Xử lý sự kiện cho form
-        form.querySelector('.btn-confirm-reschedule').addEventListener('click', () => {
-            const newDate = document.getElementById('new-date').value;
-            const newTime = document.getElementById('new-time').value;
-            
-            if (newDate && newTime) {
-                const dateInfo = card.querySelector('.appointment-info p:first-child');
-                const timeInfo = card.querySelector('.appointment-info p:nth-child(2)');
-                
-                dateInfo.innerHTML = `<i class='bx bx-calendar'></i> Ngày: ${formatDate(new Date(newDate))}`;
-                timeInfo.innerHTML = `<i class='bx bx-time'></i> Thời gian: ${newTime}`;
-                
-                const status = card.querySelector('.appointment-status');
-                status.textContent = 'Chờ xác nhận';
-                status.className = 'appointment-status pending';
-                
-                form.remove();
-                showNotification('Đã đổi lịch hẹn thành công!', 'success');
-            } else {
-                showNotification('Vui lòng chọn ngày và giờ mới!', 'error');
+        const idSan = card.dataset.idsan;
+        const ngayDatSan = card.dataset.ngay;
+        const khungGio = card.dataset.gio;
+        const userId = localStorage.getItem("userId");
+    
+        if (confirm("Bạn có chắc chắn muốn hủy lịch hẹn này?")) {
+            try {
+                const documentId = `${idSan}_${ngayDatSan}_${khungGio}`;
+                const historyId = `${userId}_${ngayDatSan}_${idSan}_${khungGio}`;
+    
+                // Cập nhật trạng thái lịch sân (còn trống)
+                const sanRef = doc(db, "lich", documentId);
+                await updateDoc(sanRef, { trangthai: "Còn trống" });
+    
+                // Cập nhật lịch sử đặt sân (đã hủy)
+                const historyRef = doc(db, "lichsudatsan", historyId);
+                await updateDoc(historyRef, { tienTrinh: "Đã hủy" });
+    
+                console.log("✅ Cập nhật lịch sân & lịch sử đặt sân thành công!");
+    
+                // Cập nhật giao diện
+                status.textContent = "Đã hủy";
+                status.className = "appointment-status cancelled";
+    
+                // Ẩn các nút hành động
+                if (actions) {
+                    actions.innerHTML = ""; // Xóa toàn bộ nút
+                }
+    
+                toastr.success("Đã hủy lịch hẹn thành công!", "Thông báo");
+    
+            } catch (error) {
+                console.error("❌ Lỗi khi hủy lịch hẹn:", error);
+                toastr.error("Lỗi hệ thống. Vui lòng thử lại!", "Lỗi");
             }
-        });
-        
-        form.querySelector('.btn-cancel-reschedule').addEventListener('click', () => {
-            form.remove();
-        });
-    }
-
+        }
+    } 
+    
     // Xử lý thanh toán
     function handlePayment(button) {
         const card = button.closest('.payment-card');
