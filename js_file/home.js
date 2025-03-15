@@ -259,18 +259,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-document.querySelectorAll('.register-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        let item = this.closest('.membership-item');
-        let name = item.querySelector('.name').textContent;
-        let description = item.querySelector('.des').textContent;
-        
-        document.getElementById('modal-title').textContent = name;
-        document.getElementById('modal-description').textContent = description;
-        document.getElementById('membership-modal').style.display = 'block';
-    });
-});
+document.addEventListener("DOMContentLoaded", function () {
+    const registerButtons = document.querySelectorAll(".register-btn");
 
-document.querySelector('.close-btn').addEventListener('click', function() {
-    document.getElementById('membership-modal').style.display = 'none';
+    const modal = document.getElementById("membership-modal");
+    const modalTitle = document.getElementById("modal-title");
+    const modalDescription = document.getElementById("modal-description");
+    const modalImage = document.getElementById("modal-image");
+    const closeModal = document.querySelector(".close-btn");
+
+    registerButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+            const membershipItem = button.closest(".membership-item");
+            const name = membershipItem.querySelector(".name").innerText;
+            const description = membershipItem.querySelector(".des").innerText;
+            const imageUrl = membershipItem.getAttribute("data-image") || "/images/default.png";
+
+            modalTitle.innerText = name;
+            modalDescription.innerText = description;
+            modalImage.src = imageUrl;
+
+            modal.style.display = "block";
+        });
+    });
+
+    closeModal.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", function (event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
 });
