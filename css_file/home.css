@@ -6,7 +6,7 @@
 .container{
     background: linear-gradient(to bottom, #EAF8E6, #C8E6C9);
     align-items: center;
-    min-height: 100vh; /* Đảm bảo container chiếm toàn bộ chiều cao màn hình */
+    min-height: 100vh;
     position: relative;
 }
 i {
@@ -479,7 +479,7 @@ img {
 
 #membership {
     position: absolute;
-    top: 45%;
+    top: 70%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 1000px;
