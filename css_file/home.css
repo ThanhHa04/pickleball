@@ -1104,6 +1104,11 @@ footer {
     margin-bottom: 30px;
 }
 
+#payments{
+    width:90%;
+    margin:auto;
+}
+
 .appointment-card, .payment-card {
     background: white;
     border-radius: 12px;

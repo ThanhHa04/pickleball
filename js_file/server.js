@@ -1,4 +1,5 @@
 require('dotenv').config();
+const bcrypt = require('bcrypt');
 const express = require('express');
 const admin = require('firebase-admin');
 const cors = require('cors');
@@ -17,6 +18,7 @@ app.use(express.static(path.resolve(__dirname, '../html_file')));
 const { FieldValue } = admin.firestore;
 const serviceAccount = require('../firebase-config.json');
 
+app.use(express.json());
 app.use(cors());
 
 admin.initializeApp({
@@ -24,6 +26,7 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
+
 
 app.post("/signup", async (req, res) => {
     const { hoTen, email, matKhau, sdt, diaChi } = req.body;
@@ -35,9 +38,7 @@ app.post("/signup", async (req, res) => {
             return res.status(400).json({ message: "Email đã tồn tại!" });
         }
 
-        // Hash mật khẩu
         const hashedPassword = await bcrypt.hash(matKhau, 10);
-
         const usersSnapshot = await userRef.get();
         let maxId = 0;
         usersSnapshot.forEach(doc => {
@@ -52,20 +53,26 @@ app.post("/signup", async (req, res) => {
         });
 
         const newId = `PKA0${maxId + 1}`;
+        const userSnapshot = await userRef.where("IDNguoiDung", "==", newId).get();
+        if (!userSnapshot.empty) {
+            return res.status(400).json({ message: "ID đã tồn tại, vui lòng chọn tên khác!" });
+        }
 
-        await userRef.add({
+        // Tạo tài liệu với ID document là newId
+        await userRef.doc(newId).set({
             HoTen: hoTen,
             Email: email,
             MatKhau: hashedPassword,
             SDT: sdt,
             DiaChi: diaChi,
-            IDNguoiDung: newId,
+            IDNguoiDung: `PKA0${maxId + 1}`, 
             NgayTao: new Date(),
             role: "user"
         });
 
         res.json({ message: "Đăng ký thành công!" });
     } catch (error) {
+        console.error("Lỗi khi xử lý đăng ký:", error.message);
         res.status(500).json({ message: "Lỗi server!", error: error.message });
     }
 });
@@ -105,7 +112,7 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.get('/locations', async (res) => {
+app.get('/locations', async (req, res) => {
     try {
         const snapshot = await db.collection('locations').get();
         if (snapshot.empty) {
@@ -123,7 +130,7 @@ app.get('/locations', async (res) => {
     }
 });
 
-app.get('/lichsudatsan', async (res) => {
+app.get('/lichsudatsan', async (req, res) => {
     try {
         const snapshot = await db.collection('lichsudatsan').get();
         if (snapshot.empty) {
@@ -470,7 +477,7 @@ app.post('/process-payment', async (req, res) => {
         await batch.commit();
         res.json({ success: true, message: "Thanh toán và đặt sân thành công!" });
     } catch (error) {
-        console.error("Lỗi khi xử lý thanh toán:", error);
+        console.error("Lỗi khi xử lý thanh toán:", error.message);
         res.json({ success: false, message: "Có lỗi xảy ra khi xử lý thanh toán." });
     }
 });

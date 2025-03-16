@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { query, getFirestore, collection, doc, getDocs, getDoc, where  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { query, getFirestore, collection, doc, getDocs, getDoc, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { firebaseConfig } from "./config.js";
 
 const app = initializeApp(firebaseConfig);
@@ -11,7 +11,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         const userId = localStorage.getItem("userId");
         const bookingsCol = collection(db, "lichsudatsan");
         const q = query(bookingsCol, where("userId", "==", userId));
-    
+
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(docSnap => ({
+            ...docSnap.data(),
+            id: docSnap.id
+        }));
+    }
+
+    async function getPayments() {
+        const userId = localStorage.getItem("userId");
+        const paymentsCol = collection(db, "lichsuthanhtoan");
+        const q = query(paymentsCol, where("userId", "==", userId));
+
         const snapshot = await getDocs(q);
         return snapshot.docs.map(docSnap => ({
             ...docSnap.data(),
@@ -51,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             } else if (tienTrinh === "Đã hủy") {
                 statusClass = "cancelled";
             }
-            
+
             let actionsHTML = "";
             if (statusClass !== "cancelled") {
                 actionsHTML = `
@@ -104,6 +116,61 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (bookings) {
         await updateBookingData(bookings);
     }
+
+    async function updatePaymentData(payments) {
+        const userId = localStorage.getItem("userId");
+        const paymentList = document.getElementById("payments-list");
+        paymentList.innerHTML = "";
+
+        for (const payment of payments) {
+            const computedHistoryId = `${userId}_${payment.ngayDatSan}_${payment.idSan}_${payment.khungGio}`;
+            console.log("Computed historyId:", computedHistoryId);
+
+            // Lấy dữ liệu lịch sử thanh toán từ Firestore
+            const paidData = await getHistoryById(computedHistoryId);
+
+            // Tạo card thanh toán
+            const card = document.createElement("div");
+            card.classList.add("payment-card");
+            card.dataset.idsan = payment.idSan;
+            card.dataset.ngay = payment.ngayDatSan;
+            card.dataset.gio = payment.khungGio;
+            card.dataset.userid = userId;
+
+            // Tạo nội dung HTML cho card thanh toán
+            card.innerHTML = `
+                <div class="payment-header">
+                    <div class="payment-title">
+                        <h3>Thanh toán tiền sân</h3>
+                        <span class="payment-status ${payment.status === "Đã thanh toán" ? "paid" : "unpaid"}">${payment.trangThaiThanhToan}</span>
+                    </div>
+                    <div class="payment-amount">
+                        <span>${payment.soTien}đ</span>
+                    </div>
+                </div>
+                <div class="payment-body">
+                    <div class="payment-info">
+                        <p><i class='bx bx-calendar'></i> Ngày thanh toán: ${payment.thoiGianThanhToan}</p>
+                        <p><i class='bx bx-cricket-ball'></i> Sân Pickleball: ${payment.tenSan}</p>
+                        <p><i class='bx bxs-compass'></i> Địa chỉ sân: ${payment.diaChiSan}</p>
+                    </div>
+                    <div class="payment-actions">
+                        <button class="btn-${payment.tienTrinh === "Thành công" ? "view-receipt" : "pay"}">
+                            ${payment.tienTrinh === "Thành công" ? "Xem hóa đơn" : "Thanh toán ngay"}
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Thêm card vào danh sách thanh toán
+            paymentList.appendChild(card);
+        }
+    }
+
+    const payments = await getPayments();
+    if (payments) {
+        await updatePaymentData(payments);
+    }
 });
 
 
@@ -119,7 +186,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const historyRef = collection(db, "lichsuthanhtoan");
         const q = query(historyRef, where("userId", "==", userId));
         const snapshot = await getDocs(q);
-        
+
         if (snapshot.empty) {
             console.warn("⚠️ Không có giao dịch nào cho userId:", userId);
             return [];
@@ -137,15 +204,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
         historyBody.innerHTML = "";
-    
+
         const transactions = await getTransactionHistory();
         console.log("📌 Transactions Data:", transactions);
-    
+
         if (!transactions.length) {
             historyBody.innerHTML = "<tr><td colspan='5' style='text-align:center'>Không có giao dịch nào</td></tr>";
             return;
         }
-    
+
         transactions.forEach(transaction => {
             const row = document.createElement("tr");
             row.innerHTML = `
@@ -162,7 +229,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await updateHistoryTable();
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Xử lý chuyển tab
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -219,9 +286,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const courtAddress = appointment.querySelector('.court-details p').textContent.toLowerCase();
                 if (!courtName.includes(searchTerm) && !courtAddress.includes(searchTerm)) {
                     show = false;
-            }
+                }
 
-            // Lọc theo trạng thái
+                // Lọc theo trạng thái
                 if (statusValue !== 'all') {
                     const status = appointment.querySelector('.appointment-status').classList[1];
                     if (status !== statusValue) {
@@ -236,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const tomorrow = new Date(today);
                     tomorrow.setDate(tomorrow.getDate() + 1);
 
-                    switch(dateValue) {
+                    switch (dateValue) {
                         case 'today':
                             if (appointmentDate.toDateString() !== today.toDateString()) {
                                 show = false;
@@ -303,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const tomorrow = new Date(today);
                     tomorrow.setDate(tomorrow.getDate() + 1);
 
-                    switch(dateValue) {
+                    switch (dateValue) {
                         case 'today':
                             if (paymentDate.toDateString() !== today.toDateString()) {
                                 show = false;
@@ -343,7 +410,7 @@ document.addEventListener('DOMContentLoaded', function() {
     dateFilter.addEventListener('change', filterAppointments);
 
     // Xử lý các nút hành động
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (e.target.classList.contains('btn-view-receipt')) {
             handleViewReceipt(e.target);
         } else if (e.target.classList.contains('btn-cancel')) {
@@ -360,45 +427,42 @@ document.addEventListener('DOMContentLoaded', function() {
         const card = button.closest(".appointment-card");
         const status = card.querySelector(".appointment-status");
         const actions = card.querySelector(".appointment-actions");
-    
+
         const idSan = card.dataset.idsan;
         const ngayDatSan = card.dataset.ngay;
         const khungGio = card.dataset.gio;
         const userId = localStorage.getItem("userId");
-    
+
         if (confirm("Bạn có chắc chắn muốn hủy lịch hẹn này?")) {
             try {
-                const documentId = `${idSan}_${ngayDatSan}_${khungGio}`;
                 const historyId = `${userId}_${ngayDatSan}_${idSan}_${khungGio}`;
-    
-                // Cập nhật trạng thái lịch sân (còn trống)
-                const sanRef = doc(db, "lich", documentId);
+                const scheduleId = `${idSan}_${ngayDatSan}_${khungGio}`;
+                const collectionName = `lich${idSan}`;
+                const sanRef = doc(db, collectionName, scheduleId);
+                console.log("TT: ", sanRef);
                 await updateDoc(sanRef, { trangthai: "Còn trống" });
-    
-                // Cập nhật lịch sử đặt sân (đã hủy)
+
                 const historyRef = doc(db, "lichsudatsan", historyId);
                 await updateDoc(historyRef, { tienTrinh: "Đã hủy" });
-    
+
                 console.log("✅ Cập nhật lịch sân & lịch sử đặt sân thành công!");
-    
-                // Cập nhật giao diện
+
                 status.textContent = "Đã hủy";
                 status.className = "appointment-status cancelled";
-    
-                // Ẩn các nút hành động
+
                 if (actions) {
                     actions.innerHTML = ""; // Xóa toàn bộ nút
                 }
-    
+
                 toastr.success("Đã hủy lịch hẹn thành công!", "Thông báo");
-    
+
             } catch (error) {
                 console.error("❌ Lỗi khi hủy lịch hẹn:", error);
                 toastr.error("Lỗi hệ thống. Vui lòng thử lại!", "Lỗi");
             }
         }
-    } 
-    
+    }
+
     // Xử lý thanh toán
     function handlePayment(button) {
         const card = button.closest('.payment-card');
@@ -454,10 +518,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function updatePagination() {
         const totalItems = document.querySelectorAll('.appointment-card:not([style*="display: none"])').length;
         const totalPages = Math.ceil(totalItems / itemsPerPage);
-        
+
         const pageNumbers = document.querySelector('.page-numbers');
         pageNumbers.innerHTML = '';
-        
+
         for (let i = 1; i <= totalPages; i++) {
             const span = document.createElement('span');
             span.textContent = i;
@@ -465,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function() {
             span.addEventListener('click', () => goToPage(i));
             pageNumbers.appendChild(span);
         }
-        
+
         document.querySelector('.btn-prev').disabled = currentPage === 1;
         document.querySelector('.btn-next').disabled = currentPage === totalPages;
     }
@@ -550,8 +614,8 @@ document.addEventListener('DOMContentLoaded', function() {
             positionClass: "toast-top-right",
             timeOut: 3000
         };
-        
-        switch(type) {
+
+        switch (type) {
             case 'success':
                 toastr.success(message);
                 break;
