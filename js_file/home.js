@@ -274,3 +274,4 @@ document.querySelectorAll('.register-btn').forEach(button => {
 document.querySelector('.close-btn').addEventListener('click', function() {
     document.getElementById('membership-modal').style.display = 'none';
 });
+

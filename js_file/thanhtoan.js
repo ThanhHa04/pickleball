@@ -1,20 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, writeBatch, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-// Cấu hình Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyATp-eu8CBatLs04mHpZS4c66FaYw5zLgk",
-    authDomain: "pka-pickleball.firebaseapp.com",
-    projectId: "pka-pickleball",
-    storageBucket: "pka-pickleball.appspot.com",
-    messagingSenderId: "38130361867",
-    appId: "1:38130361867:web:f3c1a3940e3c390b11890e",
-    measurementId: "G-0YQ7GKJKRC"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
+// Hàm tạo QR Code
 function generateQRCode() {
     let qrContainer = document.getElementById("qrcode");
     let paidButton = document.getElementById("paid-btn");
@@ -39,6 +23,7 @@ async function handlePayment() {
         console.error("❌ Không tìm thấy idSan trong URL!");
         return;
     }
+
     let userId = localStorage.getItem("userId");
     let selectedDate = document.getElementById("NgayDatSan").innerText.split(":")[1]?.trim();
     let selectedTime = document.getElementById("GioDatSan").innerText.split(":").slice(1).join(":").trim();
@@ -51,55 +36,43 @@ async function handlePayment() {
     let totalPrice = parseInt(document.getElementById("total-price").innerText.replace(/\D/g, ""), 10);
     let paymentTime = new Date().toLocaleString();
     let docId = `${userId}_${selectedDate}_${idSan}_${selectedTime}`;
-    let docIdd = `${userId}_${selectedDate}_${idSan}_${selectedTime}`;
 
-    let batch = writeBatch(db);
-
-    // Thêm lịch sử thanh toán
-    let paymentRef = doc(db, "lichsuthanhtoan", docId);
-    batch.set(paymentRef, {
-        userId,
-        tenNguoiDung: userName,
-        email: userEmail,
-        sdt: userPhone,
-        soTien: totalPrice,
-        tenSan: fieldName,
-        idSan:idSan,
-        diaChiSan: fieldAddress,
-        khungGio: selectedTime,
-        thoiGianThanhToan: paymentTime,
-        trangThaiThanhToan: "Thành công"
-    });
-
-    // Thêm lịch sử đặt sân
-    let bookingRef = doc(db, "lichsudatsan", docIdd);
-    batch.set(bookingRef, {
-        userId,
-        tenNguoiDung: userName,
-        sdt: userPhone,
-        idSan:idSan,
-        ngayDatSan: selectedDate,
-        khungGio: selectedTime,
-        tenSan: fieldName,
-        diaChiSan: fieldAddress,
-        giaSan: onePrice,
-        tienTrinh: "Chưa diễn ra"
-    });
-    // Cập nhật trạng thái sân thành "Đã đặt"
-    let fieldRef = doc(db, `lich${idSan}`, `${idSan}_${selectedDate}_${selectedTime}`);
-    batch.update(fieldRef, { TrangThai: "Đã đặt" });
-    console.log("🟢 idSan:", idSan);
-    console.log("🟢 selectedDate:", selectedDate);
-    console.log("🟢 selectedTime:", selectedTime);
-
+    // Gửi yêu cầu thanh toán lên server
     try {
-        await batch.commit();
-        alert("Thanh toán thành công và đã lưu thông tin!");
+        let response = await fetch('/process-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId,
+                userName,
+                userEmail,
+                userPhone,
+                totalPrice,
+                fieldName,
+                fieldAddress,
+                idSan,
+                selectedDate,
+                selectedTime,
+                paymentTime,
+                onePrice,
+                docId
+            })
+        });
+
+        let data = await response.json();
+        if (data.success) {
+            alert("Thanh toán thành công và đã lưu thông tin!");
+            location.reload();
+        } else {
+            console.error("Lỗi khi xử lý thanh toán:", data.message);
+            alert("Có lỗi xảy ra khi xử lý thanh toán.");
+        }
     } catch (error) {
-        console.error("Lỗi khi lưu:", error);
-        alert("Có lỗi xảy ra khi lưu thông tin thanh toán!");
+        console.error("Lỗi khi gửi yêu cầu thanh toán:", error);
+        alert("Có lỗi xảy ra khi gửi yêu cầu thanh toán.");
     }
-    location.reload();
 }
 
 // Lắng nghe sự kiện
@@ -109,6 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("Không tìm thấy ID người dùng! Vui lòng đăng nhập lại.");
         return;
     }
+
     let payButton = document.getElementById("pay-btn");
     let paidButton = document.getElementById("paid-btn");
 

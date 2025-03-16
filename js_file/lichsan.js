@@ -1,20 +1,15 @@
-const { initializeApp } = require("firebase/app");
-const { getFirestore, collection, doc, setDoc, deleteDoc, getDocs } = require("firebase/firestore");
+import admin from "firebase-admin";
+import { initializeApp } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
 
-// Cấu hình Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyATp-eu8CBatLs04mHpZS4c66FaYw5zLgk",
-    authDomain: "pka-pickleball.firebaseapp.com",
-    projectId: "pka-pickleball",
-    storageBucket: "pka-pickleball.appspot.com",
-    messagingSenderId: "38130361867",
-    appId: "1:38130361867:web:f3c1a3940e3c390b11890e",
-    measurementId: "G-0YQ7GKJKRC"
-};
+const serviceAccount = require('../firebase-config.json');
 
-// Khởi tạo Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
+
+const db = getFirestore();
+
 
 // Danh sách sân từ S01 đến S16
 const danhSachSan = Array.from({ length: 16 }, (_, i) => `S${(i + 1).toString().padStart(2, "0")}`);
@@ -22,11 +17,11 @@ const danhSachSan = Array.from({ length: 16 }, (_, i) => `S${(i + 1).toString().
 // Lấy ngày hôm qua, hôm nay và ngày +2
 const today = new Date();
 const ngayHomQua = new Date(today);
-ngayHomQua.setDate(today.getDate() - 1);
+ngayHomQua.setDate(today.getDate() - 2);
 const ngayHomQuaStr = ngayHomQua.toISOString().split("T")[0]; // YYYY-MM-DD
 
 const ngayMoi = new Date(today);
-ngayMoi.setDate(today.getDate() + 2);
+ngayMoi.setDate(today.getDate() + 1);
 const ngayMoiStr = ngayMoi.toISOString().split("T")[0]; // YYYY-MM-DD
 
 async function updateLichSan() {
