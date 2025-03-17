@@ -1,93 +1,56 @@
-// Import Firebase theo cách đúng trong trình duyệt
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-// Cấu hình Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyATp-eu8CBatLs04mHpZS4c66FaYw5zLgk",
-    authDomain: "pka-pickleball.firebaseapp.com",
-    projectId: "pka-pickleball",
-    storageBucket: "pka-pickleball.appspot.com",
-    messagingSenderId: "38130361867",
-    appId: "1:38130361867:web:f3c1a3940e3c390b11890e",
-    measurementId: "G-0YQ7GKJKRC"
-};
-
-// Khởi tạo Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Xử lý sự kiện đăng ký
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("signup-form").addEventListener("submit", async function (e) {
-        e.preventDefault(); // Ngăn chặn load lại trang
+        e.preventDefault();
 
-        // Lấy dữ liệu từ input
         const hoTen = document.getElementById("fullName").value;
         const email = document.getElementById("email").value;
         const matKhau = document.getElementById("password").value;
         const confirmMatKhau = document.getElementById("confirmpassword").value;
         const sdt = document.getElementById("phone").value;
         const diaChi = document.getElementById("address").value;
-<<<<<<< HEAD
-
-        // Kiểm tra nhập đủ dữ liệu
-=======
         // Kiểm tra tính hợp lệ của các trường dữ liệu
->>>>>>> Yoo
         if (!hoTen || !email || !matKhau || !confirmMatKhau || !sdt || !diaChi) {
             alert("Vui lòng nhập đầy đủ thông tin!");
             return;
         }
 
-        // Kiểm tra mật khẩu nhập lại
+        // Kiểm tra mật khẩu có khớp không
         if (matKhau !== confirmMatKhau) {
             alert("Mật khẩu xác nhận không trùng khớp!");
             return;
         }
 
-        try {
-            // 🔥 Kiểm tra xem email đã tồn tại trong collection `nguoidung` chưa
-            const userRef = collection(db, "nguoidung");
-            const q = query(userRef, where("Email", "==", email));
-            const querySnapshot = await getDocs(q);
+        // Kiểm tra định dạng email hợp lệ
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!emailPattern.test(email)) {
+            alert("Vui lòng nhập email hợp lệ!");
+            return;
+        }
 
-            if (!querySnapshot.empty) {
-                alert("Email đã tồn tại! Vui lòng sử dụng email khác.");
-                return;
+        // Kiểm tra mật khẩu có đủ dài không (tối thiểu 6 ký tự)
+        if (matKhau.length < 3) {
+            alert("Mật khẩu phải có ít nhất 3 ký tự!");
+            return;
+        }
+
+        try {
+            // Gửi yêu cầu đăng ký đến server
+            const response = await fetch("http://localhost:3000/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ hoTen, email, matKhau, sdt, diaChi }),
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || "Đã xảy ra lỗi khi đăng ký.");
             }
 
-            const usersSnapshot = await getDocs(userRef);
-            let maxId = 0;
-            usersSnapshot.forEach(doc => {
-                const id = doc.data().IDNguoiDung;
-                if (id && id.startsWith("PKA0")) {
-                    const numberPart = id.slice(4);
-                    const num = parseInt(numberPart, 10);
-                    if (!isNaN(num) && num > maxId) {
-                        maxId = num;
-                    }
-                }
-            });
-
-            // Tạo ID mới
-            const newId = `PKA0${usersSnapshot.size + 1}`;
-            // Thêm dữ liệu vào collection `nguoidung`
-            await addDoc(userRef, {
-                HoTen: hoTen,
-                Email: email,
-                MatKhau: matKhau,  // 🔴 KHÔNG NÊN lưu mật khẩu trực tiếp, cần mã hóa
-                SDT: sdt,
-                DiaChi: diaChi,
-                IDNguoiDung: newId,
-                NgayTao: new Date(),
-                role:"user"
-            });
-
+            // Thông báo thành công
             alert("Đăng ký thành công!");
-            window.location.href = "login.html"; // Chuyển hướng về trang đăng nhập
+            window.location.href = "login.html"; // Chuyển hướng tới trang login
         } catch (error) {
-            alert("Lỗi: " + error.message);
+            alert(error.message); // Hiển thị lỗi từ server
         }
     });
 });
