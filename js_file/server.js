@@ -27,7 +27,6 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-
 app.post("/signup", async (req, res) => {
     const { hoTen, email, matKhau, sdt, diaChi } = req.body;
 
