@@ -5,7 +5,6 @@ let userRole = localStorage.getItem("userRole");
 
 console.log("User Info:", { userName, userId, userRole });
 console.log("User Role:", userRole);
-
 const allowedPages = {
     user: ["home", "list-courts", "appointments", "history", "membership", "map"],
     admin: ["home", "manage-courts", "manage-users", "statistics", "map"]

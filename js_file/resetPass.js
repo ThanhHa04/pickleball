@@ -7,14 +7,12 @@ function resetPassword(event) {
     const newPassword = document.getElementById('newPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     const notification = document.getElementById('notification');
-
     if (!email || !code) {
         notification.style.display = 'block';
         notification.style.color = 'red';
         notification.textContent = 'Mã xác nhận không hợp lệ!';
         return;
     }
-
     if (newPassword !== confirmPassword) {
         notification.style.display = 'block';
         notification.style.color = 'red';

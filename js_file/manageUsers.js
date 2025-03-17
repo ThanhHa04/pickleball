@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const usersPerPage = 20;
     let currentPage = 1;
     let allUsers = [];
+<<<<<<< HEAD
 
     // Initialize Firebase
     const firebaseConfig = {
@@ -23,6 +24,14 @@ document.addEventListener('DOMContentLoaded', function() {
         db.collection('nguoidung').get().then((querySnapshot) => {
             allUsers = querySnapshot.docs.map(doc => {
                 const data = doc.data();
+=======
+    async function fetchUsers() {
+        try {
+            const nguoidungCol = collection(db, 'nguoidung');
+            const querySnapshot = await getDocs(nguoidungCol);
+            allUsers = querySnapshot.docs.map(docSnapshot => {
+                const data = docSnapshot.data();
+>>>>>>> Yoo
                 return {
                     id: doc.id,
                     name: data.HoTen || '-',
