@@ -53,6 +53,7 @@
                 <a href="javascript:void(0);" onclick="showContent('membership', this)">Gói hội viên</a>
                 <a href="javascript:void(0);" onclick="showContent('appointments', this)">Quản lý lịch hẹn</a>
                 <a href="javascript:void(0);" onclick="showContent('history', this)">Lịch sử giao dịch</a>
+                <a href="javascript:void(0);" onclick="showContent('manage-courts', this)">Quản lý sân</a>
                 <a href="javascript:void(0);" onclick="showContent('manage-users', this)">Quản lý người dùng</a>
                 <a href="javascript:void(0);" onclick="showContent('statistics', this)">Thống kê</a>
                 <a href="javascript:void(0);" onclick="showContent('map', this)">Map</a>
@@ -363,6 +364,34 @@
             </div>
         </div>
 
+        <div id="manage-courts" class="content">
+            <div class="list-box">
+                <div class="list-left">
+                    <h2>Danh sách sân</h2>
+                    <div class="count-item">
+                        <p class="sport-item"><span>Pickleball</span> <span id="admin-pickleball-count">0</span></p>
+                        <p class="sport-item"><span>Bóng đá</span> <span id="admin-football-count">0</span></p>
+                        <p class="sport-item"><span>Cầu lông</span> <span id="admin-badminton-count">0</span></p>
+                    </div>
+                </div>
+                <div class="list-right">
+                    <input type="text" id="admin-search-bar" placeholder=" Tìm kiếm sân...">
+                    <select id="admin-price-filter">
+                        <option value="">Chọn giá</option>
+                        <option value="low-to-high">Giá từ thấp đến cao</option>
+                        <option value="high-to-low">Giá từ cao đến thấp</option>
+                    </select>
+                    <div id="admin-san-list" class="court-list"></div>
+
+                    <div id="admin-pagination">
+                        <button id="admin-prev-page" disabled>Trang trước</button>
+                        <span id="admin-page-number">Trang 1</span>
+                        <button id="admin-next-page">Trang sau</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="manage-users" class="content">
             <h2>Quản lý người dùng</h2>
             <div class="user-search">
@@ -383,24 +412,6 @@
                 </thead>
                 <tbody id="user-table-body">
                     <tr>
-                        <td>Nguyễn Văn A</td>
-                        <td>nguyenvana@example.com</td>
-                        <td>0123456789</td>
-                        <td>Đã kích hoạt</td>
-                        <td>01/01/2023</td>
-                        <td>Người dùng</td>
-                        <td>
-                            <button class="btn-edit-user">Chỉnh sửa</button>
-                            <button class="btn-delete-user">Xóa</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Trần Thị B</td>
-                        <td>tranthib@example.com</td>
-                        <td>0987654321</td>
-                        <td>Chưa kích hoạt</td>
-                        <td>15/02/2023</td>
-                        <td>Quản trị viên</td>
                         <td>
                             <button class="btn-edit-user">Chỉnh sửa</button>
                             <button class="btn-delete-user">Xóa</button>
@@ -593,7 +604,7 @@
     <script type="module" src="../js_file/appointments.js"></script>
     <script src="../js_file/listcourts.js"></script>
     <script type="module" src="../js_file/manageUsers.js"></script>
-
+    <script type="module" src="../js_file/manageCourts.js"></script>
 </body>
 
 </html>

@@ -8,7 +8,7 @@ console.log("User Role:", userRole);
 
 const allowedPages = {
     user: ["home", "list-courts", "appointments", "history", "membership", "map"],
-    admin: ["home", "appointments", "manage-users", "statistics", "map"]
+    admin: ["home", "manage-courts", "manage-users", "statistics", "map"]
 };
 
 // Ẩn/hiện menu theo vai trò
