@@ -1157,14 +1157,9 @@ footer {
     font-weight: 500;
 }
 
-.pending {
+.ongoing {
     background: #fff3cd;
     color: #856404;
-}
-
-.confirmed {
-    background: #d4edda;
-    color: #155724;
 }
 
 .cancelled {
@@ -1172,19 +1167,9 @@ footer {
     color: #721c24;
 }
 
-.completed {
+.finished {
     background: #cce5ff;
     color: #004085;
-}
-
-.unpaid {
-    background: #fff3cd;
-    color: #856404;
-}
-
-.paid {
-    background: #d4edda;
-    color: #155724;
 }
 
 .appointment-body, .payment-body {
