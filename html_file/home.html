@@ -245,292 +245,291 @@
                     <button class="btn-next"><i class='bx bx-chevron-right'></i></button>
                 </div>
             </div>
-        </div>
-<!-- Lịch sử giao dịch -->
-        <div id="history" class="content">
-            <div class="history-container">
-                <h1>Lịch Sử Giao Dịch</h1>
-                <table class="history-table">
+    <!-- Lịch sử giao dịch -->
+            <div id="history" class="content">
+                <div class="history-container">
+                    <h1>Lịch Sử Giao Dịch</h1>
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Địa chỉ</th>
+                                <th>Tên sân</th>
+                                <th>Số tiền</th>
+                                <th>Trạng thái</th>
+                                <th>Thời gian</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-body"></tbody>
+                    </table>
+                    <div class="pagination">
+                        <button class="btn-prev"><i class='bx bx-chevron-left'></i></button>
+                        <div class="page-numbers">
+                            <span class="active">1</span>
+                            <span>2</span>
+                            <span>3</span>
+                            <span>...</span>
+                            <span>10</span>
+                        </div>
+                        <button class="btn-next"><i class='bx bx-chevron-right'></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="membership" class="content">
+                <div class="membership-container">
+                    <div class="membership-slide">
+                        <div class="membership-item" style="background-image: url('/images/membership2.png');" data-image="/images/membership1.jpg" data-id="G01">
+                            <div class="content">
+                                <div class="name">Gói Cơ Bản</div>
+                                <div class="des">Truy cập cơ bản với giá rẻ nhất.</div>
+                                <button class="register-btn">Đăng ký</button>
+                            </div>
+                        </div>
+                        <div class="membership-item" style="background-image: url('/images/membership4.jpg');" data-image="/images/membership1.jpg" data-id="G02">
+                            <div class="content">
+                                <div class="name">Gói Tiêu Chuẩn</div>
+                                <div class="des">Quyền lợi tiêu chuẩn cho thành viên.</div>
+                                <button class="register-btn">Đăng ký</button>
+                            </div>
+                        </div>
+                        <div class="membership-item" style="background-image: url('/images/membership5.png');" data-image="/images/membership1.jpg" data-id="G03">
+                            <div class="content">
+                                <div class="name">Gói Cao Cấp</div>
+                                <div class="des">Ưu đãi đặc biệt và tính năng nâng cao.</div>
+                                <button class="register-btn">Đăng ký</button>
+                            </div>
+                        </div>
+                        <div class="membership-item" style="background-image: url('/images/membership6.png');" data-image="/images/membership1.jpg" data-id="G04">
+                            <div class="content">
+                                <div class="name">Gói VIP</div>
+                                <div class="des">Trải nghiệm cao cấp và đặc quyền VIP.</div>
+                                <button class="register-btn">Đăng ký</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button">
+                        <button class="prev-membership"><i class="fa-solid fa-arrow-left"></i></button>
+                        <button class="next-membership"><i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div id="membership-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn">&times;</span>
+                    <img id="modal-image" src="" alt="Gói thành viên" class="modal-img">
+                    <h2 id="modal-title"></h2>
+                    <p id="modal-description"></p>
+                    <button id="confirm-btn">Xác nhận</button>
+                </div>
+            </div>        
+
+            <div id="profile" class="content">
+                <h2>Quản lý thông tin</h2>
+                <p>Cập nhật thông tin cá nhân...</p>
+            </div>
+
+            <div id="map" class="content">
+                <div class="left-content">
+                    <h2>Bản đồ các sân Pickleball</h2>
+                    <div id="pickleball-courts"></div>
+                </div>
+                <div class="right-content">
+                    <div id="leafletMap"></div>
+                </div>
+            </div>        
+
+            <div class="chat-container">
+                <div class="chat-icon" onclick="toggleChat()"><i class='bx bxs-chat'></i></div>
+                <div class="chat-box">
+                    <div class="chat-header" onclick="toggleChat()">Hỗ trợ trực tuyến</div>
+                    <div class="chat-body">
+                        <p>Xin chào! Tôi có thể giúp gì cho bạn?</p>
+                    </div>
+                    <input type="text" class="chat-input" placeholder="Nhập tin nhắn...">
+                </div>
+            </div>
+
+            <div id="manage-users" class="content">
+                <h2>Quản lý người dùng</h2>
+                <div class="user-search">
+                    <input type="text" id="user-search-input" placeholder="Tìm kiếm theo tên hoặc số điện thoại...">
+                    <button id="user-search-button">Tìm kiếm</button>
+                </div>
+                <table class="user-management-table">
                     <thead>
                         <tr>
-                            <th>Địa chỉ</th>
-                            <th>Tên sân</th>
-                            <th>Số tiền</th>
-                            <th>Trạng thái</th>
-                            <th>Thời gian</th>
+                            <th>Tên người dùng</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>Tình trạng hội viên</th>
+                            <th>Ngày tạo tài khoản</th>
+                            <th>Vai trò</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
-                    <tbody id="history-body"></tbody>
+                    <tbody id="user-table-body">
+                        <tr>
+                            <td>Nguyễn Văn A</td>
+                            <td>nguyenvana@example.com</td>
+                            <td>0123456789</td>
+                            <td>Đã kích hoạt</td>
+                            <td>01/01/2023</td>
+                            <td>Người dùng</td>
+                            <td>
+                                <button class="btn-edit-user">Chỉnh sửa</button>
+                                <button class="btn-delete-user">Xóa</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Trần Thị B</td>
+                            <td>tranthib@example.com</td>
+                            <td>0987654321</td>
+                            <td>Chưa kích hoạt</td>
+                            <td>15/02/2023</td>
+                            <td>Quản trị viên</td>
+                            <td>
+                                <button class="btn-edit-user">Chỉnh sửa</button>
+                                <button class="btn-delete-user">Xóa</button>
+                            </td>
+                        </tr>
+                        <!-- Thêm dữ liệu mẫu khác nếu cần -->
+                    </tbody>
                 </table>
                 <div class="pagination">
-                    <button class="btn-prev"><i class='bx bx-chevron-left'></i></button>
-                    <div class="page-numbers">
+                    <button class="btn-prev-user"><i class='bx bx-chevron-left'></i></button>
+                    <div class="user-page-numbers">
                         <span class="active">1</span>
-                        <span>2</span>
-                        <span>3</span>
-                        <span>...</span>
-                        <span>10</span>
+                        <!-- Thêm số trang nếu cần -->
                     </div>
-                    <button class="btn-next"><i class='bx bx-chevron-right'></i></button>
+                    <button class="btn-next-user"><i class='bx bx-chevron-right'></i></button>
                 </div>
             </div>
-        </div>
 
-        <div id="membership" class="content">
-            <div class="membership-container">
-                <div class="membership-slide">
-                    <div class="membership-item" style="background-image: url('/images/membership2.png');" data-image="/images/membership1.jpg" data-id="G01">
-                        <div class="content">
-                            <div class="name">Gói Cơ Bản</div>
-                            <div class="des">Truy cập cơ bản với giá rẻ nhất.</div>
-                            <button class="register-btn">Đăng ký</button>
-                        </div>
-                    </div>
-                    <div class="membership-item" style="background-image: url('/images/membership4.jpg');" data-image="/images/membership1.jpg" data-id="G02">
-                        <div class="content">
-                            <div class="name">Gói Tiêu Chuẩn</div>
-                            <div class="des">Quyền lợi tiêu chuẩn cho thành viên.</div>
-                            <button class="register-btn">Đăng ký</button>
-                        </div>
-                    </div>
-                    <div class="membership-item" style="background-image: url('/images/membership5.png');" data-image="/images/membership1.jpg" data-id="G03">
-                        <div class="content">
-                            <div class="name">Gói Cao Cấp</div>
-                            <div class="des">Ưu đãi đặc biệt và tính năng nâng cao.</div>
-                            <button class="register-btn">Đăng ký</button>
-                        </div>
-                    </div>
-                    <div class="membership-item" style="background-image: url('/images/membership6.png');" data-image="/images/membership1.jpg" data-id="G04">
-                        <div class="content">
-                            <div class="name">Gói VIP</div>
-                            <div class="des">Trải nghiệm cao cấp và đặc quyền VIP.</div>
-                            <button class="register-btn">Đăng ký</button>
-                        </div>
-                    </div>
+            <div id="statistics" class="content">
+                <h2>Thống kê</h2>
+                <div class="stats-menu">
+                    <button class="stats-tab active" data-tab="overview">Tổng quan</button>
+                    <button class="stats-tab" data-tab="users">Người dùng</button>
+                    <button class="stats-tab" data-tab="courts">Sân</button>
+                    <button class="stats-tab" data-tab="revenue">Doanh thu</button>
+                    <button class="stats-tab" data-tab="bookings">Đặt sân</button>
+                    <button class="stats-tab" data-tab="geographical">Phân bố</button>
                 </div>
-                <div class="button">
-                    <button class="prev-membership"><i class="fa-solid fa-arrow-left"></i></button>
-                    <button class="next-membership"><i class="fa-solid fa-arrow-right"></i></button>
-                </div>
-            </div>
-        </div>
-        <div id="membership-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <img id="modal-image" src="" alt="Gói thành viên" class="modal-img">
-                <h2 id="modal-title"></h2>
-                <p id="modal-description"></p>
-                <button id="confirm-btn">Xác nhận</button>
-            </div>
-        </div>        
 
-        <div id="profile" class="content">
-            <h2>Quản lý thông tin</h2>
-            <p>Cập nhật thông tin cá nhân...</p>
-        </div>
-
-        <div id="map" class="content">
-            <div class="left-content">
-                <h2>Bản đồ các sân Pickleball</h2>
-                <div id="pickleball-courts"></div>
-            </div>
-            <div class="right-content">
-                <div id="leafletMap"></div>
-            </div>
-        </div>        
-
-        <div class="chat-container">
-            <div class="chat-icon" onclick="toggleChat()"><i class='bx bxs-chat'></i></div>
-            <div class="chat-box">
-                <div class="chat-header" onclick="toggleChat()">Hỗ trợ trực tuyến</div>
-                <div class="chat-body">
-                    <p>Xin chào! Tôi có thể giúp gì cho bạn?</p>
-                </div>
-                <input type="text" class="chat-input" placeholder="Nhập tin nhắn...">
-            </div>
-        </div>
-
-        <div id="manage-users" class="content">
-            <h2>Quản lý người dùng</h2>
-            <div class="user-search">
-                <input type="text" id="user-search-input" placeholder="Tìm kiếm theo tên hoặc số điện thoại...">
-                <button id="user-search-button">Tìm kiếm</button>
-            </div>
-            <table class="user-management-table">
-                <thead>
-                    <tr>
-                        <th>Tên người dùng</th>
-                        <th>Email</th>
-                        <th>Số điện thoại</th>
-                        <th>Tình trạng hội viên</th>
-                        <th>Ngày tạo tài khoản</th>
-                        <th>Vai trò</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody id="user-table-body">
-                    <tr>
-                        <td>Nguyễn Văn A</td>
-                        <td>nguyenvana@example.com</td>
-                        <td>0123456789</td>
-                        <td>Đã kích hoạt</td>
-                        <td>01/01/2023</td>
-                        <td>Người dùng</td>
-                        <td>
-                            <button class="btn-edit-user">Chỉnh sửa</button>
-                            <button class="btn-delete-user">Xóa</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Trần Thị B</td>
-                        <td>tranthib@example.com</td>
-                        <td>0987654321</td>
-                        <td>Chưa kích hoạt</td>
-                        <td>15/02/2023</td>
-                        <td>Quản trị viên</td>
-                        <td>
-                            <button class="btn-edit-user">Chỉnh sửa</button>
-                            <button class="btn-delete-user">Xóa</button>
-                        </td>
-                    </tr>
-                    <!-- Thêm dữ liệu mẫu khác nếu cần -->
-                </tbody>
-            </table>
-            <div class="pagination">
-                <button class="btn-prev-user"><i class='bx bx-chevron-left'></i></button>
-                <div class="user-page-numbers">
-                    <span class="active">1</span>
-                    <!-- Thêm số trang nếu cần -->
-                </div>
-                <button class="btn-next-user"><i class='bx bx-chevron-right'></i></button>
-            </div>
-        </div>
-
-        <div id="statistics" class="content">
-            <h2>Thống kê</h2>
-            <div class="stats-menu">
-                <button class="stats-tab active" data-tab="overview">Tổng quan</button>
-                <button class="stats-tab" data-tab="users">Người dùng</button>
-                <button class="stats-tab" data-tab="courts">Sân</button>
-                <button class="stats-tab" data-tab="revenue">Doanh thu</button>
-                <button class="stats-tab" data-tab="bookings">Đặt sân</button>
-                <button class="stats-tab" data-tab="geographical">Phân bố</button>
-            </div>
-
-            <div id="overview" class="stats-content active">
-                <div class="overview-cards">
-                    <div class="stats-card">
-                        <div class="stats-icon"><i class='bx bx-user'></i></div>
-                        <div class="stats-info">
-                            <h3>Tổng người dùng</h3>
-                            <p class="stats-number">1,250</p>
-                            <p class="stats-growth positive">+15% so với tháng trước</p>
+                <div id="overview" class="stats-content active">
+                    <div class="overview-cards">
+                        <div class="stats-card">
+                            <div class="stats-icon"><i class='bx bx-user'></i></div>
+                            <div class="stats-info">
+                                <h3>Tổng người dùng</h3>
+                                <p class="stats-number">1,250</p>
+                                <p class="stats-growth positive">+15% so với tháng trước</p>
+                            </div>
+                        </div>
+                        <div class="stats-card">
+                            <div class="stats-icon"><i class='bx bx-tennis-ball'></i></div>
+                            <div class="stats-info">
+                                <h3>Tổng sân</h3>
+                                <p class="stats-number">34</p>
+                                <p class="stats-growth positive">+5 sân mới</p>
+                            </div>
+                        </div>
+                        <div class="stats-card">
+                            <div class="stats-icon"><i class='bx bx-calendar-check'></i></div>
+                            <div class="stats-info">
+                                <h3>Đặt sân tháng này</h3>
+                                <p class="stats-number">458</p>
+                                <p class="stats-growth positive">+23% so với tháng trước</p>
+                            </div>
+                        </div>
+                        <div class="stats-card">
+                            <div class="stats-icon"><i class='bx bx-money'></i></div>
+                            <div class="stats-info">
+                                <h3>Doanh thu tháng này</h3>
+                                <p class="stats-number">258.500.000 đ</p>
+                                <p class="stats-growth positive">+18% so với tháng trước</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="stats-card">
-                        <div class="stats-icon"><i class='bx bx-tennis-ball'></i></div>
-                        <div class="stats-info">
-                            <h3>Tổng sân</h3>
-                            <p class="stats-number">34</p>
-                            <p class="stats-growth positive">+5 sân mới</p>
+                    <div class="chart-row">
+                        <div class="chart-container">
+                            <h3>Doanh thu (6 tháng gần đây)</h3>
+                            <canvas id="revenueChart"></canvas>
                         </div>
-                    </div>
-                    <div class="stats-card">
-                        <div class="stats-icon"><i class='bx bx-calendar-check'></i></div>
-                        <div class="stats-info">
-                            <h3>Đặt sân tháng này</h3>
-                            <p class="stats-number">458</p>
-                            <p class="stats-growth positive">+23% so với tháng trước</p>
-                        </div>
-                    </div>
-                    <div class="stats-card">
-                        <div class="stats-icon"><i class='bx bx-money'></i></div>
-                        <div class="stats-info">
-                            <h3>Doanh thu tháng này</h3>
-                            <p class="stats-number">258.500.000 đ</p>
-                            <p class="stats-growth positive">+18% so với tháng trước</p>
+                        <div class="chart-container">
+                            <h3>Top 5 sân được đặt nhiều nhất</h3>
+                            <canvas id="topCourtsChart"></canvas>
                         </div>
                     </div>
                 </div>
-                <div class="chart-row">
-                    <div class="chart-container">
-                        <h3>Doanh thu (6 tháng gần đây)</h3>
-                        <canvas id="revenueChart"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <h3>Top 5 sân được đặt nhiều nhất</h3>
-                        <canvas id="topCourtsChart"></canvas>
-                    </div>
-                </div>
-            </div>
 
-            <div id="users" class="stats-content">
-                <div class="chart-container full-width">
-                    <h3>Người dùng mới theo tháng</h3>
-                    <canvas id="userChart"></canvas>
-                </div>
-                <div class="chart-row">
-                    <div class="chart-container">
-                        <h3>Phân bố người dùng theo độ tuổi</h3>
-                        <canvas id="userAgeChart"></canvas>
+                <div id="users" class="stats-content">
+                    <div class="chart-container full-width">
+                        <h3>Người dùng mới theo tháng</h3>
+                        <canvas id="userChart"></canvas>
                     </div>
-                    <div class="chart-container">
-                        <h3>Phân bố người dùng theo loại</h3>
-                        <canvas id="userTypeChart"></canvas>
+                    <div class="chart-row">
+                        <div class="chart-container">
+                            <h3>Phân bố người dùng theo độ tuổi</h3>
+                            <canvas id="userAgeChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Phân bố người dùng theo loại</h3>
+                            <canvas id="userTypeChart"></canvas>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="courts" class="stats-content">
-                <div class="chart-container">
-                    <h3>Số giờ sử dụng theo sân</h3>
-                    <canvas id="courtUsageChart"></canvas>
+                <div id="courts" class="stats-content">
+                    <div class="chart-container">
+                        <h3>Số giờ sử dụng theo sân</h3>
+                        <canvas id="courtUsageChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Tỷ lệ lấp đầy theo sân</h3>
+                        <canvas id="courtOccupancyChart"></canvas>
+                    </div>
                 </div>
-                <div class="chart-container">
-                    <h3>Tỷ lệ lấp đầy theo sân</h3>
-                    <canvas id="courtOccupancyChart"></canvas>
-                </div>
-            </div>
 
-            <div id="revenue" class="stats-content">
-                <div class="chart-container full-width">
-                    <h3>Doanh thu theo tháng</h3>
-                    <canvas id="monthlyRevenueChart"></canvas>
-                </div>
-                <div class="chart-row">
-                    <div class="chart-container">
-                        <h3>Doanh thu theo loại sân</h3>
-                        <canvas id="courtTypeRevenueChart"></canvas>
+                <div id="revenue" class="stats-content">
+                    <div class="chart-container full-width">
+                        <h3>Doanh thu theo tháng</h3>
+                        <canvas id="monthlyRevenueChart"></canvas>
                     </div>
-                    <div class="chart-container">
-                        <h3>Doanh thu theo khung giờ</h3>
-                        <canvas id="timeSlotRevenueChart"></canvas>
+                    <div class="chart-row">
+                        <div class="chart-container">
+                            <h3>Doanh thu theo loại sân</h3>
+                            <canvas id="courtTypeRevenueChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Doanh thu theo khung giờ</h3>
+                            <canvas id="timeSlotRevenueChart"></canvas>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="bookings" class="stats-content">
-                <div class="chart-container full-width">
-                    <h3>Số lượng đặt sân theo tháng</h3>
-                    <canvas id="bookingTrendChart"></canvas>
-                </div>
-                <div class="chart-row">
-                    <div class="chart-container">
-                        <h3>Đặt sân theo ngày trong tuần</h3>
-                        <canvas id="bookingByDayChart"></canvas>
+                <div id="bookings" class="stats-content">
+                    <div class="chart-container full-width">
+                        <h3>Số lượng đặt sân theo tháng</h3>
+                        <canvas id="bookingTrendChart"></canvas>
                     </div>
-                    <div class="chart-container">
-                        <h3>Đặt sân theo khung giờ</h3>
-                        <canvas id="bookingByTimeChart"></canvas>
+                    <div class="chart-row">
+                        <div class="chart-container">
+                            <h3>Đặt sân theo ngày trong tuần</h3>
+                            <canvas id="bookingByDayChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Đặt sân theo khung giờ</h3>
+                            <canvas id="bookingByTimeChart"></canvas>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="geographical" class="stats-content">
-                <h3>Phân bố người dùng theo khu vực</h3>
-                <div id="choroplethChart" style="width: 100%; height: 500px;"></div>
+                <div id="geographical" class="stats-content">
+                    <h3>Phân bố người dùng theo khu vực</h3>
+                    <div id="choroplethChart" style="width: 100%; height: 500px;"></div>
+                </div>
             </div>
-        </div>
 
     </div>
     <footer>

@@ -1340,16 +1340,6 @@ footer {
     text-align: center;
 }
 
-.paid {
-    background: #d4edda;
-    color: #155724;
-}
-
-.unpaid {
-    background: #fff3cd;
-    color: #856404;
-}
-
 /* Pagination */
 .history-container .pagination {
     display: flex;
