@@ -4,7 +4,7 @@ const { getFirestore, collection, doc, setDoc, deleteDoc, getDocs } = require("f
 // Cấu hình Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyATp-eu8CBatLs04mHpZS4c66FaYw5zLgk",
-    authDomain: "pka-pickleball.firebaseapp.com",   
+    authDomain: "pka-pickleball.firebaseapp.com",
     projectId: "pka-pickleball",
     storageBucket: "pka-pickleball.appspot.com",
     messagingSenderId: "38130361867",

@@ -1,5 +1,4 @@
 require('dotenv').config();
-const bcrypt = require('bcrypt');
 const express = require('express');
 const admin = require('firebase-admin');
 const cors = require('cors');
@@ -18,100 +17,20 @@ app.use(express.static(path.resolve(__dirname, '../html_file')));
 const { FieldValue } = admin.firestore;
 const serviceAccount = require('../firebase-config.json');
 
-app.use(express.json());
-app.use(cors());
-
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
 
 const db = admin.firestore();
+db.collection('nguoidung').get()
+    .then(() => console.log('Kết nối Firestore thành công!'))
+    .catch(err => console.error('Lỗi kết nối Firestore:', err));
 
+// Cấu hình CORS để cho phép frontend truy cập
+app.use(express.json());
+app.use(cors());
 
-app.post("/signup", async (req, res) => {
-    const { hoTen, email, matKhau, sdt, diaChi } = req.body;
-
-    try {
-        const userRef = db.collection("nguoidung");
-        const q = await userRef.where("Email", "==", email).get();
-        if (!q.empty) {
-            return res.status(400).json({ message: "Email đã tồn tại!" });
-        }
-
-        const hashedPassword = await bcrypt.hash(matKhau, 10);
-        const usersSnapshot = await userRef.get();
-        let maxId = 0;
-        usersSnapshot.forEach(doc => {
-            const id = doc.data().IDNguoiDung;
-            if (id && id.startsWith("PKA0")) {
-                const numberPart = id.slice(4);
-                const num = parseInt(numberPart, 10);
-                if (!isNaN(num) && num > maxId) {
-                    maxId = num;
-                }
-            }
-        });
-
-        const newId = `PKA0${maxId + 1}`;
-        const userSnapshot = await userRef.where("IDNguoiDung", "==", newId).get();
-        if (!userSnapshot.empty) {
-            return res.status(400).json({ message: "ID đã tồn tại, vui lòng chọn tên khác!" });
-        }
-
-        // Tạo tài liệu với ID document là newId
-        await userRef.doc(newId).set({
-            HoTen: hoTen,
-            Email: email,
-            MatKhau: hashedPassword,
-            SDT: sdt,
-            DiaChi: diaChi,
-            IDNguoiDung: `PKA0${maxId + 1}`, 
-            NgayTao: new Date(),
-            role: "user"
-        });
-
-        res.json({ message: "Đăng ký thành công!" });
-    } catch (error) {
-        console.error("Lỗi khi xử lý đăng ký:", error.message);
-        res.status(500).json({ message: "Lỗi server!", error: error.message });
-    }
-});
-
-app.post("/login", async (req, res) => {
-    const { email, password } = req.body;
-    try {
-        const userQuery = await db.collection("nguoidung").where("Email", "==", email).get();
-        if (userQuery.empty) {
-            return res.status(400).json({ message: "Email không tồn tại!" });
-        }
-
-        let userData;
-        let userId;
-        userQuery.forEach(doc => {
-            userData = doc.data();
-            userId = doc.id;
-        });
-
-        // Kiểm tra mật khẩu
-        const passwordMatch = await bcrypt.compare(password, userData.MatKhau);
-        if (!passwordMatch) {
-            return res.status(400).json({ message: "Mật khẩu không đúng!" });
-        }
-
-        // Đăng nhập thành công
-        res.json({
-            message: "Đăng nhập thành công!",
-            user: {
-                userId,
-                userName: userData.HoTen,
-                userRole: userData.role,
-            },
-        });
-    } catch (error) {
-        res.status(500).json({ message: "Lỗi server!", error: error.message });
-    }
-});
-
+// API lấy danh sách địa điểm từ 'locations'
 app.get('/locations', async (req, res) => {
     try {
         const snapshot = await db.collection('locations').get();
@@ -143,6 +62,22 @@ app.get('/lichsudatsan', async (req, res) => {
         });
 
         res.json(locations);
+    } catch (err) {
+        res.status(500).json({ error: 'Lỗi server' });
+    }
+});
+
+app.get('/lichsudatsan/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const docRef = db.collection('lichsudatsan').doc(id);
+        const docSnap = await docRef.get();
+
+        if (!docSnap.exists) {
+            return res.status(404).json({ message: 'Không tìm thấy lịch sử đặt sân.' });
+        }
+
+        res.json({ id: docSnap.id, ...docSnap.data() });
     } catch (err) {
         res.status(500).json({ error: 'Lỗi server' });
     }
@@ -185,6 +120,7 @@ app.get('/lichsuthanhtoan', async (req, res) => {
     }
 });
 
+// API lấy danh sách sân từ 'san'
 app.get('/san', async (req, res) => {
     try {
         const snapshot = await db.collection('san').get();
@@ -249,6 +185,7 @@ app.get('/chitietsan/:id', async (req, res) => {
     }
 });
 
+// API lấy thông tin địa điểm theo ID từ 'locations'
 app.get('/locations/:id', async (req, res) => {
     try {
         const locationId = req.params.id;
@@ -274,8 +211,8 @@ app.get('/locations/:id', async (req, res) => {
 });
 
 app.get('/lich/:IDSan', async (req, res) => {
-    const { IDSan } = req.params; 
-    const collectionName = `lich${IDSan}`; 
+    const { IDSan } = req.params;  // Lấy ID sân từ URL
+    const collectionName = `lich${IDSan}`; // Tạo collection theo sân
 
     try {
         const snapshot = await db.collection(collectionName).get();
@@ -286,6 +223,24 @@ app.get('/lich/:IDSan', async (req, res) => {
         });
 
         res.json(slots);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/lich/:IDSan/:documentId', async (req, res) => {
+    const { IDSan, documentId } = req.params;  
+    const collectionName = `lich${IDSan}`; 
+
+    try {
+        const docRef = db.collection(collectionName).doc(documentId);
+        const docSnap = await docRef.get();
+
+        if (!docSnap.exists) {
+            return res.status(404).json({ error: "Không tìm thấy lịch đặt sân." });
+        }
+
+        res.json({ id: docSnap.id, ...docSnap.data() });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -311,6 +266,7 @@ app.patch('/lich/:IDSan/:documentId', async (req, res) => {
     }
 });
 
+
 app.get('/nguoidung/:userId', async (req, res) => {
     const { userId } = req.params;  
 
@@ -334,6 +290,7 @@ app.get('/nguoidung/:userId', async (req, res) => {
     }
 });
 
+
 const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -345,6 +302,8 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+
+// API gửi mã xác nhận về email
 app.post('/send-verification-code', async (req, res) => {
     try {
         const { email } = req.body;
@@ -433,56 +392,11 @@ app.get('/reset-password', (req, res) => {
     res.sendFile(path.join(__dirname, '../html_file/ResetPassWord.html'));
 });
 
-// API xử lý thanh toán
-app.post('/process-payment', async (req, res) => {
-    const { userId, userName, userEmail, userPhone, totalPrice, fieldName, fieldAddress, idSan, selectedDate, selectedTime, paymentTime, onePrice, docId } = req.body;
-    let batch = db.batch();
-
-    try {
-        // Thêm lịch sử thanh toán
-        let paymentRef = db.collection("lichsuthanhtoan").doc(docId);
-        batch.set(paymentRef, {
-            userId,
-            tenNguoiDung: userName,
-            email: userEmail,
-            sdt: userPhone,
-            soTien: totalPrice,
-            tenSan: fieldName,
-            idSan,
-            diaChiSan: fieldAddress,
-            khungGio: selectedTime,
-            thoiGianThanhToan: paymentTime,
-            trangThaiThanhToan: "Thành công"
-        });
-
-        // Thêm lịch sử đặt sân
-        let bookingRef = db.collection("lichsudatsan").doc(docId);
-        batch.set(bookingRef, {
-            userId,
-            tenNguoiDung: userName,
-            sdt: userPhone,
-            idSan,
-            ngayDatSan: selectedDate,
-            khungGio: selectedTime,
-            tenSan: fieldName,
-            diaChiSan: fieldAddress,
-            giaSan: onePrice,
-            tienTrinh: "Chưa diễn ra"
-        });
-
-        // Cập nhật trạng thái sân thành "Đã đặt"
-        let fieldRef = db.collection(`lich${idSan}`).doc(`${idSan}_${selectedDate}_${selectedTime}`);
-        batch.update(fieldRef, { TrangThai: "Đã đặt" });
-
-        await batch.commit();
-        res.json({ success: true, message: "Thanh toán và đặt sân thành công!" });
-    } catch (error) {
-        console.error("Lỗi khi xử lý thanh toán:", error.message);
-        res.json({ success: false, message: "Có lỗi xảy ra khi xử lý thanh toán." });
-    }
-});
-
 app.use(express.static(path.join(__dirname, "html_file")));
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "html_file", "home.html"));
+});
 
 // Lắng nghe trên cổng 3000
 app.listen(port, () => {
