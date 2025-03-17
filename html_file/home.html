@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="https://unpkg.com/toastr@latest/build/toastr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <meta http-equiv="Content-Security-Policy"content="default-src 'self' https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://fonts.googleapis.com; connect-src 'self' http://localhost:3000 https://nominatim.openstreetmap.org ; img-src * data:; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com;">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://fonts.googleapis.com; connect-src 'self' http://localhost:3000 https://nominatim.openstreetmap.org https://firestore.googleapis.com; img-src * data:; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com;">
     <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -37,7 +38,7 @@
                         <span id="user-name-text" onclick="toggleUserDropdown(event)">User</span>
                         <div id="user-dropdown" class="user-dropdown" style="display: none;">
                             <ul>
-                                <li><a href="profile.html" >Quản lý thông tin cá nhân</a></li>
+                                <li><a href="profile.html">Quản lý thông tin cá nhân</a></li>
                                 <li id="logouLink"><a href="Login.html" onclick="logout()">Đăng xuất</a></li>
                             </ul>
                         </div>
@@ -52,10 +53,11 @@
                 <a href="javascript:void(0);" onclick="showContent('membership', this)">Gói hội viên</a>
                 <a href="javascript:void(0);" onclick="showContent('appointments', this)">Quản lý lịch hẹn</a>
                 <a href="javascript:void(0);" onclick="showContent('history', this)">Lịch sử giao dịch</a>
+                <a href="javascript:void(0);" onclick="showContent('manage-courts', this)">Quản lý sân</a>
                 <a href="javascript:void(0);" onclick="showContent('manage-users', this)">Quản lý người dùng</a>
                 <a href="javascript:void(0);" onclick="showContent('statistics', this)">Thống kê</a>
                 <a href="javascript:void(0);" onclick="showContent('map', this)">Map</a>
-            </div>            
+            </div>
         </div>
     </div>
     <div class="container">
@@ -64,9 +66,12 @@
                 <div class="intro-content">
                     <h2>PKA Pickleball là gì?</h2>
                     <p>
+                        PKA Pickleball là ứng dụng cho người yêu thể thao, giúp bạn dễ dàng tìm và đặt sân chơi ngay
+                        trên điện thoại.
+                        Dù là bóng đá, tennis, pickleball, hay cầu lông, bạn chỉ cần vài thao tác để tìm sân gần nhất,
+                        đặt lịch mong muốn
                         PKA Pickleball là ứng dụng cho người yêu thể thao, giúp bạn dễ dàng tìm và đặt sân chơi mọi lúc. 
-                        Dù là bóng đá, tennis, pickleball, hay cầu lông, bạn chỉ cần vài thao tác để tìm sân gần nhất, đặt lịch mong muốn 
-                        và kết nối với những người cùng đam mê.
+                        Dù là bóng đá, tennis, pickleball, hay cầu lông, bạn chỉ cần vài thao tác để tìm sân gần nhất, đặt lịch mong muốn và kết nối với những người cùng đam mê.
                     </p>
                 </div>
                 <div class="intro-image">
@@ -79,12 +84,14 @@
                     <div class="card highlight">
                         <img src="../images/icon1.webp" alt="Tìm kiếm sân chơi">
                         <h3>Tìm kiếm sân chơi</h3>
-                        <p>Ứng dụng giúp bạn dễ dàng tìm và chọn sân thể thao gần vị trí hiện tại hoặc khu vực mong muốn.</p>
+                        <p>Ứng dụng giúp bạn dễ dàng tìm và chọn sân thể thao gần vị trí hiện tại hoặc khu vực mong
+                            muốn.</p>
                     </div>
                     <div class="card">
                         <img src="../images/icon2.webp" alt="Tìm bạn cùng chơi">
                         <h3>Tìm bạn cùng chơi</h3>
-                        <p>Người chơi có thể tìm đối tác phù hợp trên ứng dụng dựa trên trình độ, giới tính và vị trí.</p>
+                        <p>Người chơi có thể tìm đối tác phù hợp trên ứng dụng dựa trên trình độ, giới tính và vị trí.
+                        </p>
                     </div>
                     <div class="card">
                         <img src="../images/icon3.webp" alt="Đặt giờ thuê sân">
@@ -112,25 +119,29 @@
                 <h2>⚽ CHỦ SÂN - CHỨC NĂNG QUẢN LÝ</h2>
                 <div class="chuc_nang_ql">
                     <div class="ql-images">
-                        <p><i>PKA Picklball</i> giúp chủ sân quản lý hiệu quả các sân thể thao, từ sân đơn lẻ đến cụm sân với nhiều môn thể thao. Ứng dụng tối ưu hóa quy trình đặt sân, thu hút khách hàng và tăng hiệu suất hoạt động.</p>
+                        <p><i>PKA Picklball</i> giúp chủ sân quản lý hiệu quả các sân thể thao, từ sân đơn lẻ đến cụm
+                            sân với nhiều môn thể thao. Ứng dụng tối ưu hóa quy trình đặt sân, thu hút khách hàng và
+                            tăng hiệu suất hoạt động.</p>
                         <img src="../images/booknow.webp" alt="Voucher">
                     </div>
                     <div class="quan_ly">
                         <div class="box">
                             <h3>📅 Quản lý cụm sân</h3>
-                            <p>Chủ sân có thể tạo thông tin chi tiết cho từng sân, bao gồm tên, địa chỉ, mô tả và bảng giá theo giờ.</p>
+                            <p>Chủ sân có thể tạo thông tin chi tiết cho từng sân, bao gồm tên, địa chỉ, mô tả và bảng
+                                giá theo giờ.</p>
                         </div>
-            
+
                         <div class="box">
                             <h3>👥 Quản lý khách hàng</h3>
-                            <p>Quản lý thông tin khách hàng như tên, số điện thoại, lịch sử đặt sân và các dịch vụ đã sử dụng.</p>
+                            <p>Quản lý thông tin khách hàng như tên, số điện thoại, lịch sử đặt sân và các dịch vụ đã sử
+                                dụng.</p>
                         </div>
-            
+
                         <div class="box">
                             <h3>✔️ Quản lý đơn đặt</h3>
                             <p>Quản lý chi tiết từng đơn đặt sân theo trạng thái: Xác nhận, đã thanh toán, đã hủy...</p>
                         </div>
-            
+
                         <div class="box">
                             <h3>📍 Quản lý tập trung</h3>
                             <p>Chủ sân dễ dàng quản lý các yêu cầu đặt sân từ khách hàng.</p>
@@ -146,26 +157,31 @@
                             <div class="boxx-img"><img src="../images/icon11.webp" alt="Sân chơi"></div>
                             <div class="boxx-content">
                                 <h3>Báo cáo kinh doanh</h3>
-                                <p>Các báo cáo này bao gồm số lượng đặt sân, doanh thu dịch vụ, và các giao dịch thanh toán, giúp chủ sân đánh giá hiệu quả kinh doanh và tối ưu chiến lược vận hành.</p>
+                                <p>Các báo cáo này bao gồm số lượng đặt sân, doanh thu dịch vụ, và các giao dịch thanh
+                                    toán, giúp chủ sân đánh giá hiệu quả kinh doanh và tối ưu chiến lược vận hành.</p>
                             </div>
                         </div>
-            
+
                         <div class="boxx">
                             <div class="boxx-img"><img src="../images/icon12.webp" alt="Sân chơi"></div>
                             <div class="boxx-content">
                                 <h3>Tối ưu thanh toán</h3>
-                                <p>Quản lý toàn bộ quá trình thanh toán từ người chơi. Ứng dụng cung cấp danh sách thanh toán đến hạn và nhắc nhở người chơi tự động.</p>
+                                <p>Quản lý toàn bộ quá trình thanh toán từ người chơi. Ứng dụng cung cấp danh sách thanh
+                                    toán đến hạn và nhắc nhở người chơi tự động.</p>
                             </div>
                         </div>
                     </div>
                     <div class="tk-images">
-                        <p><i>PKA Picklball</i> giúp chủ sân quản lý doanh thu, thống kê và phân tích chiến lược kinh doanh hiệu quả. Cung cấp báo cáo chi tiết về doanh thu, lượng đặt sân và tỷ lệ lấp đầy, giúp chủ sân điều chỉnh chiến lược, tối ưu giá và khung giờ để tăng doanh thu, thu hút thêm khách hàng.</p>
+                        <p><i>PKA Picklball</i> giúp chủ sân quản lý doanh thu, thống kê và phân tích chiến lược kinh
+                            doanh hiệu quả. Cung cấp báo cáo chi tiết về doanh thu, lượng đặt sân và tỷ lệ lấp đầy, giúp
+                            chủ sân điều chỉnh chiến lược, tối ưu giá và khung giờ để tăng doanh thu, thu hút thêm khách
+                            hàng.</p>
                         <img src="../images/thongke.webp" alt="Voucher">
                     </div>
                 </div>
-            </div>   
+            </div>
         </div>
-        
+
         <div id="list-courts" class="content">
             <div class="list-box">
                 <div class="list-left">
@@ -206,9 +222,8 @@
                         <div class="filter-options">
                             <select id="status-filter">
                                 <option value="all">Tất cả trạng thái</option>
-                                <option value="pending">Chờ xác nhận</option>
-                                <option value="confirmed">Đã xác nhận</option>
-                                <option value="completed">Đã hoàn thành</option>
+                                <option value="upcoming">Chưa diễn ra</option>
+                                <option value="ongoing">Đã diễn ra</option>
                                 <option value="cancelled">Đã hủy</option>
                             </select>
                             <select id="date-filter">
@@ -227,8 +242,6 @@
                     </div>
                 </div>
 
-                </div>
-
                 <div class="pagination">
                     <button class="btn-prev"><i class='bx bx-chevron-left'></i></button>
                     <div class="page-numbers">
@@ -242,34 +255,21 @@
                 </div>
             </div>
         </div>
-<!-- Lịch sử giao dịch -->
+        <!-- Lịch sử giao dịch -->
         <div id="history" class="content">
             <div class="history-container">
                 <h1>Lịch Sử Giao Dịch</h1>
                 <table class="history-table">
                     <thead>
                         <tr>
-                            <th>Ngày</th>
-                            <th>Mô tả</th>
+                            <th>Địa chỉ</th>
+                            <th>Tên sân</th>
                             <th>Số tiền</th>
                             <th>Trạng thái</th>
+                            <th>Thời gian</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>15/03/2024</td>
-                            <td>Thanh toán tiền sân Pickleball Số 1</td>
-                            <td>500.000đ</td>
-                            <td class="status paid">Đã thanh toán</td>
-                        </tr>
-                        <tr>
-                            <td>14/03/2024</td>
-                            <td>Thanh toán tiền sân Pickleball Số 2</td>
-                            <td>300.000đ</td>
-                            <td class="status unpaid">Chưa thanh toán</td>
-                        </tr>
-                        <!-- Thêm các dòng khác tương tự -->
-                    </tbody>
+                    <tbody id="history-body"></tbody>
                 </table>
                 <div class="pagination">
                     <button class="btn-prev"><i class='bx bx-chevron-left'></i></button>
@@ -288,28 +288,28 @@
         <div id="membership" class="content">
             <div class="membership-container">
                 <div class="membership-slide">
-                    <div class="membership-item" style="background-image: url('/images/membership2.png');" data-image="/images/membership1.jpg" data-id="G01">
+                    <div class="membership-item" style="background-image: url('/images/membership2.png');" data-image="/images/membership1.jpg">
                         <div class="content">
                             <div class="name">Gói Cơ Bản</div>
                             <div class="des">Truy cập cơ bản với giá rẻ nhất.</div>
                             <button class="register-btn">Đăng ký</button>
                         </div>
                     </div>
-                    <div class="membership-item" style="background-image: url('/images/membership4.jpg');" data-image="/images/membership1.jpg" data-id="G02">
+                    <div class="membership-item" style="background-image: url('/images/membership4.jpg');" data-image="/images/membership1.jpg">
                         <div class="content">
                             <div class="name">Gói Tiêu Chuẩn</div>
                             <div class="des">Quyền lợi tiêu chuẩn cho thành viên.</div>
                             <button class="register-btn">Đăng ký</button>
                         </div>
                     </div>
-                    <div class="membership-item" style="background-image: url('/images/membership5.png');" data-image="/images/membership1.jpg" data-id="G03">
+                    <div class="membership-item" style="background-image: url('/images/membership5.png');" data-image="/images/membership1.jpg">
                         <div class="content">
                             <div class="name">Gói Cao Cấp</div>
                             <div class="des">Ưu đãi đặc biệt và tính năng nâng cao.</div>
                             <button class="register-btn">Đăng ký</button>
                         </div>
                     </div>
-                    <div class="membership-item" style="background-image: url('/images/membership6.png');" data-image="/images/membership1.jpg" data-id="G04">
+                    <div class="membership-item" style="background-image: url('/images/membership6.png');" data-image="/images/membership1.jpg">
                         <div class="content">
                             <div class="name">Gói VIP</div>
                             <div class="des">Trải nghiệm cao cấp và đặc quyền VIP.</div>
@@ -331,11 +331,6 @@
                 <p id="modal-description"></p>
                 <button id="confirm-btn">Xác nhận</button>
             </div>
-        </div>        
-
-        <div id="profile" class="content">
-            <h2>Quản lý thông tin</h2>
-            <p>Cập nhật thông tin cá nhân...</p>
         </div>
 
         <div id="map" class="content">
@@ -346,7 +341,7 @@
             <div class="right-content">
                 <div id="leafletMap"></div>
             </div>
-        </div>        
+        </div>
 
         <div class="chat-container">
             <div class="chat-icon" onclick="toggleChat()"><i class='bx bxs-chat'></i></div>
@@ -356,6 +351,34 @@
                     <p>Xin chào! Tôi có thể giúp gì cho bạn?</p>
                 </div>
                 <input type="text" class="chat-input" placeholder="Nhập tin nhắn...">
+            </div>
+        </div>
+
+        <div id="manage-courts" class="content">
+            <div class="list-box">
+                <div class="list-left">
+                    <h2>Danh sách sân</h2>
+                    <div class="count-item">
+                        <p class="sport-item"><span>Pickleball</span> <span id="admin-pickleball-count">0</span></p>
+                        <p class="sport-item"><span>Bóng đá</span> <span id="admin-football-count">0</span></p>
+                        <p class="sport-item"><span>Cầu lông</span> <span id="admin-badminton-count">0</span></p>
+                    </div>
+                </div>
+                <div class="list-right">
+                    <input type="text" id="admin-search-bar" placeholder=" Tìm kiếm sân...">
+                    <select id="admin-price-filter">
+                        <option value="">Chọn giá</option>
+                        <option value="low-to-high">Giá từ thấp đến cao</option>
+                        <option value="high-to-low">Giá từ cao đến thấp</option>
+                    </select>
+                    <div id="admin-san-list" class="court-list"></div>
+
+                    <div id="admin-pagination">
+                        <button id="admin-prev-page" disabled>Trang trước</button>
+                        <span id="admin-page-number">Trang 1</span>
+                        <button id="admin-next-page">Trang sau</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -379,24 +402,6 @@
                 </thead>
                 <tbody id="user-table-body">
                     <tr>
-                        <td>Nguyễn Văn A</td>
-                        <td>nguyenvana@example.com</td>
-                        <td>0123456789</td>
-                        <td>Đã kích hoạt</td>
-                        <td>01/01/2023</td>
-                        <td>Người dùng</td>
-                        <td>
-                            <button class="btn-edit-user">Chỉnh sửa</button>
-                            <button class="btn-delete-user">Xóa</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Trần Thị B</td>
-                        <td>tranthib@example.com</td>
-                        <td>0987654321</td>
-                        <td>Chưa kích hoạt</td>
-                        <td>15/02/2023</td>
-                        <td>Quản trị viên</td>
                         <td>
                             <button class="btn-edit-user">Chỉnh sửa</button>
                             <button class="btn-delete-user">Xóa</button>
@@ -550,7 +555,8 @@
             </div>
             <div class="footer-section">
                 <h3>Về chúng tôi</h3>
-                <p>PKA Pickleball giúp bạn dễ dàng tìm và đặt sân chơi nhanh chóng, kết nối với cộng đồng đam mê thể thao.</p>
+                <p>PKA Pickleball giúp bạn dễ dàng tìm và đặt sân chơi nhanh chóng, kết nối với cộng đồng đam mê thể
+                    thao.</p>
             </div>
             <div class="footer-section">
                 <h3>Liên kết nhanh</h3>
@@ -583,12 +589,12 @@
             <p>&copy; 2025 PKA Pickleball. All Rights Reserved.</p>
         </div>
     </footer>
-    
-    <script src="../js_file/home.js"></script>
-    <script src="../js_file/appointments.js"></script>
-    <script src="../js_file/listcourts.js"></script>
-    <script src="../js_file/manageUsers.js"></script>
 
+    <script src="../js_file/home.js"></script>
+    <script type="module" src="../js_file/appointments.js"></script>
+    <script src="../js_file/listcourts.js"></script>
+    <script type="module" src="../js_file/manageUsers.js"></script>
+    <script type="module" src="../js_file/manageCourts.js"></script>
 </body>
 
 </html>

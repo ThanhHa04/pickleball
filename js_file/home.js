@@ -8,7 +8,7 @@ console.log("User Role:", userRole);
 
 const allowedPages = {
     user: ["home", "list-courts", "appointments", "history", "membership", "map"],
-    admin: ["home", "appointments", "manage-users", "statistics", "map"]
+    admin: ["home", "manage-courts", "manage-users", "statistics", "map"]
 };
 
 // Ẩn/hiện menu theo vai trò
@@ -115,7 +115,6 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Trình duyệt của bạn không hỗ trợ xác định vị trí.");
             return;
         }
-
         navigator.geolocation.getCurrentPosition(
             function (position) {
                 var userLat = position.coords.latitude;
@@ -123,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 function cleanAddress(address) {
                     let parts = address.split(", ");
-                    if (parts.length > 7) {
+                    if (parts.length > 5) {
                         return parts.slice(0, 5).join(", ");
                     }
                     return address;
@@ -292,4 +291,8 @@ document.addEventListener("DOMContentLoaded", function () {
             modal.style.display = "none";
         }
     });
+});
+
+document.querySelector('.close-btn').addEventListener('click', function() {
+    document.getElementById('membership-modal').style.display = 'none';
 });
