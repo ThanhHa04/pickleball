@@ -6,7 +6,6 @@ function generateQRCode() {
     let accountNumber = "0932396059";
     let bankID = "mb";
     let paymentMethod = document.getElementById("payment-method").value;
-
     if (paymentMethod === "bank" || paymentMethod === "momo") {
         let apiUrl = `https://img.vietqr.io/image/${bankID}-${accountNumber}-compact.png?amount=${totalPrice}&addInfo=ThanhToanSanBong`;
         qrContainer.innerHTML = `<img src="${apiUrl}" alt="QR Code">`;
@@ -16,7 +15,6 @@ function generateQRCode() {
         alert("Vui lòng chọn phương thức thanh toán hợp lệ.");
     }
 }
-
 // Hàm xử lý thanh toán
 async function handlePayment() {
     const urlParams = new URLSearchParams(window.location.search);

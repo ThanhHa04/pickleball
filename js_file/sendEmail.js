@@ -11,7 +11,6 @@ async function sendEmail(event) {
         notification.style.color = 'red';
         return;
     }
-
     try {
         const response = await fetch('http://localhost:3000/send-verification-code', {
             method: 'POST',

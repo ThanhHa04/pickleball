@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const usersPerPage = 20;
     let currentPage = 1;
     let allUsers = [];
-
     async function fetchUsers() {
         try {
             const nguoidungCol = collection(db, 'nguoidung');

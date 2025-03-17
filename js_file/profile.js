@@ -23,7 +23,6 @@ document.querySelectorAll('.profile-nav li').forEach(tab => {
         document.getElementById(tabId).classList.add('active');
     });
 });
-
 // Xử lý upload ảnh đại diện
 const avatarUpload = document.getElementById('avatar-upload');
 const avatarPreview = document.getElementById('avatar-preview');

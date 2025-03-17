@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const confirmMatKhau = document.getElementById("confirmpassword").value;
         const sdt = document.getElementById("phone").value;
         const diaChi = document.getElementById("address").value;
-
         // Kiểm tra tính hợp lệ của các trường dữ liệu
         if (!hoTen || !email || !matKhau || !confirmMatKhau || !sdt || !diaChi) {
             alert("Vui lòng nhập đầy đủ thông tin!");
