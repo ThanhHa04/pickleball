@@ -115,7 +115,6 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Trình duyệt của bạn không hỗ trợ xác định vị trí.");
             return;
         }
-
         navigator.geolocation.getCurrentPosition(
             function (position) {
                 var userLat = position.coords.latitude;
@@ -123,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 function cleanAddress(address) {
                     let parts = address.split(", ");
-                    if (parts.length > 7) {
+                    if (parts.length > 5) {
                         return parts.slice(0, 5).join(", ");
                     }
                     return address;
