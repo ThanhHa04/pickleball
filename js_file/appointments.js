@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 // Nếu trạng thái trong lịch sử đặt sân là "Chưa diễn ra" hoặc "Đã hủy", cập nhật thành "Đã diễn ra"
                 if (tienTrinh === "Chưa diễn ra" || tienTrinh === "Đã hủy") {
-                    tienTrinh = "Đã diễn ra"; // Cập nhật lại trạng thái trong hệ thống
+                    tienTrinh = "Đã diễn ra"; 
                     await updateDoc(doc(db, "lichsudatsan", computedHistoryId), { tienTrinh: "Đã diễn ra" });
                 }
             } else if (tienTrinh === "Chưa diễn ra") {

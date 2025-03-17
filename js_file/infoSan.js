@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("❌ Không tìm thấy idSan trong URL.");
         return;
     }
+
     const fetchChiTietSan = fetch(`http://localhost:3000/chitietsan/${idSan}`).then(res => res.json());
     const fetchSan = fetch(`http://localhost:3000/san/${idSan}`).then(res => res.json());
 
