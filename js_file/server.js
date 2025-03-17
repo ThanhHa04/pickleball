@@ -393,7 +393,7 @@ app.post('/send-verification-code', async (req, res) => {
 
 app.post('/api/reset-password', async (req, res) => {
     const { email, code, newPassword } = req.body;
-    const expirationTime = 5 * 60 * 1000;
+    const expirationTime = 5 * 60 * 1000; // 5 phút
 
     try {
         const userRef = db.collection('nguoidung').where('Email', '==', email);
@@ -407,23 +407,29 @@ app.post('/api/reset-password', async (req, res) => {
         const userData = userDoc.data();
         const currentTime = Date.now();
 
-        // Kiểm tra mã xác nhận & thời gian hợp lệ
-        if (!userData.resetCode || userData.resetCode !== parseInt(code)) {
+        // 🔹 Sửa lỗi: Kiểm tra mã xác nhận đúng kiểu dữ liệu (String)
+        if (!userData.resetCode || userData.resetCode !== code) {
             return res.json({ success: false, message: 'Mã xác nhận không đúng!' });
         }
+
+        // 🔹 Kiểm tra mã có hết hạn không
         if (!userData.resetCodeTime || currentTime - userData.resetCodeTime > expirationTime) {
             return res.json({ success: false, message: 'Mã xác nhận đã hết hạn!' });
         }
 
-        // Cập nhật mật khẩu & xóa mã
+        // 🔹 Mã hóa mật khẩu trước khi lưu vào Firestore
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // 🔹 Cập nhật mật khẩu & xóa resetCode sau khi sử dụng
         await userDoc.ref.update({
-            MatKhau: newPassword,
+            MatKhau: hashedPassword, // 🔹 Cập nhật với mật khẩu đã mã hóa
             resetCode: FieldValue.delete(),
             resetCodeTime: FieldValue.delete()
         });
 
         res.json({ success: true, message: 'Đổi mật khẩu thành công!' });
     } catch (error) {
+        console.error("Lỗi đặt lại mật khẩu:", error);
         res.status(500).json({ success: false, message: 'Lỗi hệ thống!' });
     }
 });

@@ -7,6 +7,7 @@ function resetPassword(event) {
     const newPassword = document.getElementById('newPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     const notification = document.getElementById('notification');
+
     if (!email || !code) {
         notification.style.display = 'block';
         notification.style.color = 'red';
@@ -34,19 +35,9 @@ function resetPassword(event) {
             setTimeout(() => window.location.href = "Login.html", 1000);
         }
     })
-    .catch(error => {
+    .catch(() => {
         notification.style.display = 'block';
         notification.style.color = 'red';
         notification.textContent = 'Lỗi hệ thống, thử lại sau!';
     });
 }
-
-function getPath(filename) {
-    if (window.location.origin.includes("127.0.0.1:5500")) {
-        return `/html_file/${filename}`; 
-    }
-    return `/${filename}`;
-}
-window.onload = function () {
-    document.getElementById("loginLink").setAttribute("href", getPath("Login.html"));
-};
