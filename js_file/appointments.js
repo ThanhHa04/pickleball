@@ -125,6 +125,61 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 });
 
+
+document.addEventListener("DOMContentLoaded", async () => {
+    async function getTransactionHistory() {
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+            console.error("❌ Không tìm thấy userId trong localStorage!");
+            return [];
+        }
+
+        const historyRef = collection(db, "lichsuthanhtoan");
+        const q = query(historyRef, where("userId", "==", userId));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            console.warn("⚠️ Không có giao dịch nào cho userId:", userId);
+            return [];
+        }
+
+        const transactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        console.log(`📌 Giao dịch của userId=${userId}:`, transactions);
+        return transactions;
+    }
+
+    async function updateHistoryTable() {
+        const historyBody = document.getElementById("history-body");
+        if (!historyBody) {
+            console.error("❌ Không tìm thấy phần tử history-body trong HTML!");
+            return;
+        }
+        historyBody.innerHTML = "";
+
+        const transactions = await getTransactionHistory();
+        console.log("📌 Transactions Data:", transactions);
+
+        if (!transactions.length) {
+            historyBody.innerHTML = "<tr><td colspan='5' style='text-align:center'>Không có giao dịch nào</td></tr>";
+            return;
+        }
+
+        transactions.forEach(transaction => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${transaction.diaChiSan || "N/A"}</td>
+                <td>${transaction.tenSan || "N/A"}</td>
+                <td>${transaction.soTien ? transaction.soTien + "đ" : "N/A"}</td>
+                <td>${transaction.trangThaiThanhToan || "Chưa rõ"}</td>
+                <td>${transaction.thoiGianThanhToan || "N/A"}</td>
+            `;
+            historyBody.appendChild(row);
+        });
+    }
+
+    await updateHistoryTable();
+});
+
 document.addEventListener('DOMContentLoaded', function () {
     // Lấy các phần tử
     const searchInput = document.getElementById('appointment-search');
@@ -253,3 +308,5 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 }); 
+
+
