@@ -479,10 +479,10 @@ img {
 
 #membership {
     position: absolute;
-    top: 70%;
+    top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 1000px;
+    width: 1200px;
     height: 600px;
     background: #f5f5f5;
     box-shadow: 0 30px 50px #dbdbdb;

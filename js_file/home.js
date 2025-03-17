@@ -293,11 +293,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-<<<<<<< HEAD
 
 document.querySelector('.close-btn').addEventListener('click', function() {
     document.getElementById('membership-modal').style.display = 'none';
 });
-
-=======
->>>>>>> cc8b5624e1e3a798e77155ffc7dd1d176a406109

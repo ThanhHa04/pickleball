@@ -56,13 +56,26 @@ document.addEventListener("DOMContentLoaded", async () => {
             const hinhAnh = sanData?.HinhAnh;
             const tienTrinh = historyData?.tienTrinh || "Không xác định";
 
-            // Xác định class trạng thái
+            const bookingDate = new Date(booking.ngayDatSan); // Lấy ngày đặt sân
+            const [startHour, startMinute] = booking.khungGio.split(":"); // Lấy giờ và phút từ khung giờ
+            const bookingTime = new Date(bookingDate.setHours(startHour, startMinute)); // Tạo đối tượng thời gian đầy đủ
+
+            // Xác định trạng thái của lịch hẹn
             let statusClass = "pending";
-            if (tienTrinh === "Đã xác nhận") {
-                statusClass = "confirmed";
+            let statusText = tienTrinh;
+            const currentDate = new Date(); 
+            
+            if (currentDate > bookingTime) { // Nếu thời gian hiện tại đã qua lịch hẹn
+                statusClass = "finished";
+                statusText = "Đã diễn ra";
+            } else if (tienTrinh === "Chưa diễn ra") {
+                statusClass = "ongoing";
+                statusText = "Chưa diễn ra";
             } else if (tienTrinh === "Đã hủy") {
                 statusClass = "cancelled";
+                statusText = "Đã hủy";
             }
+
 
             let actionsHTML = "";
             if (statusClass !== "cancelled") {
