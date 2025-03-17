@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             let actionsHTML = "";
-            if (statusClass !== "cancelled") {
+            if (statusClass !== "cancelled" && statusClass !== "finished") {
                 actionsHTML = `
                     <div class="appointment-actions">
                         <button class="btn-cancel">Hủy lịch</button>
