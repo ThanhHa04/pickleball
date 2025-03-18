@@ -1488,11 +1488,13 @@ footer {
 
 /* Styles for User Management Section */
 .user-management-table {
-    width: 100%;
+    width: 90%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin: 20px auto;
 }
-
+#manage-users.content{
+    padding:20px;
+}
 .user-management-table th, .user-management-table td {
     border: 1px solid #ddd;
     padding: 8px;
@@ -1501,7 +1503,7 @@ footer {
 }
 
 .user-management-table th {
-    background-color: #f2f2f2;
+    background-color: #cbd6cf;
     color: black;
 }
 
@@ -1534,11 +1536,12 @@ footer {
 .user-search {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin: 20px;
+    border:40px;
 }
 
 #user-search-input {
-    width: 300px;
+    width: 400px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px 0 0 5px;
@@ -1550,14 +1553,13 @@ footer {
     border-color: #007bff;
 }
 
-#user-search-button {
+.finder {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #36ae7e;
     color: white;
     border: none;
     border-radius: 0 5px 5px 0;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
 #user-search-button:hover {

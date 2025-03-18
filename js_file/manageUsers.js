@@ -19,11 +19,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = docSnapshot.data();
                 return {
                     id: docSnapshot.id,
+                    userID: data.IDNguoiDung,
                     name: data.HoTen || '-',
                     email: data.Email || '-',
-                    phone: data.IDNguoiDung || '-',
+                    phone: data.SDT || '-',
                     membershipStatus: data.HienThiThongTin ? 'Đã kích hoạt' : 'Chưa kích hoạt',
-                    creationDate: data.NgayTao || '-',
+                    creationDate: formatFirestoreTimestamp(data.NgayTao) || '-',
                     role: data.role || 'user'
                 };
             });
@@ -38,6 +39,12 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error("Lỗi khi lấy dữ liệu người dùng:", error);
         }
+    }
+
+    function formatFirestoreTimestamp(timestamp) {
+        if (!timestamp || !timestamp.seconds) return '-';
+        const date = new Date(timestamp.seconds * 1000);
+        return date.toLocaleString(); 
     }
 
     function filterUsers() {
@@ -94,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
         usersToShow.forEach(user => {
             const row = document.createElement('tr');
             row.innerHTML = `
+                <td>${user.userID}</td>
                 <td>${user.name}</td>
                 <td>${user.email}</td>
                 <td>${user.phone}</td>
