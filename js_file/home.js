@@ -260,7 +260,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 document.addEventListener("DOMContentLoaded", function () {
     const registerButtons = document.querySelectorAll(".register-btn");
-
     const modal = document.getElementById("membership-modal");
     const modalTitle = document.getElementById("modal-title");
     const modalDescription = document.getElementById("modal-description");
@@ -268,17 +267,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeModal = document.querySelector(".close-btn");
 
     registerButtons.forEach((button) => {
-        button.addEventListener("click", function () {
+        button.addEventListener("click", async function () {
             const membershipItem = button.closest(".membership-item");
-            const name = membershipItem.querySelector(".name").innerText;
-            const description = membershipItem.querySelector(".des").innerText;
-            const imageUrl = membershipItem.getAttribute("data-image") || "/images/default.png";
+            const idGoi = membershipItem.getAttribute("data-id"); // Lấy ID gói hội viên
 
-            modalTitle.innerText = name;
-            modalDescription.innerText = description;
-            modalImage.src = imageUrl;
+            try {
+                const response = await fetch(`http://localhost:3000/membership/${idGoi}`);
+                if (!response.ok) {
+                    throw new Error("Không thể lấy dữ liệu từ Firestore");
+                }
+                const data = await response.json();
 
-            modal.style.display = "block";
+                modalTitle.innerText = data.TenGoi;
+                modalDescription.innerText = `Giá: ${data.GiaTien} VNĐ\nQuyền lợi: ${data.QuyenLoi}\nThời hạn: ${data.ThoiHan} tháng`;
+                modalImage.src = membershipItem.getAttribute("data-image");
+
+                modal.style.display = "block";
+            } catch (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error);
+            }
         });
     });
 

@@ -489,6 +489,24 @@ app.post('/process-payment', async (req, res) => {
 
 app.use(express.static(path.join(__dirname, "html_file")));
 
+app.get("/membership/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const docRef = db.collection("GoiHoiVien").doc(id);
+        const docSnap = await docRef.get();
+
+        if (!docSnap.exists) {
+            return res.status(404).json({ message: "Gói hội viên không tồn tại!" });
+        }
+
+        res.json(docSnap.data());
+    } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu:", error);
+        res.status(500).json({ message: "Lỗi server!" });
+    }
+});
+
+
 // Lắng nghe trên cổng 3000
 app.listen(port, () => {
     console.log(`Server đang chạy tại http://localhost:${port}`);
