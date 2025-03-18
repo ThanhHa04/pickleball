@@ -122,8 +122,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 function cleanAddress(address) {
                     let parts = address.split(", ");
-                    if (parts.length > 7) {
-                        return parts.slice(0, 5).join(", ");
+                    if (parts.length > 5) {
+                        return parts.slice(0, 5).join(", "); 
                     }
                     return address;
                 }
@@ -241,23 +241,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("DOMContentLoaded", loadPickleballData);
 
-document.addEventListener('DOMContentLoaded', function() {
-    const statTabs = document.querySelectorAll('.stats-tab');
-    const statContents = document.querySelectorAll('.stats-content');
-
-    statTabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-            // Xóa class active khỏi tất cả các tab và nội dung
-            statTabs.forEach(t => t.classList.remove('active'));
-            statContents.forEach(content => content.classList.remove('active'));
-
-            // Thêm class active vào tab và nội dung được chọn
-            this.classList.add('active');
-            const activeContent = document.getElementById(this.getAttribute('data-tab'));
-            activeContent.classList.add('active');
-        });
-    });
-});
 document.addEventListener("DOMContentLoaded", function () {
     const registerButtons = document.querySelectorAll(".register-btn");
     const modal = document.getElementById("membership-modal");

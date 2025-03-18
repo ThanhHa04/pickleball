@@ -76,7 +76,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 });
 
-
 async function getUserInfo(userId) {
   try {
     const response = await fetch(`http://localhost:3000/nguoidung/${userId}`);
@@ -92,7 +91,6 @@ async function getUserInfo(userId) {
 }
 
 async function loadSchedule(idSan) {
-  console.log("🔄 Đang tải lịch...");
   try {
     const response = await fetch(`http://localhost:3000/lich/${idSan}`);
     if (!response.ok) throw new Error("❌ Lỗi khi tải dữ liệu lịch");
@@ -119,27 +117,28 @@ function renderSchedule(dateList, schedule) {
   tbody.innerHTML = "";
   const now = new Date();
   const currentHour = now.getHours();
-for (let h = 6; h <= 21; h++) {
+
+  for (let h = 6; h <= 21; h++) {
     const hourStr = `${h < 10 ? "0" + h : h}:00`;
     const tr = document.createElement("tr");
     tr.innerHTML = `<td class="hour-col">${hourStr}</td>`;
-
     dateList.forEach(date => {
-        const slot = schedule[date]?.[hourStr];
-        const slotTime = new Date(date + "T" + hourStr + ":00"); 
+      const slot = schedule[date]?.[hourStr];
+      const slotTime = new Date(date + "T" + hourStr + ":00"); 
 
-        let cellContent = `<span class="empty-slot">-</span>`;
-        let cellClass = "";
+      let cellContent = `<span class="empty-slot">-</span>`;
+      let cellClass = "";
 
-        tbody.innerHTML = "";
-  const now = new Date();
-  const currentHour = now.getHours();
-for (let h = 6; h <= 21; h++) {
-    const hourStr = `${h < 10 ? "0" + h : h}:00`;
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td class="hour-col">${hourStr}</td>`;
+      tbody.innerHTML = "";
+    const now = new Date();
+    const currentHour = now.getHours();
 
-    dateList.forEach(date => {
+    for (let h = 6; h <= 21; h++) {
+      const hourStr = `${h < 10 ? "0" + h : h}:00`;
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td class="hour-col">${hourStr}</td>`;
+
+      dateList.forEach(date => {
         const slot = schedule[date]?.[hourStr];
         const slotTime = new Date(date + "T" + hourStr + ":00"); 
 
@@ -147,27 +146,26 @@ for (let h = 6; h <= 21; h++) {
         let cellClass = "";
 
         if (slot) {
-            if (slot.TrangThai === "Còn trống" && slotTime > now) {
-                cellContent = `<label class="available-slot">
-                                <input type="checkbox" class="booking-checkbox"
-                                 data-date="${date}" data-hour="${hourStr}"
-                                 data-san="${slot.IDSan}"
-                                 value="${formatCurrency(slot.Gia)}đ">
-                              </label>`;
-                cellClass = "highlight"; // Màu xanh nhạt
-            } else if (slotTime <= now) {
-                cellContent = `<span class="past-slot">Hết hạn</span>`; // Đánh dấu hết hạn
-                cellClass = "disabled-slot"; // Màu xám
-            } else {
-                cellContent = `<span class="booked-slot">(${slot.TrangThai})</span>`;
-            }
-         }    
+          if (slot.TrangThai === "Còn trống" && slotTime > now) {
+            cellContent = `<label class="available-slot">
+                            <input type="checkbox" class="booking-checkbox"
+                            data-date="${date}" data-hour="${hourStr}"
+                            data-san="${slot.IDSan}"
+                            value="${formatCurrency(slot.Gia)}đ">
+                          </label>`;
+            cellClass = "highlight"; // Màu xanh nhạt
+          } else if (slotTime <= now) {
+            cellContent = `<span class="past-slot">Hết hạn</span>`; // Đánh dấu hết hạn
+            cellClass = "disabled-slot"; // Màu xám
+          } else {
+            cellContent = `<span class="booked-slot">(${slot.TrangThai})</span>`;
+          }
+        }    
         tr.innerHTML += `<td class="${cellClass}">${cellContent}</td>`;
-    });
-    tbody.appendChild(tr);
-  }
-        
-        tr.innerHTML += `<td class="${cellClass}">${cellContent}</td>`;
+      });
+      tbody.appendChild(tr);
+    }      
+      tr.innerHTML += `<td class="${cellClass}">${cellContent}</td>`;
     });
     tbody.appendChild(tr);
   }
@@ -216,17 +214,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function getUserInfo(userId) {
   try {
-      const response = await fetch(`http://localhost:3000/nguoidung/${userId}`);
-      const data = await response.json();
+    const response = await fetch(`http://localhost:3000/nguoidung/${userId}`);
+    const data = await response.json();
 
-      if (response.ok) {
-          return data;
-      } else {
-          throw new Error(data.error || "Lỗi không xác định");
-      }
+    if (response.ok) {
+        return data;
+    } else {
+        throw new Error(data.error || "Lỗi không xác định");
+    }
   } catch (error) {
-      console.error("Lỗi khi lấy thông tin người dùng:", error);
-      return null;
+    console.error("Lỗi khi lấy thông tin người dùng:", error);
+    return null;
   }
 }
 
@@ -248,26 +246,26 @@ async function updateBookingInfo() {
   selectedFields.innerHTML = "";
 
   document.querySelectorAll(".booking-checkbox:checked").forEach(checkbox => {
-      const date = checkbox.getAttribute("data-date");
-      const hour = checkbox.getAttribute("data-hour");
-      const price = parseInt(checkbox.value.replace(/\D/g, ""));
-      total += price;
+    const date = checkbox.getAttribute("data-date");
+    const hour = checkbox.getAttribute("data-hour");
+    const price = parseInt(checkbox.value.replace(/\D/g, ""));
+    total += price;
 
-      const fieldInfo = document.createElement("div");
-      fieldInfo.classList.add("personal-info");
-      fieldInfo.innerHTML = `
-            <div class="left-column">
-                <div id="NgayDatSan"><strong>Ngày:</strong> ${date}</div>
-                <div id="GioDatSan"><strong>Giờ:</strong> ${hour}</div>
-                <div id="GiaDatSan"><strong>Giá:</strong> ${formatCurrency(price)}đ</div>
-            </div>
-            <div class="right-column">
-                <div id="NguoiDatSan"><strong>Người đặt:</strong> ${userInfo.HoTen}</div>
-                <div id="EmailDatSan"><strong>Email:</strong> ${userInfo.Email}</div>
-                <div id="SdtDatSan"><strong>SĐT:</strong> ${userInfo.SDT}</div>
-            </div>
-      `;
-      selectedFields.appendChild(fieldInfo);
+    const fieldInfo = document.createElement("div");
+    fieldInfo.classList.add("personal-info");
+    fieldInfo.innerHTML = `
+          <div class="left-column">
+              <div id="NgayDatSan"><strong>Ngày:</strong> ${date}</div>
+              <div id="GioDatSan"><strong>Giờ:</strong> ${hour}</div>
+              <div id="GiaDatSan"><strong>Giá:</strong> ${formatCurrency(price)}đ</div>
+          </div>
+          <div class="right-column">
+              <div id="NguoiDatSan"><strong>Người đặt:</strong> ${userInfo.HoTen}</div>
+              <div id="EmailDatSan"><strong>Email:</strong> ${userInfo.Email}</div>
+              <div id="SdtDatSan"><strong>SĐT:</strong> ${userInfo.SDT}</div>
+          </div>
+    `;
+    selectedFields.appendChild(fieldInfo);
   });
   totalPriceElement.textContent = `Tổng giá: ${formatCurrency(total)}đ`;
 }

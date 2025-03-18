@@ -438,13 +438,20 @@ app.get('/reset-password', (req, res) => {
     res.sendFile(path.join(__dirname, '../html_file/ResetPassWord.html'));
 });
 
-// API xử lý thanh toán
 app.post('/process-payment', async (req, res) => {
     const { userId, userName, userEmail, userPhone, totalPrice, fieldName, fieldAddress, idSan, selectedDate, selectedTime, paymentTime, onePrice, docId } = req.body;
-    let batch = db.batch();
 
     try {
-        // Thêm lịch sử thanh toán
+        if (!selectedDate || !selectedDate.includes("-")) {
+            throw new Error("Định dạng ngày đặt sân không hợp lệ!");
+        }
+
+        // 🎯 Lấy năm-tháng từ selectedDate (định dạng YYYY-MM-DD)
+        let [year, month, day] = selectedDate.split("-");
+        let monthYear = `${year}-${month}`; // VD: "2025-03"
+        let batch = db.batch();
+
+        // 🎯 Thêm lịch sử thanh toán
         let paymentRef = db.collection("lichsuthanhtoan").doc(docId);
         batch.set(paymentRef, {
             userId,
@@ -460,7 +467,7 @@ app.post('/process-payment', async (req, res) => {
             trangThaiThanhToan: "Thành công"
         });
 
-        // Thêm lịch sử đặt sân
+        // 🎯 Thêm lịch sử đặt sân
         let bookingRef = db.collection("lichsudatsan").doc(docId);
         batch.set(bookingRef, {
             userId,
@@ -475,17 +482,32 @@ app.post('/process-payment', async (req, res) => {
             tienTrinh: "Chưa diễn ra"
         });
 
-        // Cập nhật trạng thái sân thành "Đã đặt"
+        // 🎯 Cập nhật trạng thái sân thành "Đã đặt"
         let fieldRef = db.collection(`lich${idSan}`).doc(`${idSan}_${selectedDate}_${selectedTime}`);
         batch.update(fieldRef, { TrangThai: "Đã đặt" });
 
+        // 🎯 Cập nhật doanh thu
+        let revenueRef = db.collection("doanhThu").doc(monthYear);
+        let revenueDoc = await revenueRef.get();
+
+        if (revenueDoc.exists) {
+            let currentRevenue = revenueDoc.data()?.tongDoanhThuThang || 0;
+            batch.update(revenueRef, { tongDoanhThuThang: currentRevenue + totalPrice });
+        } else {
+            batch.set(revenueRef, { tongDoanhThuThang: totalPrice });
+        }
+
+        // ✅ Commit batch
         await batch.commit();
         res.json({ success: true, message: "Thanh toán và đặt sân thành công!" });
+
     } catch (error) {
-        console.error("Lỗi khi xử lý thanh toán:", error.message);
-        res.json({ success: false, message: "Có lỗi xảy ra khi xử lý thanh toán." });
+        console.error("❌ Lỗi khi xử lý thanh toán:", error);
+        res.json({ success: false, message: error.message || "Có lỗi xảy ra khi xử lý thanh toán." });
     }
 });
+
+
 
 app.use(express.static(path.join(__dirname, "html_file")));
 

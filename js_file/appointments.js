@@ -55,9 +55,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (currentDate > bookingTime) { // Nếu thời gian hiện tại đã qua lịch hẹn
                 statusClass = "finished";
                 statusText = "Đã diễn ra";
-
                 // Nếu trạng thái trong lịch sử đặt sân là "Chưa diễn ra" hoặc "Đã hủy", cập nhật thành "Đã diễn ra"
-                if (tienTrinh === "Chưa diễn ra" || tienTrinh === "Đã hủy") {
+                if (tienTrinh === "Chưa diễn ra") {
                     tienTrinh = "Đã diễn ra"; 
                     await updateDoc(doc(db, "lichsudatsan", computedHistoryId), { tienTrinh: "Đã diễn ra" });
                 }
