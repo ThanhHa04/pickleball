@@ -1608,14 +1608,16 @@ footer {
 .stats-menu {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 30px;
+    gap: 5%;
+    margin: 30px auto;
+    width:60%;
     border-bottom: 1px solid #eee;
     padding-bottom: 10px;
 }
 
 .stats-tab {
-    padding: 8px 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 8px 25px;
     background-color: #f5f5f5;
     border: none;
     border-radius: 5px;

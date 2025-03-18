@@ -5,6 +5,7 @@ import { firebaseConfig } from "./config.js";
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+//Tổng QuanQuan
 document.addEventListener('DOMContentLoaded', async function() {
     const statTabs = document.querySelectorAll('.stats-tab');
     const statContents = document.querySelectorAll('.stats-content');
@@ -154,7 +155,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
     
-    
     function renderTopCourtsChart(data) {
         const ctx = document.getElementById('topCourtsChart').getContext('2d');
         new Chart(ctx, {
@@ -197,7 +197,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         const lastMonthKey = `${lastMonthYear}-${String(lastMonth).padStart(2, '0')}`;
 
         let currentRevenue = 0, lastRevenue = 0;
-    
         const revenueSnapshot = await getDocs(collection(db, "doanhThu"));
     
         revenueSnapshot.forEach(doc => {
@@ -218,8 +217,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         growthElement.textContent = growthRate.toFixed(2) + "% so với tháng trước";
     }
     
-    
     fetchStats();
     fetchRevenueLast6Months();
     updateGrowthPercentage()
+});
+
+//Doanh thu
+document.addEventListener('DOMContentLoaded', async function(){
+    document.getElementById('totalRevenueChart')
 });

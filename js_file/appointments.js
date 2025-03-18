@@ -268,11 +268,21 @@ document.addEventListener('DOMContentLoaded', function () {
         const card = button.closest(".appointment-card");
         const status = card.querySelector(".appointment-status");
         const actions = card.querySelector(".appointment-actions");
-
+    
         const idSan = card.dataset.idsan;
         const ngayDatSan = card.dataset.ngay;
         const khungGio = card.dataset.gio;
         const userId = localStorage.getItem("userId");
+        
+        const currentTime = new Date();
+        const bookingTime = new Date(`${ngayDatSan}T${khungGio}:00`);
+        const diffInMs = bookingTime - currentTime;
+        const diffInHours = diffInMs / (1000 * 60 * 60);
+
+        if (diffInHours < 2) {
+            toastr.warning("Hết hạn hủy lịch sân! Bạn chỉ có thể hủy trước 2 giờ.", "Thông báo");
+            return;
+        }
 
         if (confirm("Bạn có chắc chắn muốn hủy lịch hẹn này?")) {
             try {
@@ -280,29 +290,59 @@ document.addEventListener('DOMContentLoaded', function () {
                 const scheduleId = `${idSan}_${ngayDatSan}_${khungGio}`;
                 const collectionName = `lich${idSan}`;
                 const sanRef = doc(db, collectionName, scheduleId);
-                console.log("TT: ", sanRef);
-                await updateDoc(sanRef, { trangthai: "Còn trống" });
-
                 const historyRef = doc(db, "lichsudatsan", historyId);
+    
+                // Cập nhật trạng thái sân & lịch sử đặt sân
+                await updateDoc(sanRef, { trangthai: "Còn trống" });
                 await updateDoc(historyRef, { tienTrinh: "Đã hủy" });
-
+    
                 console.log("✅ Cập nhật lịch sân & lịch sử đặt sân thành công!");
-
+    
+                // 🔹 Lấy số tiền từ `lichsuthanhtoan`
+                const paymentRef = doc(db, "lichsuthanhtoan", historyId);
+                const paymentSnap = await getDoc(paymentRef);
+                if (!paymentSnap.exists()) {
+                    console.warn("⚠️ Không tìm thấy thông tin thanh toán!");
+                    return;
+                }
+    
+                const soTien = paymentSnap.data().soTien || 0;
+    
+                // 🔹 Lấy YYYY-MM từ `ngayDatSan`
+                const [year, month] = ngayDatSan.split('-');
+                const monthKey = `${year}-${month}`;
+    
+                // 🔹 Trừ tiền vào `doanhThu`
+                const revenueRef = doc(db, "doanhThu", monthKey);
+                const revenueSnap = await getDoc(revenueRef);
+                
+                if (revenueSnap.exists()) {
+                    const tongDoanhThuThang = revenueSnap.data().tongDoanhThuThang || 0;
+                    const updatedRevenue = Math.max(0, tongDoanhThuThang - soTien);
+    
+                    await updateDoc(revenueRef, { tongDoanhThuThang: updatedRevenue });
+    
+                    console.log(`✅ Cập nhật doanh thu tháng ${monthKey}: -${soTien} đ`);
+                } else {
+                    console.warn(`⚠️ Không tìm thấy doanh thu tháng ${monthKey}`);
+                }
+    
+                // 🔹 Cập nhật giao diện
                 status.textContent = "Đã hủy";
                 status.className = "appointment-status cancelled";
-
                 if (actions) {
-                    actions.innerHTML = ""; // Xóa toàn bộ nút
+                    actions.innerHTML = "";
                 }
-
+    
                 toastr.success("Đã hủy lịch hẹn thành công!", "Thông báo");
-
+    
             } catch (error) {
                 console.error("❌ Lỗi khi hủy lịch hẹn:", error);
                 toastr.error("Lỗi hệ thống. Vui lòng thử lại!", "Lỗi");
             }
         }
     }
+    
 
 }); 
 
