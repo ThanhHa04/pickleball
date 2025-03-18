@@ -138,12 +138,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         const snapshot = await getDocs(q);
 
         if (snapshot.empty) {
-            console.warn("⚠️ Không có giao dịch nào cho userId:", userId);
+            console.log("Không có giao dịch nào cho userId:", userId);
             return [];
         }
 
         const transactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log(`📌 Giao dịch của userId=${userId}:`, transactions);
         return transactions;
     }
 
@@ -156,7 +155,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         historyBody.innerHTML = "";
 
         const transactions = await getTransactionHistory();
-        console.log("📌 Transactions Data:", transactions);
 
         if (!transactions.length) {
             historyBody.innerHTML = "<tr><td colspan='5' style='text-align:center'>Không có giao dịch nào</td></tr>";
