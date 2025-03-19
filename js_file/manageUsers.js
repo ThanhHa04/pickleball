@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 await updateDoc(userRef, {
                     HoTen: newName,
                     Email: newEmail,
-                    IDNguoiDung: newPhone,
+                    SDT: newPhone,
                     HienThiThongTin: newMembershipStatus,
                     role: newRole
                 });
