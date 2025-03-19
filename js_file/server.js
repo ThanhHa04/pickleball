@@ -527,6 +527,32 @@ app.get("/membership/:id", async (req, res) => {
         res.status(500).json({ message: "Lỗi server!" });
     }
 });
+app.post('/handle-membership-payment', async (req, res) => {
+    const { userId, membershipId, membershipName, amount, paymentTime } = req.body;
+
+    try {
+        if (!userId || !membershipId || !amount) {
+            throw new Error("Thiếu thông tin cần thiết để xử lý thanh toán!");
+        }
+
+        // Thêm vào lịch sử thanh toán
+        let paymentRef = db.collection("lichsuthanhtoan").doc();
+        await paymentRef.set({
+            userId,
+            membershipId,
+            membershipName,
+            amount,
+            paymentTime,
+            status: "Thành công"
+        });
+
+        res.json({ success: true, message: "Thanh toán thành viên đã được ghi nhận thành công!" });
+
+    } catch (error) {
+        console.error("❌ Lỗi khi xử lý thanh toán:", error);
+        res.json({ success: false, message: error.message || "Có lỗi xảy ra khi xử lý thanh toán." });
+    }
+});
 
 
 // Lắng nghe trên cổng 3000

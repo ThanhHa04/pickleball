@@ -279,7 +279,7 @@ document.addEventListener("DOMContentLoaded", function () {
             };
 
             modalTitle.innerText = data.TenGoi;
-            modalDescription.innerText = `Giá: ${data.GiaTien.toLocaleString("vi-VN")} VNĐ\nQuyền lợi: ${data.QuyenLoi}\nThời hạn: ${data.ThoiHan} tháng`;
+            modalDescription.innerText = `Giá: ${data.GiaTien.toLocaleString("vi-VN")} VNĐ\nQuyền lợi: ${data.QuyenLoi}\nThời hạn: ${data.ThoiHan}`;
             modalImage.src = membershipItem.getAttribute("data-image");
 
             modal.style.display = "block";
@@ -355,4 +355,52 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.getElementById("vietqr-image").src = vietqrLink;
     }
+
+    // ✅ Xử lý khi người dùng xác nhận thanh toán
+    document.getElementById("confirm-payment-btn").addEventListener("click", async function () {
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+            alert("Không tìm thấy ID người dùng! Vui lòng đăng nhập lại.");
+            return;
+        }
+
+        if (!currentMembership.id || !currentMembership.giaTien) {
+            alert("Lỗi: Không có thông tin thanh toán hợp lệ.");
+            return;
+        }
+
+        const paymentTime = new Date().toLocaleString();
+        const transactionData = {
+            userId,
+            membershipId: currentMembership.id,
+            membershipName: currentMembership.tenGoi,
+            amount: currentMembership.giaTien,
+            paymentTime
+        };
+
+        try {
+            const response = await fetch("http://localhost:3000/handle-membership-payment", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(transactionData),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert("✅ Thanh toán đã được xác nhận thành công!");
+                confirmPaymentModal.style.display = "none"; // Đóng modal
+                location.reload(); // Refresh trang
+            } else {
+                alert("❌ Xác nhận thanh toán thất bại! Vui lòng thử lại.");
+            }
+        } catch (error) {
+            console.error("Lỗi khi gửi xác nhận thanh toán:", error);
+            alert("❌ Đã xảy ra lỗi khi xác nhận thanh toán.");
+        }
+    });
 });
+
+
