@@ -1888,3 +1888,46 @@ footer {
     transition: background 0.3s;
     margin-top: 10px;
 }
+#payment-info p {
+    text-align: left;
+    margin: 5px 0;
+}
+
+#vietqr-image {
+    width: 200px;
+    height: 200px;
+    display: block;
+    margin: 10px auto;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+}
+
+#confirm-payment-btn {
+    background-color: #57d430; /* Màu xanh */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+}
+
+#confirm-payment-btn:hover {
+    background-color: #1aad3a; /* Màu xanh đậm khi hover */
+}
+#confirm-btn {
+    background-color: #25ce33; /* Màu xanh */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#confirm-btn:hover {
+    background-color: #0b9248; /* Màu xanh đậm khi hover */
+}
