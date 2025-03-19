@@ -245,97 +245,114 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalImage = document.getElementById("modal-image");
     const closeModal = document.querySelector(".close-btn");
 
+    const paymentModal = document.getElementById("payment-modal");
+    const confirmPaymentModal = document.getElementById("confirm-payment-modal");
+
     let currentMembership = {}; // Lưu thông tin gói thành viên
+
+    async function fetchMembership(idGoi) {
+        try {
+            const response = await fetch(`http://localhost:3000/membership/${idGoi}`);
+            if (!response.ok) throw new Error(`Lỗi: ${response.status} - ${response.statusText}`);
+            return await response.json();
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu:", error);
+            alert("Không thể tải thông tin gói thành viên. Vui lòng thử lại!");
+            return null;
+        }
+    }
 
     registerButtons.forEach((button) => {
         button.addEventListener("click", async function () {
             const membershipItem = button.closest(".membership-item");
             const idGoi = membershipItem.getAttribute("data-id");
 
-            try {
-                const response = await fetch(`http://localhost:3000/membership/${idGoi}`);
-                if (!response.ok) throw new Error(`Lỗi: ${response.status} - ${response.statusText}`);
+            const data = await fetchMembership(idGoi);
+            if (!data) return;
 
-                const data = await response.json();
+            currentMembership = {
+                id: idGoi,
+                tenGoi: data.TenGoi,
+                giaTien: data.GiaTien,
+                quyenLoi: data.QuyenLoi,
+                thoiHan: data.ThoiHan,
+            };
 
-                currentMembership = {
-                    id: idGoi,
-                    tenGoi: data.TenGoi,
-                    giaTien: data.GiaTien,
-                    quyenLoi: data.QuyenLoi,
-                    thoiHan: data.ThoiHan,
-                };
+            modalTitle.innerText = data.TenGoi;
+            modalDescription.innerText = `Giá: ${data.GiaTien.toLocaleString("vi-VN")} VNĐ\nQuyền lợi: ${data.QuyenLoi}\nThời hạn: ${data.ThoiHan} tháng`;
+            modalImage.src = membershipItem.getAttribute("data-image");
 
-                modalTitle.innerText = data.TenGoi;
-                modalDescription.innerText = `Giá: ${data.GiaTien} VNĐ\nQuyền lợi: ${data.QuyenLoi}\nThời hạn: ${data.ThoiHan} tháng`;
-                modalImage.src = membershipItem.getAttribute("data-image");
-
-                modal.style.display = "block";
-            } catch (error) {
-                console.error("Lỗi khi lấy dữ liệu:", error);
-                alert("Không thể tải thông tin gói thành viên. Vui lòng thử lại!");
-            }
+            modal.style.display = "block";
         });
     });
 
-    closeModal.addEventListener("click", function () {
-        modal.style.display = "none";
-    });
+    function closeModalHandler(event) {
+        event.target.closest(".modal").style.display = "none";
+    }
+
+    closeModal.addEventListener("click", closeModalHandler);
+    document.querySelector(".close-payment").addEventListener("click", closeModalHandler);
+    document.querySelector(".close-confirm-payment").addEventListener("click", closeModalHandler);
 
     window.addEventListener("click", function (event) {
-        if (event.target === modal) {
-            modal.style.display = "none";
+        if (event.target.classList.contains("modal")) {
+            event.target.style.display = "none";
         }
     });
 
-    // Khi nhấn "Xác nhận", mở modal thanh toán
     document.getElementById("confirm-btn").addEventListener("click", function () {
         if (!currentMembership.giaTien) {
             alert("Vui lòng chọn gói thành viên trước khi thanh toán.");
             return;
         }
-
-        document.getElementById("membership-modal").style.display = "none"; // Ẩn modal đăng ký
-        document.getElementById("payment-modal").style.display = "flex"; // Hiển thị modal thanh toán
+        modal.style.display = "none";
+        paymentModal.style.display = "flex";
     });
 
-    // Khi nhấn "Thanh toán ngay", mở modal xác nhận thanh toán
-    document.getElementById("pay-now-btn").addEventListener("click", function () {
-        document.getElementById("payment-modal").style.display = "none"; // Ẩn modal thanh toán
-        document.getElementById("confirm-payment-modal").style.display = "flex"; // Hiển thị modal xác nhận thanh toán
+    document.getElementById("pay-now-btn").addEventListener("click", async function () {
+        paymentModal.style.display = "none";
+        confirmPaymentModal.style.display = "flex";
 
-        // Cập nhật thông tin xác nhận thanh toán
-        document.getElementById("total-amount").innerText = `${currentMembership.giaTien.toLocaleString("vi-VN")} VNĐ`;
-        document.getElementById("payment-date").innerText = new Date().toLocaleDateString("vi-VN");
+        await updatePaymentModal();
+    });
 
-        // Tạo QR VietQR
-        const soTaiKhoan = "123456789";
-        const nganHang = "970422";
+    async function getUserInfo(userId) {
+        try {
+            const response = await fetch(`http://localhost:3000/nguoidung/${userId}`);
+            if (!response.ok) throw new Error(`Lỗi: ${response.status} - ${response.statusText}`);
+            return await response.json();
+        } catch (error) {
+            console.error("Lỗi khi lấy thông tin người dùng:", error);
+            return null;
+        }
+    }
+
+    async function updatePaymentModal() {
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+            console.error("Không tìm thấy userId trong localStorage.");
+            return;
+        }
+
+        const userInfo = await getUserInfo(userId);
+        if (!userInfo) return;
+
+        document.getElementById("payer-name").textContent = userInfo.HoTen || "N/A";
+        document.getElementById("payer-email").textContent = userInfo.Email || "N/A";
+        document.getElementById("payer-phone").textContent = userInfo.SDT || "N/A";
+
+        const formattedDate = new Date().toLocaleDateString("vi-VN");
+        document.getElementById("payment-date").textContent = formattedDate;
+
+        document.getElementById("total-amount").textContent = `${currentMembership.giaTien.toLocaleString("vi-VN")} VNĐ`;
+
+        const soTaiKhoan = "8831814758";
+        const nganHang = "970418";
         const soTien = currentMembership.giaTien;
         const noiDung = encodeURIComponent(`Thanh toan goi ${currentMembership.tenGoi}`);
 
         const vietqrLink = `https://img.vietqr.io/image/${nganHang}-${soTaiKhoan}-compact2.jpg?amount=${soTien}&addInfo=${noiDung}`;
 
         document.getElementById("vietqr-image").src = vietqrLink;
-    });
-
-    // Đóng modal thanh toán
-    document.querySelector(".close-payment").addEventListener("click", function () {
-        document.getElementById("payment-modal").style.display = "none";
-    });
-
-    // Đóng modal xác nhận thanh toán
-    document.querySelector(".close-confirm-payment").addEventListener("click", function () {
-        document.getElementById("confirm-payment-modal").style.display = "none";
-    });
-
-    // Đóng modal khi nhấn ra ngoài
-    window.addEventListener("click", function (event) {
-        if (event.target === document.getElementById("payment-modal")) {
-            document.getElementById("payment-modal").style.display = "none";
-        }
-        if (event.target === document.getElementById("confirm-payment-modal")) {
-            document.getElementById("confirm-payment-modal").style.display = "none";
-        }
-    });
+    }
 });
