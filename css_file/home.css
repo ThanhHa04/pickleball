@@ -1609,7 +1609,7 @@ footer {
     display: flex;
     justify-content: center;
     gap: 5%;
-    margin: 30px auto;
+    margin: 10px auto;
     width:60%;
     border-bottom: 1px solid #eee;
     padding-bottom: 10px;
@@ -1870,3 +1870,6 @@ footer {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+.modal-content { background: #fff; padding: 20px; margin: 10% auto; width: 50%; border-radius: 5px; }
+.close { float: right; font-size: 24px; cursor: pointer; }

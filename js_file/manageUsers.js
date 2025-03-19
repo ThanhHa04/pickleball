@@ -57,26 +57,59 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function handleEditUser(user) {
-        alert(`Chỉnh sửa thông tin người dùng: ${user.name}`);
-        const userRef = doc(db, 'nguoidung', user.id);
-        const newName = prompt('Nhập tên mới:', user.name);
-        const newEmail = prompt('Nhập email mới:', user.email);
-        const newPhone = prompt('Nhập số điện thoại mới:', user.phone);
-        const newMembershipStatus = confirm('Kích hoạt hiển thị thông tin?');
-        const newRole = prompt('Nhập vai trò mới:', user.role);
-        
-        try {
-            if (newName) await updateDoc(userRef, { HoTen: newName });
-            if (newEmail) await updateDoc(userRef, { Email: newEmail });
-            if (newPhone) await updateDoc(userRef, { IDNguoiDung: newPhone });
-            await updateDoc(userRef, { HienThiThongTin: newMembershipStatus });
-            if (newRole) await updateDoc(userRef, { role: newRole });
-            alert('Thông tin người dùng đã được cập nhật.');
-            fetchUsers();
-        } catch (error) {
-            console.error("Lỗi cập nhật người dùng:", error);
-        }
+        const modal = document.getElementById("editUserModal");
+        const closeModal = document.querySelector(".close");
+    
+        // Hiển thị modal
+        modal.style.display = "block";
+    
+        // Điền thông tin người dùng vào modal
+        document.getElementById("editName").value = user.name;
+        document.getElementById("editEmail").value = user.email;
+        document.getElementById("editPhone").value = user.phone;
+        document.getElementById("editRole").value = user.role;
+        document.getElementById("editMembership").checked = user.membershipStatus;
+    
+        // Khi bấm lưu thay đổi
+        document.getElementById("saveUserChanges").onclick = async function () {
+            const userRef = doc(db, "nguoidung", user.id);
+    
+            const newName = document.getElementById("editName").value;
+            const newEmail = document.getElementById("editEmail").value;
+            const newPhone = document.getElementById("editPhone").value;
+            const newRole = document.getElementById("editRole").value;
+            const newMembershipStatus = document.getElementById("editMembership").checked;
+    
+            try {
+                await updateDoc(userRef, {
+                    HoTen: newName,
+                    Email: newEmail,
+                    IDNguoiDung: newPhone,
+                    HienThiThongTin: newMembershipStatus,
+                    role: newRole
+                });
+    
+                alert("Thông tin người dùng đã được cập nhật.");
+                modal.style.display = "none";
+                fetchUsers();
+            } catch (error) {
+                console.error("Lỗi cập nhật người dùng:", error);
+            }
+        };
+    
+        // Đóng modal khi bấm "X"
+        closeModal.onclick = function () {
+            modal.style.display = "none";
+        };
+    
+        // Đóng modal khi click ra ngoài
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
     }
+    
 
     async function handleDeleteUser(user) {
         if (confirm(`Bạn có chắc chắn muốn xóa người dùng: ${user.name}?`)) {

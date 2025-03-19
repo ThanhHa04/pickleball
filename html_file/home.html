@@ -400,15 +400,38 @@
                 </div>
                 <button class="btn-next-user"><i class='bx bx-chevron-right'></i></button>
             </div>
+            <!-- Modal chỉnh sửa -->
+            <div id="editUserModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Chỉnh sửa thông tin người dùng</h2>
+                    <label for="editName">Tên:</label>
+                    <input type="text" id="editName">
+                    
+                    <label for="editEmail">Email:</label>
+                    <input type="email" id="editEmail">
+                    
+                    <label for="editPhone">Số điện thoại:</label>
+                    <input type="text" id="editPhone">
+                    
+                    <label for="editRole">Vai trò:</label>
+                    <input type="text" id="editRole">
+                    
+                    <label>
+                        <input type="checkbox" id="editMembership">
+                        Kích hoạt hiển thị thông tin
+                    </label>
+                    
+                    <button id="saveUserChanges">Lưu thay đổi</button>
+                </div>
+            </div>
         </div>
 
         <div id="statistics" class="content">
             <div class="stats-menu">
                 <button class="stats-tab active" data-tab="overview">Tổng quan</button>
-                <button class="stats-tab" data-tab="users">Người dùng</button>
-                <button class="stats-tab" data-tab="courts">Sân</button>
+                <!-- <button class="stats-tab" data-tab="users">Người dùng</button> -->
                 <button class="stats-tab" data-tab="revenue">Doanh thu</button>
-                <button class="stats-tab" data-tab="geographical">Phân bố</button>
             </div>
 
             <div id="overview" class="stats-content active">
@@ -458,7 +481,7 @@
                 </div>
             </div>
 
-            <div id="users" class="stats-content">
+            <!-- <div id="users" class="stats-content">
                 <div class="chart-container full-width">
                     <h3>Người dùng mới theo tháng</h3>
                     <canvas id="userChart"></canvas>
@@ -473,32 +496,23 @@
                         <canvas id="userTypeChart"></canvas>
                     </div>
                 </div>
-            </div>
-
-            <div id="courts" class="stats-content">
-                <div class="chart-container">
-                    <h3>Số giờ sử dụng theo sân</h3>
-                    <canvas id="courtUsageChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>Tỷ lệ lấp đầy theo sân</h3>
-                    <canvas id="courtOccupancyChart"></canvas>
-                </div>
-            </div>
+            </div> -->
 
             <div id="revenue" class="stats-content">
                 <div class="chart-container full-width">
                     <h3>Tổng doanh thu</h3>
-                    <canvas id="totalRevenueChart"></canvas>
+                    <div id="finalRevenue"></div>
+                    <div  id="revenueLineChart" class="scrollable-list"></div > <!-- Thêm thẻ canvas -->
                 </div>
+                
                 <div class="chart-row">
                     <div class="chart-container">
                         <h3>Doanh thu theo loại sân</h3>
-                        <canvas id="courtTypeRevenueChart"></canvas>
+                        <canvas id="courtTypeRevenueChart" class="courtTypeRevenueChart" width="400" height="400"></canvas>
                     </div>
                     <div class="chart-container">
                         <h3>Doanh thu theo khung giờ</h3>
-                        <canvas id="timeSlotRevenueChart"></canvas>
+                        <canvas id="timeSlotRevenueChart" class="timeSlotRevenueChart" width="600" height="400"></canvas>
                     </div>
                 </div>
             </div>
@@ -518,11 +532,6 @@
                         <canvas id="bookingByTimeChart"></canvas>
                     </div>
                 </div>
-            </div>
-
-            <div id="geographical" class="stats-content">
-                <h3>Phân bố người dùng theo khu vực</h3>
-                <div id="choroplethChart" style="width: 100%; height: 500px;"></div>
             </div>
         </div>
     </div>
