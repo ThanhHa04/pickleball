@@ -5,7 +5,7 @@ import { firebaseConfig } from "./config.js";
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-//Tổng QuanQuan
+//Tổng Quan
 document.addEventListener('DOMContentLoaded', async function() {
     const statTabs = document.querySelectorAll('.stats-tab');
     const statContents = document.querySelectorAll('.stats-content');
@@ -224,5 +224,137 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 //Doanh thu
 document.addEventListener('DOMContentLoaded', async function(){
-    document.getElementById('totalRevenueChart')
+    async function fetchTotalRevenue() {
+        try {
+            const revenueSnapshot = await getDocs(collection(db, "doanhThu"));
+            let totalRevenue = 0;
+            let revenueList = "";
+    
+            revenueSnapshot.forEach((doc) => {
+                const data = doc.data();
+                const revenue = parseFloat(data.tongDoanhThuThang) || 0;
+                totalRevenue += revenue;
+    
+                revenueList += `<li><strong>${doc.id}:</strong> ${revenue.toLocaleString()} VNĐ</li>`;
+            });
+    
+            const revenueElement = document.getElementById("finalRevenue");
+            if (revenueElement) {
+                revenueElement.innerHTML = `<ul>${revenueList}</ul>
+                    <br><strong>Tổng cộng: ${totalRevenue.toLocaleString()} VNĐ</strong>`;
+            }
+    
+        } catch (error) {
+            console.error("Lỗi khi lấy tổng doanh thu:", error);
+        }
+    }
+    
+
+    async function fetchFinalBookingStats() {
+        try {
+            const bookingsSnapshot = await getDocs(collection(db, "lichsudatsan"));
+            const courtsSnapshot = await getDocs(collection(db, "san"));
+    
+            // 1. Tạo danh sách khung giờ từ 06:00 - 21:00
+            const timeSlots = Array.from({ length: 16 }, (_, i) => {
+                const hour = (i + 6).toString().padStart(2, '0'); // 06, 07, ..., 21
+                return `${hour}:00`;
+            });
+            const timeSlotCount = Object.fromEntries(timeSlots.map(slot => [slot, 0]));
+    
+            
+            const courtTypeMap = new Map();
+            courtsSnapshot.forEach(doc => {
+                const data = doc.data();
+                courtTypeMap.set(doc.id, data.IDLoaiSan);
+            });
+    
+            // 3. Đếm số lần đặt theo IDLoaiSan
+            const courtTypeCount = new Map([
+                ["P01", 0], ["P02", 0], ["P03", 0], ["P04", 0] 
+            ]);
+            bookingsSnapshot.forEach(doc => {
+                const parts = doc.id.split('_'); 
+                if (parts.length < 4) return;
+                const timeSlot = parts[3]; 
+                if (timeSlotCount[timeSlot] !== undefined) {
+                    timeSlotCount[timeSlot]++;
+                }
+                const courtId = parts[2];
+                const courtTypeId = courtTypeMap.get(courtId);
+                if (courtTypeId) {
+                    courtTypeCount.set(courtTypeId, (courtTypeCount.get(courtTypeId) || 0) + 1);
+                }
+            });
+    
+            // 4. Vẽ biểu đồ chấm (Scatter chart)
+            const scatterCanvas = document.getElementById("timeSlotRevenueChart");
+            if (scatterCanvas) {
+                const scatterCtx = scatterCanvas.getContext("2d");
+                const scatterData = Object.entries(timeSlotCount).map(([slot, count]) => ({
+                    x: parseInt(slot.split(":")[0]),
+                    y: count
+                }));
+
+                new Chart(scatterCtx, {
+                    type: "scatter",
+                    data: {
+                        datasets: [{
+                            label: "Số lần đặt sân",
+                            data: scatterData,
+                            backgroundColor: "rgba(75, 192, 192, 0.6)",
+                            borderColor: "rgba(75, 192, 192, 1)",
+                            pointRadius: 6, 
+                            pointHoverRadius: 8,
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                type: "linear",
+                                position: "bottom",
+                                title: { display: true, text: "Khung Giờ" },
+                                ticks: { stepSize: 1, min: 6, max: 21 }
+                            },
+                            y: {
+                                title: { display: true, text: "Số lần đặt" },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            } else {
+                console.error("Không tìm thấy phần tử canvas với ID 'timeSlotScatterChart'");
+            }
+
+            // 5. Vẽ biểu đồ tròn hiển thị số lần đặt theo loại sân
+            const courtTypeLabels = ["Sân Acrylic", "Sân Polyurethane", "Sân Nhựa Tổng Hợp", "Sân Bê Tông"];
+            const courtTypeData = ["P01", "P02", "P03", "P04"].map(id => courtTypeCount.get(id) || 0);
+            console.log(courtTypeCount);
+            const ctx = document.getElementById("courtTypeRevenueChart").getContext("2d");
+            new Chart(ctx, {
+                type: "pie",
+                data: {
+                    labels: courtTypeLabels,
+                    datasets: [{
+                        data: courtTypeData,
+                        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false
+                }
+            });
+    
+        } catch (error) {
+            console.error("Lỗi khi lấy thống kê đặt sân:", error);
+        }
+    }
+    
+    
+    fetchFinalBookingStats()
+    fetchTotalRevenue();
 });
