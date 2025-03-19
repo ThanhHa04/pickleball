@@ -237,10 +237,6 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("scroll", checkScroll);
     checkScroll();
 });
-
-
-document.addEventListener("DOMContentLoaded", loadPickleballData);
-
 document.addEventListener("DOMContentLoaded", function () {
     const registerButtons = document.querySelectorAll(".register-btn");
     const modal = document.getElementById("membership-modal");
@@ -249,17 +245,26 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalImage = document.getElementById("modal-image");
     const closeModal = document.querySelector(".close-btn");
 
+    let currentMembership = {}; // Lưu thông tin gói thành viên
+
     registerButtons.forEach((button) => {
         button.addEventListener("click", async function () {
             const membershipItem = button.closest(".membership-item");
-            const idGoi = membershipItem.getAttribute("data-id"); // Lấy ID gói hội viên
+            const idGoi = membershipItem.getAttribute("data-id");
 
             try {
                 const response = await fetch(`http://localhost:3000/membership/${idGoi}`);
-                if (!response.ok) {
-                    throw new Error("Không thể lấy dữ liệu từ Firestore");
-                }
+                if (!response.ok) throw new Error(`Lỗi: ${response.status} - ${response.statusText}`);
+
                 const data = await response.json();
+
+                currentMembership = {
+                    id: idGoi,
+                    tenGoi: data.TenGoi,
+                    giaTien: data.GiaTien,
+                    quyenLoi: data.QuyenLoi,
+                    thoiHan: data.ThoiHan,
+                };
 
                 modalTitle.innerText = data.TenGoi;
                 modalDescription.innerText = `Giá: ${data.GiaTien} VNĐ\nQuyền lợi: ${data.QuyenLoi}\nThời hạn: ${data.ThoiHan} tháng`;
@@ -268,6 +273,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 modal.style.display = "block";
             } catch (error) {
                 console.error("Lỗi khi lấy dữ liệu:", error);
+                alert("Không thể tải thông tin gói thành viên. Vui lòng thử lại!");
             }
         });
     });
@@ -279,6 +285,57 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("click", function (event) {
         if (event.target === modal) {
             modal.style.display = "none";
+        }
+    });
+
+    // Khi nhấn "Xác nhận", mở modal thanh toán
+    document.getElementById("confirm-btn").addEventListener("click", function () {
+        if (!currentMembership.giaTien) {
+            alert("Vui lòng chọn gói thành viên trước khi thanh toán.");
+            return;
+        }
+
+        document.getElementById("membership-modal").style.display = "none"; // Ẩn modal đăng ký
+        document.getElementById("payment-modal").style.display = "flex"; // Hiển thị modal thanh toán
+    });
+
+    // Khi nhấn "Thanh toán ngay", mở modal xác nhận thanh toán
+    document.getElementById("pay-now-btn").addEventListener("click", function () {
+        document.getElementById("payment-modal").style.display = "none"; // Ẩn modal thanh toán
+        document.getElementById("confirm-payment-modal").style.display = "flex"; // Hiển thị modal xác nhận thanh toán
+
+        // Cập nhật thông tin xác nhận thanh toán
+        document.getElementById("total-amount").innerText = `${currentMembership.giaTien.toLocaleString("vi-VN")} VNĐ`;
+        document.getElementById("payment-date").innerText = new Date().toLocaleDateString("vi-VN");
+
+        // Tạo QR VietQR
+        const soTaiKhoan = "123456789";
+        const nganHang = "970422";
+        const soTien = currentMembership.giaTien;
+        const noiDung = encodeURIComponent(`Thanh toan goi ${currentMembership.tenGoi}`);
+
+        const vietqrLink = `https://img.vietqr.io/image/${nganHang}-${soTaiKhoan}-compact2.jpg?amount=${soTien}&addInfo=${noiDung}`;
+
+        document.getElementById("vietqr-image").src = vietqrLink;
+    });
+
+    // Đóng modal thanh toán
+    document.querySelector(".close-payment").addEventListener("click", function () {
+        document.getElementById("payment-modal").style.display = "none";
+    });
+
+    // Đóng modal xác nhận thanh toán
+    document.querySelector(".close-confirm-payment").addEventListener("click", function () {
+        document.getElementById("confirm-payment-modal").style.display = "none";
+    });
+
+    // Đóng modal khi nhấn ra ngoài
+    window.addEventListener("click", function (event) {
+        if (event.target === document.getElementById("payment-modal")) {
+            document.getElementById("payment-modal").style.display = "none";
+        }
+        if (event.target === document.getElementById("confirm-payment-modal")) {
+            document.getElementById("confirm-payment-modal").style.display = "none";
         }
     });
 });

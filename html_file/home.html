@@ -318,7 +318,37 @@
                 <p id="modal-description"></p>
                 <button id="confirm-btn">Xác nhận</button>
             </div>
-        </div>        
+        </div>
+        <!-- Modal Thanh Toán -->
+        <div id="payment-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn close-payment">&times;</span>
+                <h2>Thanh Toán</h2>
+                <p>Bạn có chắc chắn muốn đăng ký gói này?</p>
+                <button id="pay-now-btn">Thanh toán ngay</button>
+            </div>
+        </div>  
+        <!-- Modal Xác nhận Thanh toán -->
+        <div id="confirm-payment-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn close-confirm-payment">&times;</span>
+                    <h2>Xác nhận Thanh toán</h2>
+                    <div id="payment-info">
+                        <p><strong>Người thanh toán:</strong> <span id="payer-name"></span></p>
+                        <p><strong>Email:</strong> <span id="payer-email"></span></p>
+                        <p><strong>Số điện thoại:</strong> <span id="payer-phone"></span></p>
+                        <p><strong>Ngày thanh toán:</strong> <span id="payment-date"></span></p>
+                        <p><strong>Phương thức thanh toán:</strong> <span id="payment-method">VietQR</span></p>
+                        <p><strong>Tổng tiền:</strong> <span id="total-amount"></span> VNĐ</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <img id="vietqr-image" src="" alt="Mã QR Thanh Toán" style="width: 200px; height: 200px; margin: 10px auto;">
+                        <p>Quét mã QR để thanh toán</p>
+                    </div>
+                    <button id="confirm-payment-btn">Xác nhận & Thanh toán</button>
+            </div>
+        </div>
+
 
         <div id="profile" class="content">
             <h2>Quản lý thông tin</h2>
