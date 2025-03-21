@@ -564,6 +564,50 @@
                 </div>
             </div>
         </div>
+
+        <div id="manage-courts" class="content">
+            <h2>Quản Lý Sân</h2>
+            <table class="court-management-table">
+                <thead>
+                    <tr>
+                        <th>ID Sân</th>
+                        <th>Tên Sân</th>
+                        <th>Mô tả</th>
+                        <th>Tình trạng sân</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody id="court-table-body">
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>
+                        <button class="btn-edit">Chỉnh sửa</button>
+                    </td>
+                </tbody>
+            </table>
+            <!-- Modal chỉnh sửa -->
+            <div id="editCourtModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Chỉnh sửa thông sân</h2>
+                    <label for="editCourtName">Tên sân:</label>
+                    <input type="text" id="editCourtName">
+                    
+                    <label for="editDescription">Mô tả:</label>
+                    <input type="text" id="editDescription">
+                    
+                    <label for="editStatus">Tình trạng sân:</label>
+                    <select id="editStatus">
+                        <option value="hoat_dong_tot">Hoạt động tốt</option>
+                        <option value="dang_bao_tri">Đang bảo trì</option>
+                    </select>
+                    
+                    <button id="saveUserChanges">Lưu thay đổi</button>
+                </div>
+            </div>
+        </div>
     </div>
     <footer>
         <div class="footer-container">
@@ -612,6 +656,7 @@
     <script src="../js_file/listcourts.js"></script>
     <script type="module" src="../js_file/manageUsers.js"></script>
     <script type="module" src="../js_file/statistics.js"></script>
+    <script type="module" src="../js_file/manageCourts.js"></script>
     </body>
 
 </html>
