@@ -356,7 +356,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("vietqr-image").src = vietqrLink;
     }
 
-    // ✅ Xử lý khi người dùng xác nhận thanh toán
     document.getElementById("confirm-payment-btn").addEventListener("click", async function () {
         const userId = localStorage.getItem("userId");
         if (!userId) {
@@ -402,5 +401,3 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-
-

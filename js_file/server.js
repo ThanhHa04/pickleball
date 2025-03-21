@@ -535,9 +535,13 @@ app.post('/handle-membership-payment', async (req, res) => {
             throw new Error("Thiếu thông tin cần thiết để xử lý thanh toán!");
         }
 
-        // Thêm vào lịch sử thanh toán
+        console.log("📌 Dữ liệu nhận được:", { userId, membershipId, membershipName, amount, paymentTime });
+
+        let batch = db.batch();
+
+        // 🎯 Thêm vào lịch sử thanh toán
         let paymentRef = db.collection("lichsuthanhtoan").doc();
-        await paymentRef.set({
+        batch.set(paymentRef, {
             userId,
             membershipId,
             membershipName,
@@ -545,6 +549,23 @@ app.post('/handle-membership-payment', async (req, res) => {
             paymentTime,
             status: "Thành công"
         });
+        console.log("✅ Đã thêm lịch sử thanh toán");
+
+        // 🎯 Cập nhật membershipId vào người dùng
+        let userRef = db.collection("nguoidung").doc(userId);
+        let userSnap = await userRef.get();
+
+        if (userSnap.exists) {
+            console.log(`✅ Người dùng ${userId} tồn tại. Cập nhật membershipId...`);
+            batch.update(userRef, { membershipId });
+        } else {
+            console.log(`⚠️ Người dùng ${userId} chưa tồn tại. Tạo mới với membershipId...`);
+            batch.set(userRef, { membershipId }, { merge: true });
+        }
+
+        // 🏁 Commit batch
+        await batch.commit();
+        console.log("🚀 Batch commit thành công!");
 
         res.json({ success: true, message: "Thanh toán thành viên đã được ghi nhận thành công!" });
 
@@ -553,7 +574,6 @@ app.post('/handle-membership-payment', async (req, res) => {
         res.json({ success: false, message: error.message || "Có lỗi xảy ra khi xử lý thanh toán." });
     }
 });
-
 
 // Lắng nghe trên cổng 3000
 app.listen(port, () => {
