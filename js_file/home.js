@@ -216,7 +216,7 @@ async function loadPickleballData() {
             htmlContent += `<li>${loc.name}: có ${numCourts} sân</li>`;
         });
         htmlContent += `</ul>`;
-        document.getElementById("pickleball-courts").innerHTML = htmlContent;
+        document.getElementById("listed").innerHTML = htmlContent;
 
     } catch (error) {
         console.error("🚨 Lỗi khi tải dữ liệu:", error);

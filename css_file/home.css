@@ -260,7 +260,7 @@ a:hover {
     box-sizing: border-box;
 }
 
-#pickleball-courts {
+#listed {
     font-size: 18px;
     border-radius: 20px;
     padding: 3% 10% 5% 5%;
@@ -271,7 +271,7 @@ a:hover {
     margin-top: 15px;
 }
 
-#pickleball-courts > ul > li{
+#listed > ul > li{
     padding:2%;
 }
 
