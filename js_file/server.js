@@ -16,7 +16,7 @@ app.use(express.static(path.resolve(__dirname, '../html_file')));
 
 
 const { FieldValue } = admin.firestore;
-const serviceAccount = require('../firebase-config.json');
+const serviceAccount = require('../scpickleball-firebase.json');
 
 app.use(express.json());
 app.use(cors());
