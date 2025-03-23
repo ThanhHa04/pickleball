@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("editStatus").value = court.trangThaiBaoTri;
 
         // Khi bấm lưu thay đổi
-        document.getElementById("saveUserChanges").onclick = async function () {
+        document.getElementById("saveCourtChanges").onclick = async function () {
             const courtRef = doc(db, "san", court.id);
 
             const newCourtName = document.getElementById("editCourtName").value;
