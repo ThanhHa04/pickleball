@@ -351,13 +351,20 @@
 
         <div class="chat-container">
             <div class="chat-icon" onclick="toggleChat()"><i class='bx bxs-chat'></i></div>
-            <div class="chat-box">
-                <div class="chat-header" onclick="toggleChat()">Hỗ trợ trực tuyến</div>
-                <div class="chat-body">
-                    <p>Xin chào! Tôi có thể giúp gì cho bạn?</p>
+            <div class="chat-box" style="display: none;">
+                <div class="chat-messages">Hỗ trợ trực tuyến</div>
+                <div class="chat-options">
+                    <button onclick="sendMessage('Giờ mở cửa')">Giờ mở cửa</button>
+                    <button onclick="sendMessage('Giá dịch vụ')">Giá dịch vụ</button>
+                    <button onclick="sendMessage('Xem lịch sử thanh toán')">Xem lịch sử thanh toán</button>
+                    <button onclick="sendMessage('Xem lịch sử đặt sân')">Xem lịch sử đặt sân</button>
+                    <button onclick="sendMessage('Hủy sân')">Cách hủy sân</button>
+                    <button onclick="sendMessage('Liên hệ với nhân viên')">Liên hệ với nhân viên</button>
+                    <button onclick="sendMessage('Hướng dẫn thanh toán')">Hướng dẫn thanh toán</button>
+                    <button onclick="sendMessage('Tạm biệt')">Tạm biệt</button>
+                    <button onclick="toggleFAQ()">📖 Câu hỏi thường gặp</button>
                 </div>
-                <input type="text" class="chat-input" placeholder="Nhập tin nhắn...">
-            </div>
+            </div>           
         </div>
 
         <div id="manage-users" class="content">

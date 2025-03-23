@@ -71,6 +71,15 @@ function getPath(filename) {
     return isLiveServer ? `/html_file/${filename}` : `/${filename}`;
 }
 
+function addMessage(sender, text) {
+    let chatMessages = document.querySelector(".chat-messages");
+    let messageDiv = document.createElement("div");
+    messageDiv.classList.add("message");
+    messageDiv.innerHTML = `<strong>${sender}:</strong> ${text}`;
+    chatMessages.appendChild(messageDiv);
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
 
 function toggleChat() {
     let chatBox = document.querySelector(".chat-box");
@@ -78,12 +87,105 @@ function toggleChat() {
 
     if (chatBox.style.display === "none" || chatBox.style.display === "") {
         chatBox.style.display = "block";
-        chatIcon.style.display = "none";
+        chatIcon.style.display = "flex";
     } else {
         chatBox.style.display = "none";
         chatIcon.style.display = "flex";
     }
 }
+//chatbot
+document.addEventListener("DOMContentLoaded", function () {
+    let chatMessages = document.querySelector(".chat-messages");
+
+    const botResponses = {
+        "Giờ mở cửa": "⏰ Chúng tôi mở cửa từ 6h00 - 22h00 hàng ngày.",
+        "Giá dịch vụ": "💰 Bạn có thể xem bảng giá chi tiết trong mục danh sách sân.",
+        "Liên hệ với nhân viên": "📞 Gọi vào số 0123456789 để được hỗ trợ nhanh nhất!",
+        "Tạm biệt": "🙏 Cảm ơn bạn đã ghé thăm! Chúc bạn một ngày tốt lành!"
+    };
+
+    function sendMessage(userMessage) {
+        addMessage("Bạn", userMessage);
+    
+        if (userMessage === "Hướng dẫn thanh toán") {
+            sendStepByStepPayment();
+            return; 
+        }
+    
+        if (userMessage === "Hủy sân") {
+            sendStepByStepCancel();
+            return; 
+        }
+    
+        if (userMessage === "Xem lịch sử thanh toán") {
+            sendStepByStepPayment();
+            return;
+        }
+    
+        if (userMessage === "Xem lịch sử đặt sân") {
+            sendStepByStepBooking();
+            return;
+        }
+    
+        setTimeout(() => {
+            let botReply = botResponses[userMessage] || "🤖 Xin lỗi, tôi chưa hiểu câu hỏi của bạn.";
+            addMessage("Bot", botReply);
+        }, 500);
+    }
+    function addMessage(sender, text) {
+        let messageDiv = document.createElement("div");
+        messageDiv.classList.add("message");
+    
+        // Thêm lớp tùy thuộc vào người gửi
+        if (sender === "Bạn") {
+            messageDiv.classList.add("user");
+        } else {
+            messageDiv.classList.add("bot");
+        }
+    
+        messageDiv.innerHTML = `<strong>${sender}:</strong> ${text}`;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    function sendStepByStepPayment() {
+        setTimeout(() => addMessage("Bot", "💳 **Hướng dẫn thanh toán:**"), 500);
+        setTimeout(() => addMessage("Bot", "1️⃣ Truy cập vào danh sách sân."), 1000);
+        setTimeout(() => addMessage("Bot", "2️⃣ Chọn sân mà bạn muốn đặt."), 1500);
+        setTimeout(() => addMessage("Bot", "3️⃣ Chọn khung giờ và phương thức thanh toán."), 2000);
+        setTimeout(() => addMessage("Bot", "4️⃣ Nhấn 'Đã thanh toán' sau khi hoàn tất giao dịch."), 2500);
+    }
+
+    function sendStepByStepCancel() {
+        setTimeout(() => addMessage("Bot", " **Hướng dẫn hủy sân:**"), 500);
+        setTimeout(() => addMessage("Bot", "1️⃣ Truy cập vào quản lý lịch hẹn."), 1000);
+        setTimeout(() => addMessage("Bot", "2️⃣ Chọn lịch đặt mà bạn muốn hủy."), 1500);
+        setTimeout(() => addMessage("Bot", "3️⃣ Nhấn hủy sân ở bên dướidưới."), 2000);
+        setTimeout(() => addMessage("Bot", "⚠️ Chỉ có thể hủy sân trước 2 tiếng so với thời gian đặt "), 2500);
+    }
+    
+    function sendStepByStepPayment() {
+        setTimeout(() => addMessage("Bot", "💳 **Hướng dẫn xem lịch sử thanh toán:**"), 500);
+        setTimeout(() => addMessage("Bot", "1️⃣ Truy cập vào mục lịch sử thanh toán trên menu."), 1000);
+        setTimeout(() => addMessage("Bot", "2️⃣ Hiển thị lịch sử thanh toántoán"), 1500);
+    }
+
+    function sendStepByStepBooking() {
+        setTimeout(() => addMessage("Bot", "💳 **Hướng dẫn thanh toán:**"), 500);
+        setTimeout(() => addMessage("Bot", "1️⃣ Truy cập vào quản lý lịch hẹn."), 1000);
+        setTimeout(() => addMessage("Bot", "2️⃣ Hệ thống sẽ hiển thị danh sách các lịch mà bạn đã đặt."), 1500);
+    }
+
+    function addMessage(sender, text) {
+        let messageDiv = document.createElement("div");
+        messageDiv.classList.add("message");
+        messageDiv.innerHTML = `<strong>${sender}:</strong> ${text}`;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    window.sendMessage = sendMessage;
+});
 
 document.addEventListener("DOMContentLoaded", function () {
     var map = L.map('leafletMap').setView([20.9725, 105.7772], 14);
@@ -203,6 +305,8 @@ async function loadPickleballData() {
         const locations = await locationsRes.json();
         const sanRes = await fetch('http://localhost:3000/san');
         const sanList = await sanRes.json();
+        console.log("🏀 Locations:", locations);
+        console.log("🏟️ Courts:", sanList);
         let courtCount = {};
         sanList.forEach(san => {
             let locationId = san.location_id;
@@ -215,6 +319,7 @@ async function loadPickleballData() {
             let numCourts = courtCount[loc.id] || 0;
             htmlContent += `<li>${loc.name}: có ${numCourts} sân</li>`;
         });
+
         htmlContent += `</ul>`;
         document.getElementById("listed").innerHTML = htmlContent;
 
@@ -222,6 +327,7 @@ async function loadPickleballData() {
         console.error("🚨 Lỗi khi tải dữ liệu:", error);
     }
 }
+document.addEventListener("DOMContentLoaded", loadPickleballData);
 
 document.addEventListener("DOMContentLoaded", function () {
     const elements = document.querySelectorAll(".ql-images, .tk-images,.intro-content, .intro-image,.cards .card");
