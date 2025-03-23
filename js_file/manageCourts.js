@@ -4,6 +4,7 @@ const db = getFirestore();
 
 document.addEventListener('DOMContentLoaded', function() {
     const courtTableBody = document.getElementById('court-table-body');
+    const courtSearchInput = document.getElementById('court-search-input');
     let allCourts = [];
 
     async function fetchCourts() {
@@ -25,6 +26,16 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("Lỗi khi lấy dữ liệu sân:", error);
         }
     }
+
+    function filterCourts() {
+        const searchTerm = courtSearchInput.value.toLowerCase();
+        const filteredCourts = allCourts.filter(court => {
+            return court.TenSan.toLowerCase().includes(searchTerm);
+        });
+        displayCourts(filteredCourts);
+    }
+
+    courtSearchInput.addEventListener('input', filterCourts);
 
     async function handleEditCourt(court) {
         const modal = document.getElementById("editCourtModal");

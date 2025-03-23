@@ -1561,7 +1561,7 @@ footer {
     border:40px;
 }
 
-#user-search-input {
+#user-search-input, #court-search-input {
     width: 400px;
     padding: 10px;
     border: 1px solid #ccc;
@@ -1570,7 +1570,7 @@ footer {
     transition: border-color 0.3s ease;
 }
 
-#user-search-input:focus {
+#user-search-input:focus, #court-search-input:focus {
     border-color: #007bff;
 }
 
