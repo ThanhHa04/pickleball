@@ -368,7 +368,8 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const paymentTime = new Date().toLocaleString();
+        let now = new Date();
+        let paymentTime = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
         const transactionData = {
             userId,
             membershipId: currentMembership.id,
@@ -401,3 +402,4 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+

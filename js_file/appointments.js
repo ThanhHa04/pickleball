@@ -30,32 +30,43 @@ document.addEventListener("DOMContentLoaded", async () => {
         return historySnap.exists() ? historySnap.data() : null;
     }
 
-    async function updateBookingData(bookings) {
+    let currentPage = 1;
+    const itemsPerPage = 5;
+    let allBookings = [];
+
+    async function updateBookingData() {
         const userId = localStorage.getItem("userId");
         const bookingList = document.getElementById("booking-list");
         bookingList.innerHTML = "";
+    
+        allBookings.sort((a, b) => {
+            const dateA = new Date(`${a.ngayDatSan}T${a.khungGio}`);
+            const dateB = new Date(`${b.ngayDatSan}T${b.khungGio}`);
+            return dateB - dateA; 
+        });
 
-        for (const booking of bookings) {
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const bookingsToShow = allBookings.slice(start, end);
+
+        for (const booking of bookingsToShow) {
             const computedHistoryId = `${userId}_${booking.ngayDatSan}_${booking.idSan}_${booking.khungGio}`;
-            console.log("Computed historyId:", computedHistoryId);
             const sanData = await getSanById(booking.idSan);
             const historyData = await getHistoryById(computedHistoryId);
             const hinhAnh = sanData?.HinhAnh;
             let tienTrinh = historyData?.tienTrinh || "Không xác định";
-
-            const bookingDate = new Date(booking.ngayDatSan); // Lấy ngày đặt sân
-            const [startHour, startMinute] = booking.khungGio.split(":"); // Lấy giờ và phút từ khung giờ
-            const bookingTime = new Date(bookingDate.setHours(startHour, startMinute)); // Tạo đối tượng thời gian đầy đủ
-
-            // Xác định trạng thái của lịch hẹn
+    
+            const bookingDate = new Date(booking.ngayDatSan);
+            const [startHour, startMinute] = booking.khungGio.split(":");
+            const bookingTime = new Date(bookingDate.setHours(startHour, startMinute));
+    
             let statusClass = "pending";
             let statusText = tienTrinh;
-            const currentDate = new Date(); 
-
-            if (currentDate > bookingTime) { // Nếu thời gian hiện tại đã qua lịch hẹn
+            const currentDate = new Date();
+    
+            if (currentDate > bookingTime) {
                 statusClass = "finished";
                 statusText = "Đã diễn ra";
-                // Nếu trạng thái trong lịch sử đặt sân là "Chưa diễn ra" hoặc "Đã hủy", cập nhật thành "Đã diễn ra"
                 if (tienTrinh === "Chưa diễn ra") {
                     tienTrinh = "Đã diễn ra"; 
                     await updateDoc(doc(db, "lichsudatsan", computedHistoryId), { tienTrinh: "Đã diễn ra" });
@@ -67,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 statusClass = "cancelled";
                 statusText = "Đã hủy";
             }
-
+    
             let actionsHTML = "";
             if (statusClass !== "cancelled" && statusClass !== "finished") {
                 actionsHTML = `
@@ -76,15 +87,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                     </div>
                 `;
             }
-
-            // Tạo card lịch hẹn
+    
             const card = document.createElement("div");
             card.classList.add("appointment-card");
             card.dataset.idsan = booking.idSan;
             card.dataset.ngay = booking.ngayDatSan;
             card.dataset.gio = booking.khungGio;
             card.dataset.userid = userId;
-
+    
             card.innerHTML = `
                 <div class="appointment-header">
                     <div class="final">
@@ -94,7 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                             <p><i class='bx bx-map'></i> ${booking.diaChiSan}</p>
                         </div>
                     </div>
-                    <div class="appointment-status">
+                    <div class="appointment-status ${statusClass}">
                         ${tienTrinh}
                     </div>
                 </div>
@@ -108,22 +118,48 @@ document.addEventListener("DOMContentLoaded", async () => {
                     ${actionsHTML}
                 </div>
             `;
-
-            // Cập nhật class cho phần tử trạng thái
-            const statusElement = card.querySelector(".appointment-status");
-            statusElement.classList.add(statusClass);
-
+    
             bookingList.appendChild(card);
         }
+
+        updatePagination();
     }
 
-    const bookings = await getBookings();
-    if (bookings) {
-        await updateBookingData(bookings);
+    function updatePagination() {
+        const totalPages = Math.ceil(allBookings.length / itemsPerPage);
+        document.querySelector(".page-numbers").innerHTML = Array.from({ length: totalPages }, (_, i) => `
+            <span class="${i + 1 === currentPage ? 'active' : ''}" data-page="${i + 1}">${i + 1}</span>
+        `).join('');
+    }
+
+    document.querySelector(".btn-prev").addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            updateBookingData();
+        }
+    });
+
+    document.querySelector(".btn-next").addEventListener("click", () => {
+        const totalPages = Math.ceil(allBookings.length / itemsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            updateBookingData();
+        }
+    });
+
+    document.querySelector(".page-numbers").addEventListener("click", (e) => {
+        if (e.target.tagName === "SPAN") {
+            currentPage = parseInt(e.target.dataset.page);
+            updateBookingData();
+        }
+    });
+
+    allBookings = await getBookings();
+    if (allBookings.length) {
+        updateBookingData();
     }
 
 });
-
 
 document.addEventListener("DOMContentLoaded", async () => {
     async function getTransactionHistory() {
@@ -142,8 +178,38 @@ document.addEventListener("DOMContentLoaded", async () => {
             return [];
         }
 
-        const transactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const transactions = snapshot.docs.map(doc => {
+            const data = doc.data();
+
+            // Kiểm tra loại giao dịch (đặt sân hoặc hội viên)
+            const isMembershipPayment = data.paymentTime !== undefined;
+            return {
+                id: doc.id,
+                diaChiSan: isMembershipPayment ? data.membershipName || "N/A" : data.diaChiSan || "N/A",
+                tenSan: isMembershipPayment ? data.membershipId || "N/A" : data.tenSan || "N/A",
+                soTien: data.amount || data.soTien || "N/A",
+                trangThaiThanhToan: data.status || data.trangThaiThanhToan || "Chưa rõ",
+                thoiGianThanhToan: formatDateForSorting(data.paymentTime || data.thoiGianThanhToan)
+            };
+        });
+
+        // Sắp xếp theo thời gian giảm dần
+        transactions.sort((a, b) => b.thoiGianThanhToan - a.thoiGianThanhToan);
+
         return transactions;
+    }
+
+    function formatDateForSorting(dateString) {
+        if (!dateString) return null;
+
+        let parts = dateString.split(" ");
+        if (parts.length !== 2) return null;
+
+        let [datePart, timePart] = parts;
+        let [day, month, year] = datePart.split("/").map(num => num.padStart(2, "0"));
+        let [hour, minute, second] = timePart.split(":").map(num => num.padStart(2, "0"));
+
+        return new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
     }
 
     async function updateHistoryTable() {
@@ -164,11 +230,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         transactions.forEach(transaction => {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${transaction.diaChiSan || "N/A"}</td>
-                <td>${transaction.tenSan || "N/A"}</td>
-                <td>${transaction.soTien ? transaction.soTien + "đ" : "N/A"}</td>
-                <td>${transaction.trangThaiThanhToan || "Chưa rõ"}</td>
-                <td>${transaction.thoiGianThanhToan || "N/A"}</td>
+                <td>${transaction.diaChiSan}</td>
+                <td>${transaction.tenSan}</td>
+                <td>${transaction.soTien !== "N/A" ? transaction.soTien.toLocaleString() + "đ" : "N/A"}</td>
+                <td>${transaction.trangThaiThanhToan}</td>
+                <td>${transaction.thoiGianThanhToan ? transaction.thoiGianThanhToan.toLocaleString("vi-VN", { hour12: false }) : "N/A"}</td>
             `;
             historyBody.appendChild(row);
         });
@@ -176,6 +242,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await updateHistoryTable();
 });
+
 
 document.addEventListener('DOMContentLoaded', function () {
     // Lấy các phần tử
@@ -342,8 +409,5 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
-    
 
 }); 
-
-

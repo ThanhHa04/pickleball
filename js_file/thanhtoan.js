@@ -42,7 +42,8 @@ async function handlePayment() {
     let fieldName = document.getElementById("tensan").innerText;
     let fieldAddress = document.getElementById("diachi").innerText;
     let totalPrice = parseInt(document.getElementById("total-price").innerText.replace(/\D/g, ""), 10);
-    let paymentTime = new Date().toLocaleString();
+    let now = new Date();
+    let paymentTime = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
     let docId = `${userId}_${selectedDate}_${idSan}_${selectedTime}`;
 
     // Kiểm tra dữ liệu cần thiết
