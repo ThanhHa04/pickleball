@@ -1996,7 +1996,7 @@ footer {
 
 
 #editUserModal, #editCourtModal {
-    display: block; /* Ẩn modal mặc định */
+    display: none; /* Ẩn modal mặc định */
     position: fixed;
     top: 0;
     left: 0;

@@ -30,47 +30,52 @@ async function loadCourts() {
 // Gọi hàm loadCourts khi trang được tải
 document.addEventListener("DOMContentLoaded", loadCourts);
 
-document.addEventListener("DOMContentLoaded", function() {
-    const editButtons = document.querySelectorAll(".btn-edit");
-    const editModal = document.getElementById("editUserModal");
-    const closeModal = document.querySelector("#editUserModal .close");
-    const saveChanges = document.getElementById("saveUserChanges");
 
-    editButtons.forEach(button => {
-        button.addEventListener("click", function() {
-            // Lấy thông tin của hàng tương ứng
-            const row = this.closest("tr");
-            const courtName = row.cells[1].innerText;
-            const description = row.cells[2].innerText;
-            const status = row.cells[3].innerText;
+// Hàm để mở modal và điền thông tin sân
+function openEditModal(san) {
+    document.getElementById("editCourtName").value = san.TenSan;
+    document.getElementById("editDescription").value = san.MoTa;
+    document.getElementById("editStatus").value = san.trangThaiBaoTri;
+    document.getElementById("editCourtModal").style.display = "block";
 
-            // Điền thông tin vào modal
-            document.getElementById("editCourtName").value = courtName;
-            document.getElementById("editDescription").value = description;
-            document.getElementById("editStatus").value = status;
+    // Lưu ID sân để sử dụng khi cập nhật
+    document.getElementById("editCourtModal").dataset.id = san.IDSan;
+}
 
-            // Hiển thị modal
-            editModal.style.display = "flex";
-        });
-    });
+// Hàm để cập nhật thông tin sân
+async function saveCourtChanges() {
+    const idSan = document.getElementById("editCourtModal").dataset.id;
+    const courtRef = doc(db, "san", idSan);
 
-    closeModal.addEventListener("click", function() {
-        editModal.style.display = "none";
-    });
+    const updatedData = {
+        TenSan: document.getElementById("editCourtName").value,
+        MoTa: document.getElementById("editDescription").value,
+        trangThaiBaoTri: document.getElementById("editStatus").value
+    };
 
-    saveChanges.addEventListener("click", function() {
-        // Lưu thay đổi và cập nhật thông tin
-        const newCourtName = document.getElementById("editCourtName").value;
-        const newDescription = document.getElementById("editDescription").value;
-        const newStatus = document.getElementById("editStatus").value;
+    await updateDoc(courtRef, updatedData);
+    document.getElementById("editCourtModal").style.display = "none";
+    loadCourts(); // Tải lại danh sách sân
+}
 
-        // Cập nhật thông tin trong bảng (cần thêm logic để lưu vào Firestore nếu cần)
-        const row = document.querySelector(".btn-edit").closest("tr");
-        row.cells[1].innerText = newCourtName;
-        row.cells[2].innerText = newDescription;
-        row.cells[3].innerText = newStatus;
+// Gắn sự kiện cho nút "Chỉnh sửa"
+document.addEventListener("click", function(event) {
+    if (event.target.classList.contains("btn-edit")) {
+        const row = event.target.closest("tr");
+        const san = {
+            IDSan: row.cells[0].textContent,
+            TenSan: row.cells[1].textContent,
+            MoTa: row.cells[2].textContent,
+            trangThaiBaoTri: row.cells[3].textContent
+        };
+        openEditModal(san);
+    }
+});
 
-        // Đóng modal
-        editModal.style.display = "none";
-    });
+// Gắn sự kiện cho nút "Lưu thay đổi"
+document.getElementById("saveUserChanges").addEventListener("click", saveCourtChanges);
+
+// Đóng modal khi nhấn nút "X"
+document.querySelector("#editCourtModal .close").addEventListener("click", function() {
+    document.getElementById("editCourtModal").style.display = "none";
 });
