@@ -31,30 +31,37 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     let currentPage = 1;
-    const itemsPerPage = 5;
+    const itemsPerPage = 6;
     let allBookings = [];
 
     async function updateBookingData() {
         const userId = localStorage.getItem("userId");
         const bookingList = document.getElementById("booking-list");
         bookingList.innerHTML = "";
-    
+        
+        const selectedStatus = document.getElementById("status-filter").value; // Lấy giá trị dropdown
+        
         allBookings.sort((a, b) => {
             const dateA = new Date(`${a.ngayDatSan}T${a.khungGio}`);
             const dateB = new Date(`${b.ngayDatSan}T${b.khungGio}`);
-            return dateB - dateA; 
+            return dateB - dateA;
         });
-
+    
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
         const bookingsToShow = allBookings.slice(start, end);
-
+    
         for (const booking of bookingsToShow) {
             const computedHistoryId = `${userId}_${booking.ngayDatSan}_${booking.idSan}_${booking.khungGio}`;
             const sanData = await getSanById(booking.idSan);
             const historyData = await getHistoryById(computedHistoryId);
             const hinhAnh = sanData?.HinhAnh;
             let tienTrinh = historyData?.tienTrinh || "Không xác định";
+    
+            // Kiểm tra nếu không chọn "Tất cả" và trạng thái không khớp thì bỏ qua
+            if (selectedStatus !== "all" && tienTrinh !== selectedStatus) {
+                continue;
+            }
     
             const bookingDate = new Date(booking.ngayDatSan);
             const [startHour, startMinute] = booking.khungGio.split(":");
@@ -64,19 +71,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             let statusText = tienTrinh;
             const currentDate = new Date();
     
-            if (currentDate > bookingTime) {
+            if (tienTrinh === "Đã hủy") {
+                statusClass = "cancelled";
+                statusText = "Đã hủy";
+            } else if (tienTrinh === "Chưa diễn ra" && currentDate > bookingTime) {
                 statusClass = "finished";
                 statusText = "Đã diễn ra";
-                if (tienTrinh === "Chưa diễn ra") {
-                    tienTrinh = "Đã diễn ra"; 
-                    await updateDoc(doc(db, "lichsudatsan", computedHistoryId), { tienTrinh: "Đã diễn ra" });
-                }
+                tienTrinh = "Đã diễn ra";
+                await updateDoc(doc(db, "lichsudatsan", computedHistoryId), { tienTrinh: "Đã diễn ra" });
             } else if (tienTrinh === "Chưa diễn ra") {
                 statusClass = "ongoing";
                 statusText = "Chưa diễn ra";
-            } else if (tienTrinh === "Đã hủy") {
-                statusClass = "cancelled";
-                statusText = "Đã hủy";
+            } else if (tienTrinh === "Đã diễn ra") {
+                statusClass = "finished";
+                statusText = "Đã diễn ra";
             }
     
             let actionsHTML = "";
@@ -105,14 +113,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                         </div>
                     </div>
                     <div class="appointment-status ${statusClass}">
-                        ${tienTrinh}
+                        ${statusText}
                     </div>
                 </div>
                 <div class="appointment-body">
                     <div class="appointment-info">
                         <p><i class='bx bx-calendar'></i> Ngày: ${booking.ngayDatSan}</p>
                         <p><i class='bx bx-time'></i> Thời gian: ${booking.khungGio}</p>
-                        <p><i class='bx bxs-caret-right-circle'></i> Trạng thái: ${tienTrinh}</p>
+                        <p><i class='bx bxs-caret-right-circle'></i> Trạng thái: ${statusText}</p>
                         <p><i class='bx bx-money'></i> Tổng tiền: ${booking.giaSan}</p>
                     </div>
                     ${actionsHTML}
@@ -121,9 +129,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     
             bookingList.appendChild(card);
         }
-
+    
         updatePagination();
     }
+    
 
     function updatePagination() {
         const totalPages = Math.ceil(allBookings.length / itemsPerPage);
@@ -131,7 +140,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             <span class="${i + 1 === currentPage ? 'active' : ''}" data-page="${i + 1}">${i + 1}</span>
         `).join('');
     }
-
+    
     document.querySelector(".btn-prev").addEventListener("click", () => {
         if (currentPage > 1) {
             currentPage--;
@@ -243,7 +252,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await updateHistoryTable();
 });
 
-
 document.addEventListener('DOMContentLoaded', function () {
     // Lấy các phần tử
     const searchInput = document.getElementById('appointment-search');
@@ -254,36 +262,35 @@ document.addEventListener('DOMContentLoaded', function () {
         const searchTerm = searchInput.value.toLowerCase();
         const statusValue = statusFilter.value;
         const dateValue = dateFilter.value;
-
+    
         const appointments = document.querySelectorAll('.appointment-card');
-
+    
         appointments.forEach(appointment => {
             let show = true;
-
+    
             // Lọc theo từ khóa tìm kiếm
             const courtName = appointment.querySelector('.court-details h3').textContent.toLowerCase();
             const courtAddress = appointment.querySelector('.court-details p').textContent.toLowerCase();
             if (!courtName.includes(searchTerm) && !courtAddress.includes(searchTerm)) {
                 show = false;
             }
-
+    
             // Lọc theo trạng thái
             if (statusValue !== 'all') {
-                const status = appointment.querySelector('.appointment-status');
-                const statusClass = status ? status.classList[1] : ''; // Lấy lớp trạng thái
-
-                if (statusClass !== statusValue) {
+                const statusElement = appointment.querySelector('.appointment-status');
+                if (!statusElement.classList.contains(statusValue)) {
                     show = false;
                 }
             }
-
+    
             // Lọc theo thời gian
             if (dateValue !== 'all') {
-                const appointmentDate = new Date(appointment.querySelector('.appointment-info p:first-child').textContent.split(': ')[1]);
+                const appointmentDateText = appointment.querySelector('.appointment-info p:first-child').textContent.split(': ')[1];
+                const appointmentDate = new Date(appointmentDateText);
                 const today = new Date();
-                const tomorrow = new Date(today);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-
+                const tomorrow = new Date();
+                tomorrow.setDate(today.getDate() + 1);
+    
                 switch (dateValue) {
                     case 'today':
                         if (appointmentDate.toDateString() !== today.toDateString()) {
@@ -296,7 +303,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                         break;
                     case 'week':
-                        const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
+                        const weekStart = new Date(today);
+                        weekStart.setDate(today.getDate() - today.getDay());
                         const weekEnd = new Date(weekStart);
                         weekEnd.setDate(weekEnd.getDate() + 6);
                         if (appointmentDate < weekStart || appointmentDate > weekEnd) {
@@ -312,11 +320,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         break;
                 }
             }
-
+    
             // Hiển thị hoặc ẩn lịch hẹn
             appointment.style.display = show ? 'block' : 'none';
         });
     }
+    
 
     // Thêm event listeners cho bộ lọc
     searchInput.addEventListener('input', filterAppointments);

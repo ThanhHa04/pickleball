@@ -421,3 +421,22 @@ h1 {
     width: 300px;
     height: auto;
 }
+
+#scheduleTable tbody tr:last-child {
+    display: none;
+}
+
+#paid-btn {
+    background-color: #57d430; /* Màu xanh */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+}
+#paid-btn:hover{
+    background-color: #1aad3a; /* Màu xanh đậm khi hover */
+}

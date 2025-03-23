@@ -1232,6 +1232,7 @@ footer {
 .page-numbers {
     display: flex;
     gap: 5px;
+    padding:10px 0;
 }
 
 .page-numbers span {
@@ -1900,7 +1901,7 @@ footer {
     border-radius: 5px;
 }
 
-#confirm-payment-btn {
+#confirm-payment-btn, #paid-btn {
     background-color: #57d430; /* Màu xanh */
     color: white;
     border: none;
@@ -1912,7 +1913,7 @@ footer {
     width: 100%;
 }
 
-#confirm-payment-btn:hover {
+#confirm-payment-btn:hover , #paid-btn:hover{
     background-color: #1aad3a; /* Màu xanh đậm khi hover */
 }
 #confirm-btn {
