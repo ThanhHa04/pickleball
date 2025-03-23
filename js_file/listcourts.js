@@ -76,10 +76,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         let giaThue = court.GiaThue % 1 === 0 ? Math.floor(court.GiaThue) : court.GiaThue;
                         let imageUrl = court.HinhAnh || "default-image.jpg";
-
+                        let baoTriClass = court.trangThaiBaoTri === "Đang bảo trì" ? "bao-tri" : "";
+                        let baoTriOverlay = court.trangThaiBaoTri === "Đang bảo trì" ? `<div class="overlay">Đang bảo trì</div>` : "";
+                        
                         courtItem.innerHTML = `
-                        <div class="court-img">
+                        <div class="court-img ${baoTriClass}">
                             <img class="court-img-ex" src="${imageUrl}" alt="${court.TenSan}">
+                            ${baoTriOverlay}
                         </div>
                         <div class="court-info">
                             <h3>${court.TenSan}</h3>
@@ -93,7 +96,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                         `;
                         courtListDiv.appendChild(courtItem);
+                        if (court.trangThaiBaoTri === "Đang bảo trì") {
+                            courtItem.style.pointerEvents = "none";
+                        }
                     });
+
 
                     document.getElementById("page-number").textContent = `Trang ${currentPage}`;
                     document.getElementById("prev-page").disabled = currentPage === 1;

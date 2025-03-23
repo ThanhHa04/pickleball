@@ -455,6 +455,31 @@ img {
 .court-img-ex {
     width: 100%;
 }
+.bao-tri {
+    position: relative;
+    height: 100%;
+}
+
+.bao-tri::after {
+    content: "Đang bảo trì";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); 
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+.bao-tri .court-info {
+    pointer-events: none; /* Chặn click */
+}
 
 #court-details {
     display: none;
@@ -1954,15 +1979,17 @@ footer {
 .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
 .modal-content { background: #fff; padding: 20px; margin: 10% auto; width: 50%; border-radius: 5px; }
 .close { float: right; font-size: 24px; cursor: pointer; }
-
+#manage-courts{
+    padding:20px;
+}
 .court-management-table {
-    width: 100%;
+    width: 90%;
+    margin: 20px auto;
     border-collapse: collapse;
-    margin-top: 20px;
 }
 
 .court-management-table th, .court-management-table td {
-    border: 1px solid #ddd;
+    border: 1px solid #dddddd;
     padding: 8px;
     text-align: center;
 }
