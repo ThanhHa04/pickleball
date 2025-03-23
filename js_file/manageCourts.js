@@ -1,81 +1,96 @@
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Sử dụng Firestore đã khởi tạo
 const db = getFirestore();
 
-// Hàm lấy dữ liệu từ Firestore và hiển thị vào bảng
-async function loadCourts() {
-    const sanCollection = collection(db, "san");
-    const sanSnapshot = await getDocs(sanCollection);
-    const sanList = sanSnapshot.docs.map(doc => doc.data());
+document.addEventListener('DOMContentLoaded', function() {
+    const courtTableBody = document.getElementById('court-table-body');
+    let allCourts = [];
 
-    const tableBody = document.getElementById("court-table-body");
-    tableBody.innerHTML = ""; // Xóa nội dung cũ
-
-    sanList.forEach(san => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${san.IDSan}</td>
-            <td>${san.TenSan}</td>
-            <td>${san.MoTa}</td>
-            <td>${san.trangThaiBaoTri}</td>
-            <td>
-                <button class="btn-edit">Chỉnh sửa</button>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
-}
-
-// Gọi hàm loadCourts khi trang được tải
-document.addEventListener("DOMContentLoaded", loadCourts);
-
-
-// Hàm để mở modal và điền thông tin sân
-function openEditModal(san) {
-    document.getElementById("editCourtName").value = san.TenSan;
-    document.getElementById("editDescription").value = san.MoTa;
-    document.getElementById("editStatus").value = san.trangThaiBaoTri;
-    document.getElementById("editCourtModal").style.display = "block";
-
-    // Lưu ID sân để sử dụng khi cập nhật
-    document.getElementById("editCourtModal").dataset.id = san.IDSan;
-}
-
-// Hàm để cập nhật thông tin sân
-async function saveCourtChanges() {
-    const idSan = document.getElementById("editCourtModal").dataset.id;
-    const courtRef = doc(db, "san", idSan);
-
-    const updatedData = {
-        TenSan: document.getElementById("editCourtName").value,
-        MoTa: document.getElementById("editDescription").value,
-        trangThaiBaoTri: document.getElementById("editStatus").value
-    };
-
-    await updateDoc(courtRef, updatedData);
-    document.getElementById("editCourtModal").style.display = "none";
-    loadCourts(); // Tải lại danh sách sân
-}
-
-// Gắn sự kiện cho nút "Chỉnh sửa"
-document.addEventListener("click", function(event) {
-    if (event.target.classList.contains("btn-edit")) {
-        const row = event.target.closest("tr");
-        const san = {
-            IDSan: row.cells[0].textContent,
-            TenSan: row.cells[1].textContent,
-            MoTa: row.cells[2].textContent,
-            trangThaiBaoTri: row.cells[3].textContent
-        };
-        openEditModal(san);
+    async function fetchCourts() {
+        try {
+            const sanCollection = collection(db, 'san');
+            const querySnapshot = await getDocs(sanCollection);
+            allCourts = querySnapshot.docs.map(docSnapshot => {
+                const data = docSnapshot.data();
+                return {
+                    id: docSnapshot.id,
+                    IDSan: data.IDSan,
+                    TenSan: data.TenSan,
+                    MoTa: data.MoTa,
+                    trangThaiBaoTri: data.trangThaiBaoTri
+                };
+            });
+            displayCourts(allCourts);
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu sân:", error);
+        }
     }
-});
 
-// Gắn sự kiện cho nút "Lưu thay đổi"
-document.getElementById("saveUserChanges").addEventListener("click", saveCourtChanges);
+    async function handleEditCourt(court) {
+        const modal = document.getElementById("editCourtModal");
+        const closeModal = document.querySelector("#editCourtModal .close");
 
-// Đóng modal khi nhấn nút "X"
-document.querySelector("#editCourtModal .close").addEventListener("click", function() {
-    document.getElementById("editCourtModal").style.display = "none";
+        // Hiển thị modal
+        modal.style.display = "block";
+
+        // Điền thông tin sân vào modal
+        document.getElementById("editCourtName").value = court.TenSan;
+        document.getElementById("editDescription").value = court.MoTa;
+        document.getElementById("editStatus").value = court.trangThaiBaoTri;
+
+        // Khi bấm lưu thay đổi
+        document.getElementById("saveUserChanges").onclick = async function () {
+            const courtRef = doc(db, "san", court.id);
+
+            const newCourtName = document.getElementById("editCourtName").value;
+            const newDescription = document.getElementById("editDescription").value;
+            const newStatus = document.getElementById("editStatus").value;
+
+            try {
+                await updateDoc(courtRef, {
+                    TenSan: newCourtName,
+                    MoTa: newDescription,
+                    trangThaiBaoTri: newStatus
+                });
+
+                alert("Thông tin sân đã được cập nhật.");
+                modal.style.display = "none";
+                fetchCourts();
+            } catch (error) {
+                console.error("Lỗi cập nhật thông tin sân:", error);
+            }
+        };
+
+        // Đóng modal khi bấm "X"
+        closeModal.onclick = function () {
+            modal.style.display = "none";
+        };
+
+        // Đóng modal khi click ra ngoài
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
+    }
+
+    function displayCourts(courts) {
+        courtTableBody.innerHTML = '';
+        courts.forEach(court => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${court.IDSan}</td>
+                <td>${court.TenSan}</td>
+                <td>${court.MoTa}</td>
+                <td>${court.trangThaiBaoTri}</td>
+                <td>
+                    <button class="btn-edit">Chỉnh sửa</button>
+                </td>
+            `;
+            row.querySelector('.btn-edit').addEventListener('click', () => handleEditCourt(court));
+            courtTableBody.appendChild(row);
+        });
+    }
+
+    fetchCourts();
 });
