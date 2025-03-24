@@ -48,7 +48,7 @@ async function updateLichSan() {
                 }
             }
 
-            console.log("📌 Giá sân ngày hôm qua:", giaSanHomQua);
+            console.log("📌 Giá sân ngày hôm nay:", ngayHomQuaStr );
 
             // ❌ **Chỉ xóa lịch của ngày hôm qua**
             for (let docItem of querySnapshot.docs) {
@@ -77,7 +77,6 @@ async function updateLichSan() {
                     TrangThai: "Còn trống",
                     Gia: giaSan
                 });
-
                 console.log(`✅ Tạo mới: ${docID} | Giá: ${giaSan}`);
             }
         }

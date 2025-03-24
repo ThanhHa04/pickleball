@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     IDSan: data.IDSan,
                     TenSan: data.TenSan,
                     MoTa: data.MoTa,
+                    GiaThue: data.GiaThue,
                     trangThaiBaoTri: data.trangThaiBaoTri
                 };
             });
@@ -48,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("editCourtName").value = court.TenSan;
         document.getElementById("editDescription").value = court.MoTa;
         document.getElementById("editStatus").value = court.trangThaiBaoTri;
-
+        document.getElementById("editPrice").value = court.GiaThue;
         // Khi bấm lưu thay đổi
         document.getElementById("saveCourtChanges").onclick = async function () {
             const courtRef = doc(db, "san", court.id);
@@ -56,11 +57,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const newCourtName = document.getElementById("editCourtName").value;
             const newDescription = document.getElementById("editDescription").value;
             const newStatus = document.getElementById("editStatus").value;
-
+            const newPrice = document.getElementById("editPrice").value;
             try {
                 await updateDoc(courtRef, {
                     TenSan: newCourtName,
                     MoTa: newDescription,
+                    GiaThue: newPrice,
                     trangThaiBaoTri: newStatus
                 });
 
@@ -88,11 +90,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayCourts(courts) {
         courtTableBody.innerHTML = '';
         courts.forEach(court => {
+            const formattedPrice = parseFloat(court.GiaThue).toLocaleString('vi-VN') + ' đ';
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${court.IDSan}</td>
                 <td>${court.TenSan}</td>
                 <td>${court.MoTa}</td>
+                <td>${formattedPrice}</td>
                 <td>${court.trangThaiBaoTri}</td>
                 <td>
                     <button class="btn-edit">Chỉnh sửa</button>

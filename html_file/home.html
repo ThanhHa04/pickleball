@@ -54,6 +54,7 @@
                 <a href="javascript:void(0);" onclick="showContent('list-courts', this)">Danh sách sân</a>
                 <a href="javascript:void(0);" onclick="showContent('membership', this)">Gói hội viên</a>
                 <a href="javascript:void(0);" onclick="showContent('appointments', this)">Quản lý lịch hẹn</a>
+                <a href="javascript:void(0);" onclick="showContent('allAppointments', this)">Quản lý lịch hẹn</a>
                 <a href="javascript:void(0);" onclick="showContent('manage-courts', this)">Quản lý sân</a>
                 <a href="javascript:void(0);" onclick="showContent('history', this)">Lịch sử giao dịch</a>
                 <a href="javascript:void(0);" onclick="showContent('manage-users', this)">Quản lý người dùng</a>
@@ -333,10 +334,27 @@
                 </div>
         </div>
 
-
         <div id="profile" class="content">
             <h2>Quản lý thông tin</h2>
             <p>Cập nhật thông tin cá nhân...</p>
+        </div>
+
+        <div id="allAppointments" class="content">
+            <h2>Quản lý tất cả lịch hẹn</h2>
+            <table class="booking-table">
+                <thead>
+                    <tr>
+                        <th>Tên sân</th>
+                        <th>ID người dùng</th>
+                        <th>Thời gian thanh toán</th>
+                        <th>Số tiền</th>
+                        <th>Phương thức</th>
+                        <th>Trạng thái thanh toán</th>
+                        <th>Xác nhận</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingTableBody"></tbody>
+            </table>
         </div>
 
         <div id="map" class="content">
@@ -378,6 +396,7 @@
                         <th>ID Sân</th>
                         <th>Tên Sân</th>
                         <th>Mô tả</th>
+                        <th>Giá sân</th>
                         <th>Tình trạng sân</th>
                         <th>Hành Động</th>
                     </tr>
@@ -402,6 +421,9 @@
                     
                     <label for="editDescription">Mô tả:</label>
                     <input type="text" id="editDescription">
+
+                    <label for="editPrice">Giá sân:</label>
+                    <input type="text" id="editPrice">
                     
                     <label for="editStatus">Tình trạng sân:</label>
                     <select id="editStatus">
