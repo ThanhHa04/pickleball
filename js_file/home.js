@@ -7,7 +7,7 @@ console.log("User Info:", { userName, userId, userRole });
 console.log("User Role:", userRole);
 const allowedPages = {
     user: ["home", "list-courts", "appointments", "history", "membership", "map"],
-    admin: ["home", "manage-courts", "manage-users", "statistics", "map"]
+    admin: ["home", "manage-courts", "manage-users","allAppointments", "statistics", "map"]
 };
 
 // Ẩn/hiện menu theo vai trò
@@ -62,7 +62,7 @@ window.onload = function () {
     document.getElementById("loginLink").setAttribute("href", getPath("Login.html"));
     document.getElementById("signupLink").setAttribute("href", getPath("Signup.html"));
 
-    updateMenuByRole(); // GỌI LẠI HÀM NÀY Ở ĐÂY
+    updateMenuByRole();
 };
 
 

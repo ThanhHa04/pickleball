@@ -42,16 +42,17 @@ async function handlePayment() {
     let fieldName = document.getElementById("tensan").innerText;
     let fieldAddress = document.getElementById("diachi").innerText;
     let totalPrice = parseInt(document.getElementById("total-price").innerText.replace(/\D/g, ""), 10);
+    let paymentMethod = document.getElementById("payment-method")?.value || "Không xác định";
     let now = new Date();
     let paymentTime = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
     let docId = `${userId}_${selectedDate}_${idSan}_${selectedTime}`;
-
+    
     // Kiểm tra dữ liệu cần thiết
     if (!selectedDate || !selectedTime || !onePrice || !userName || !userEmail || !userPhone || !fieldName || !fieldAddress || !totalPrice) {
         alert("Vui lòng điền đầy đủ thông tin trước khi thanh toán.");
         return;
     }
-
+    
     // Gửi yêu cầu thanh toán lên server
     let response = await fetch('http://127.0.0.1:3000/process-payment', {
         method: 'POST',
@@ -71,22 +72,23 @@ async function handlePayment() {
             selectedTime,
             paymentTime,
             onePrice,
-            docId
+            docId,
+            paymentMethod 
         })
     });
 
-        if (!response.ok) {
-            throw new Error('Lỗi khi gửi yêu cầu thanh toán.');
-        }
+    if (!response.ok) {
+        throw new Error('Lỗi khi gửi yêu cầu thanh toán.');
+    }
 
-        let data = await response.json();
-        if (data.success) {
-            alert("Thanh toán thành công và đã lưu thông tin!");
-            location.reload();
-        } else {
-            console.error("Lỗi khi xử lý thanh toán:", data.message);
-            alert("Có lỗi xảy ra khi xử lý thanh toán.");
-        }
+    let data = await response.json();
+    if (data.success) {
+        alert("Thanh toán thành công và đã lưu thông tin!");
+        location.reload();
+    } else {
+        console.error("Lỗi khi xử lý thanh toán:", data.message);
+        alert("Có lỗi xảy ra khi xử lý thanh toán.");
+    }
 }
 
 // Lắng nghe sự kiện

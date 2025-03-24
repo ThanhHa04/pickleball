@@ -439,7 +439,7 @@ app.get('/reset-password', (req, res) => {
 });
 
 app.post('/process-payment', async (req, res) => {
-    const { userId, userName, userEmail, userPhone, totalPrice, fieldName, fieldAddress, idSan, selectedDate, selectedTime, paymentTime, onePrice, docId } = req.body;
+    const { userId, userName, userEmail, userPhone, totalPrice, fieldName, fieldAddress, idSan, selectedDate, selectedTime, paymentTime, onePrice, docId, paymentMethod } = req.body;
 
     try {
         if (!selectedDate || !selectedDate.includes("-")) {
@@ -464,7 +464,8 @@ app.post('/process-payment', async (req, res) => {
             diaChiSan: fieldAddress,
             khungGio: selectedTime,
             thoiGianThanhToan: paymentTime,
-            trangThaiThanhToan: "Thành công"
+            phuongThucThanhToan: paymentMethod,
+            trangThaiThanhToan: "Chờ xác nhận"
         });
 
         // 🎯 Thêm lịch sử đặt sân
@@ -534,9 +535,6 @@ app.post('/handle-membership-payment', async (req, res) => {
         if (!userId || !membershipId || !amount) {
             throw new Error("Thiếu thông tin cần thiết để xử lý thanh toán!");
         }
-
-        console.log("📌 Dữ liệu nhận được:", { userId, membershipId, membershipName, amount, paymentTime });
-
         let batch = db.batch();
 
         // 🎯 Thêm vào lịch sử thanh toán
@@ -547,7 +545,8 @@ app.post('/handle-membership-payment', async (req, res) => {
             membershipName,
             amount,
             paymentTime,
-            status: "Thành công"
+            phuongThucThanhToan: "bank",
+            trangThaiThanhToan: "Chờ xác nhận",
         });
         console.log("✅ Đã thêm lịch sử thanh toán");
 

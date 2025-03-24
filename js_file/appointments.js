@@ -420,3 +420,88 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 }); 
+
+//Quản lý tất cả lịch đặt sân
+document.addEventListener("DOMContentLoaded", async () => {
+    async function getPayments() {
+        const paymentsCol = collection(db, "lichsuthanhtoan");
+        const snapshot = await getDocs(paymentsCol);
+        let payments = {};
+        snapshot.docs.forEach(docSnap => {
+            let paymentData = docSnap.data(); 
+            payments[docSnap.id] = {
+                thoiGianThanhToan: paymentData.thoiGianThanhToan || paymentData.paymentTime,    
+                trangThaiThanhToan: paymentData.trangThaiThanhToan || "Chưa rõ",
+                tenSan: paymentData.tenSan || paymentData.membershipName,
+                userId: paymentData.userId,
+                soTien: paymentData.soTien || paymentData.amount,
+                tienTrinh: paymentData.tienTrinh || "-",
+                phuongThucThanhToan: paymentData.phuongThucThanhToan || "-"
+            };
+        });
+        return payments;
+    }
+
+    async function updateBookingData() {
+        const tableBody = document.getElementById("bookingTableBody");
+        tableBody.innerHTML = ""; // Xóa dữ liệu cũ trước khi thêm mới
+    
+        let allPayments = await getPayments(); // Lấy danh sách thanh toán
+    
+        for (const id in allPayments) {
+            let payment = allPayments[id];
+            
+            let paymentMethodMap = { "bank": "Chuyển khoản", "momo": "MoMo", "cash": "Tiền mặt" };
+            let phuongThucThanhToan = paymentMethodMap[payment.phuongThucThanhToan] || payment.phuongThucThanhToan || "-";
+
+            let soTien = parseFloat(payment.soTien || payment.amount || 0); // Ưu tiên soTien, nếu không có thì lấy amount
+            let soTienHienThi = isNaN(soTien) ? "Chưa có giá" : soTien.toLocaleString('vi-VN') + " đ";
+    
+            let trangThai = payment.trangThaiThanhToan || "Chưa rõ";
+            let buttons = `
+                <button class="confirm-btn" data-id="${id}">✔ Xác nhận</button>
+                <button class="reject-btn" data-id="${id}">✖ Từ chối</button>
+            `;
+    
+            // Nếu trạng thái là Thành công, thay thế bằng "Đã nhận"
+            if (trangThai === "Thành công") {
+                buttons = `<span class="received-status">Đã nhận</span>`;
+            }
+    
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${payment.tenSan || "Không rõ"}</td>
+                <td>${payment.userId || "Không rõ"}</td>
+                <td>${payment.thoiGianThanhToan || "Không có thông tin"}</td>
+                <td>${soTienHienThi}</td>
+                <td>${phuongThucThanhToan || "-"}</td>
+                <td>${trangThai}</td>
+                <td>${buttons}</td>
+            `;
+    
+            tableBody.appendChild(row);
+        }
+    
+        // Gán sự kiện cho nút xác nhận và từ chối (chỉ gán nếu trạng thái chưa phải Thành công)
+        document.querySelectorAll(".confirm-btn").forEach(button => {
+            button.addEventListener("click", async (e) => {
+                const paymentId = e.target.dataset.id;
+                await updateBookingStatus(paymentId, "Thành công");
+                await updateBookingData(); // Cập nhật lại bảng sau khi thay đổi
+            });
+        });
+    
+        document.querySelectorAll(".reject-btn").forEach(button => {
+            button.addEventListener("click", async (e) => {
+                const paymentId = e.target.dataset.id;
+                await updateBookingStatus(paymentId, "Đã từ chối");
+                await updateBookingData(); // Cập nhật lại bảng sau khi thay đổi
+            });
+        });
+    }
+    
+
+    updateBookingData(); // Gọi hàm hiển thị dữ liệu thanh toán
+});
+
+
