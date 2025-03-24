@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const bookingList = document.getElementById("booking-list");
         bookingList.innerHTML = "";
         
-        const selectedStatus = document.getElementById("status-filter").value; // Lấy giá trị dropdown
+        const selectedStatus = document.getElementById("status-filter").value;
         
         allBookings.sort((a, b) => {
             const dateA = new Date(`${a.ngayDatSan}T${a.khungGio}`);
@@ -120,7 +120,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <div class="appointment-info">
                         <p><i class='bx bx-calendar'></i> Ngày: ${booking.ngayDatSan}</p>
                         <p><i class='bx bx-time'></i> Thời gian: ${booking.khungGio}</p>
-                        <p><i class='bx bxs-caret-right-circle'></i> Trạng thái: ${statusText}</p>
+                        <p><i class='bx bxs-caret-right-circle'></i> Trạng thái sân: ${statusText}</p>
+                        <p><i class='bx bx-message-alt-check'></i> Trạng thái thanh toán: ${booking.trangThaiThanhToan || "-"}</p>
                         <p><i class='bx bx-money'></i> Tổng tiền: ${booking.giaSan}</p>
                     </div>
                     ${actionsHTML}
@@ -448,24 +449,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     
         let allPayments = await getPayments(); // Lấy danh sách thanh toán
     
-        for (const id in allPayments) {
-            let payment = allPayments[id];
-            
+        let paymentsArray = Object.entries(allPayments).map(([id, payment]) => ({ id, ...payment }));
+    
+        function parsePaymentTime(timeStr) {
+            if (!timeStr) return new Date(0);
+            let [datePart, timePart] = timeStr.split(" ");
+            let [day, month, year] = datePart.split("/").map(Number);
+            let [hour, minute, second] = timePart.split(":").map(Number);
+            return new Date(year, month - 1, day, hour, minute, second);
+        }
+    
+        paymentsArray.sort((a, b) => parsePaymentTime(b.thoiGianThanhToan) - parsePaymentTime(a.thoiGianThanhToan));
+    
+        for (const payment of paymentsArray) {
             let paymentMethodMap = { "bank": "Chuyển khoản", "momo": "MoMo", "cash": "Tiền mặt" };
             let phuongThucThanhToan = paymentMethodMap[payment.phuongThucThanhToan] || payment.phuongThucThanhToan || "-";
-
-            let soTien = parseFloat(payment.soTien || payment.amount || 0); // Ưu tiên soTien, nếu không có thì lấy amount
+    
+            let soTien = parseFloat(payment.soTien || payment.amount || 0);
             let soTienHienThi = isNaN(soTien) ? "Chưa có giá" : soTien.toLocaleString('vi-VN') + " đ";
     
             let trangThai = payment.trangThaiThanhToan || "Chưa rõ";
             let buttons = `
-                <button class="confirm-btn" data-id="${id}">✔ Xác nhận</button>
-                <button class="reject-btn" data-id="${id}">✖ Từ chối</button>
+                <button class="confirm-btn" data-id="${payment.id}">✔ Xác nhận</button>
+                <button class="reject-btn" data-id="${payment.id}">✖ Từ chối</button>
             `;
     
-            // Nếu trạng thái là Thành công, thay thế bằng "Đã nhận"
             if (trangThai === "Thành công") {
                 buttons = `<span class="received-status">Đã nhận</span>`;
+            } else if (trangThai === "Bị từ chối") {
+                buttons = `<span class="rejected-status">Đã từ chối</span>`;
             }
     
             const row = document.createElement("tr");
@@ -482,26 +494,48 @@ document.addEventListener("DOMContentLoaded", async () => {
             tableBody.appendChild(row);
         }
     
-        // Gán sự kiện cho nút xác nhận và từ chối (chỉ gán nếu trạng thái chưa phải Thành công)
+        // Gán sự kiện cho nút xác nhận
         document.querySelectorAll(".confirm-btn").forEach(button => {
             button.addEventListener("click", async (e) => {
                 const paymentId = e.target.dataset.id;
                 await updateBookingStatus(paymentId, "Thành công");
-                await updateBookingData(); // Cập nhật lại bảng sau khi thay đổi
+                await updateBookingData();
             });
         });
     
+        // Gán sự kiện cho nút từ chối
         document.querySelectorAll(".reject-btn").forEach(button => {
             button.addEventListener("click", async (e) => {
                 const paymentId = e.target.dataset.id;
-                await updateBookingStatus(paymentId, "Đã từ chối");
-                await updateBookingData(); // Cập nhật lại bảng sau khi thay đổi
+                await updateBookingStatus(paymentId, "Bị từ chối");
+                await updateBookingData();
             });
         });
     }
     
+    // Hàm cập nhật trạng thái lên Firebase
+    async function updateBookingStatus(paymentId, newStatus, bookingDate) {
+    try {
+        const paymentRef = doc(db, "lichsuthanhtoan", paymentId);
+        let bookingStatus = (newStatus === "Thành công") ? "Đã thanh toán" : "Bị từ chối";
 
-    updateBookingData(); // Gọi hàm hiển thị dữ liệu thanh toán
+        // Cập nhật trạng thái trong `lichsuthanhtoan`
+        await updateDoc(paymentRef, { 
+            trangThaiThanhToan: newStatus,
+        });
+        const bookingRef = doc(db, "lichsudatsan", paymentId);
+        const bookingDoc = await getDoc(bookingRef);
+
+        await updateDoc(bookingRef, { 
+            trangThaiThanhToan: bookingStatus 
+        });
+    } catch (error) {
+        console.error("Lỗi khi cập nhật trạng thái:", error);
+    }
+}
+
+    
+    updateBookingData(); 
 });
 
 

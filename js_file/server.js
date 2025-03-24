@@ -480,7 +480,8 @@ app.post('/process-payment', async (req, res) => {
             tenSan: fieldName,
             diaChiSan: fieldAddress,
             giaSan: onePrice,
-            tienTrinh: "Chưa diễn ra"
+            tienTrinh: "Chưa diễn ra",
+            trangThaiThanhToan: "Chờ xác nhận"
         });
 
         // 🎯 Cập nhật trạng thái sân thành "Đã đặt"
