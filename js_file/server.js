@@ -129,6 +129,24 @@ app.get('/locations', async (req, res) => {
     }
 });
 
+app.get('/thongBao', async (req, res) => {
+    try {
+        const snapshot = await db.collection('thongBao').get();
+        if (snapshot.empty) {
+            return res.status(404).json({ message: 'Không có thông báo nào.' });
+        }
+
+        let locations = [];
+        snapshot.forEach(doc => {
+            locations.push({ id: doc.id, ...doc.data() });
+        });
+
+        res.json(locations);
+    } catch (err) {
+        res.status(500).json({ error: 'Lỗi server' });
+    }
+});
+
 app.get('/lichsudatsan', async (req, res) => {
     try {
         const snapshot = await db.collection('lichsudatsan').get();

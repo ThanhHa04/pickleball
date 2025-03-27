@@ -1,6 +1,6 @@
 # Bỏ file cấu hình Firebase (tránh lộ API key)
 test.json
-
+lichsan.js
 # chạy lệnh npm install
 node_modules/  
 package-lock.json  

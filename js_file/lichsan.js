@@ -3,13 +3,13 @@ const { getFirestore, collection, doc, setDoc, deleteDoc, getDocs } = require("f
 
 // Cấu hình Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyBVcmyIiHt7xA9n2oLGZ4YuZzq4EcRL7O8",
-    authDomain: "scpickleball-b858e.firebaseapp.com",
-    projectId: "scpickleball-b858e",
-    storageBucket: "scpickleball-b858e.firebasestorage.app",
-    messagingSenderId: "1049761235902",
-    appId: "1:1049761235902:web:55035d34a7225a4c0a6fef",
-    measurementId: "G-PYK2HP0FJ4"
+    apiKey: "AIzaSyAhzwJgrxzQOMEjBVEGM3fEkuAXrjPHguA",
+    authDomain: "test-230cb.firebaseapp.com",
+    projectId: "test-230cb",
+    storageBucket: "test-230cb.firebasestorage.app",
+    messagingSenderId: "12609187904",
+    appId: "1:12609187904:web:4d56c71d455e052b266fa5",
+    measurementId: "G-X2YZLLC07M"
 };
 // Khởi tạo Firebase
 const app = initializeApp(firebaseConfig);

@@ -524,18 +524,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function toggleNotificationDropdown(event) {
     const dropdown = document.getElementById("notification-dropdown");
-    var udropdown = document.getElementById("user-dropdown");
-    if (dropdown.style.display === "block") {
-        dropdown.style.display = "none";
-        udropdown.style.display = "none";
-    } else {
-        dropdown.style.display = "block";
-        udropdown.style.display = "none";
-    }
+
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
     event.stopPropagation();
 }
 
-//ẩn dropdown khi click ra ngoài
 document.addEventListener("click", function (event) {
     const dropdown = document.getElementById("notification-dropdown");
     if (!dropdown.contains(event.target) && !event.target.closest(".notification-icon")) {
@@ -543,32 +536,46 @@ document.addEventListener("click", function (event) {
     }
 });
 
-//lấy thông báo từ database
 function getNotifications() {
-    fetch("http://localhost:3000/notifications")
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+
+    fetch("http://localhost:3000/thongBao")
         .then(response => response.json())
         .then(notifications => {
-            const dropdown = document.getElementById("notification-dropdown");
-            notifications.forEach(notification => {
-                if (notification.title === "Thông báo" && notification.message === "Bạn chưa có thông báo nào") {
-                    return;
-                }
-                const notificationItem = document.createElement("li");
-                notificationItem.innerHTML = `<strong>${notification.title}</strong> - ${notification.message}`;
-                dropdown.appendChild(notificationItem);
-            });
+            const dropdownList = document.getElementById("notification-list");
+            dropdownList.innerHTML = "";
+
+            // Kiểm tra nếu notifications không phải mảng hoặc rỗng
+            if (!Array.isArray(notifications) || notifications.length === 0) {
+                dropdownList.innerHTML = <li><strong>Thông báo</strong><p>Bạn chưa có thông báo nào</p></li>;
+                updateNotificationCount(0);
+                return;
+            }
+
+            // Lọc thông báo theo userId
+            const userNotifications = notifications.filter(noti => noti.userId === userId);
+            updateNotificationCount(userNotifications.length);
+
+            if (userNotifications.length === 0) {
+                dropdownList.innerHTML = <li><strong>Thông báo</strong><p>Bạn chưa có thông báo nào</p></li>;
+            } else {
+                userNotifications.forEach(notification => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `Bạn đã đặt <strong>${notification.tenSan}</strong> thành công vào <strong>${notification.khungGio}</strong> ${notification.ngayDatSan}`;
+                    dropdownList.appendChild(li);
+                });
+            }
         })
-        .catch(error => console.error("Lỗi khi lấy thông báo:", error));
+        .catch(error => {
+            console.error("Lỗi khi lấy thông báo:", error);
+            document.getElementById("notification-list").innerHTML = <li><strong>Thông báo</strong><p>Bạn chưa có thông báo nào</p></li>;
+            updateNotificationCount(0);
+        });
 }
 
-//cập nhật số thông báo
-function updateNotificationCount() {
-    const count = document.querySelector(".notification-count");
-    count.textContent = "0";
+function updateNotificationCount(count) {
+    document.querySelector(".notification-count").textContent = count;
 }
 
-//xử lý click vào thông báo
-function handleNotificationClick(event) {
-    const dropdown = document.getElementById("notification-dropdown");
-    dropdown.style.display = "none";
-}
+document.addEventListener("DOMContentLoaded", getNotifications);
