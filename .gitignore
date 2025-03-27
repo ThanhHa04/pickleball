@@ -1,5 +1,5 @@
 # Bỏ file cấu hình Firebase (tránh lộ API key)
-scpickleball-firebase.json
+test.json
 
 # chạy lệnh npm install
 node_modules/  
