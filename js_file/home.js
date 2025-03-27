@@ -509,3 +509,50 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+function toggleNotificationDropdown(event) {
+    const dropdown = document.getElementById("notification-dropdown");
+    if (dropdown.style.display === "block") {
+        dropdown.style.display = "none";
+    } else {
+        dropdown.style.display = "block";
+    }
+    event.stopPropagation();
+}
+
+//ẩn dropdown khi click ra ngoài
+document.addEventListener("click", function (event) {
+    const dropdown = document.getElementById("notification-dropdown");
+    if (!dropdown.contains(event.target) && !event.target.closest(".notification-icon")) {
+        dropdown.style.display = "none";
+    }
+});
+
+//lấy thông báo từ database
+function getNotifications() {
+    fetch("http://localhost:3000/notifications")
+        .then(response => response.json())
+        .then(notifications => {
+            const dropdown = document.getElementById("notification-dropdown");
+            notifications.forEach(notification => {
+                if (notification.title === "Thông báo" && notification.message === "Bạn chưa có thông báo nào") {
+                    return;
+                }
+                const notificationItem = document.createElement("li");
+                notificationItem.innerHTML = `<strong>${notification.title}</strong> - ${notification.message}`;
+                dropdown.appendChild(notificationItem);
+            });
+        })
+        .catch(error => console.error("Lỗi khi lấy thông báo:", error));
+}
+
+//cập nhật số thông báo
+function updateNotificationCount() {
+    const count = document.querySelector(".notification-count");
+    count.textContent = "0";
+}
+
+//xử lý click vào thông báo
+function handleNotificationClick(event) {
+    const dropdown = document.getElementById("notification-dropdown");
+    dropdown.style.display = "none";
+}

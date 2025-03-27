@@ -35,9 +35,18 @@
                     <button type="button"><i class='bx bx-search'></i></button>
                 </div>
                 <ul>
-                    <li class="notification-icon">
+                    <li class="notification-icon" onclick="toggleNotificationDropdown(event)">
                         <i class='bx bx-bell'></i>
                         <span class="notification-count">0</span>
+                        <div id="notification-dropdown" class="notification-dropdown">
+                            <!--dữ liệu mẫu cho thông báo-->
+                            <ul>
+                                <li>
+                                    <strong>Thông báo</strong>
+                                    <p>Bạn chưa có thông báo nào</p>
+                                </li>
+                            </ul>   
+                        </div>
                     </li>
                     <li><i class='bx bx-user' onclick="toggleUserDropdown(event)"></i></li>
                     <li id="user-name" style="display: none;">
