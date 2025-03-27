@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function toggleUserDropdown(event) {
     var dropdown = document.getElementById("user-dropdown");
-
+    
     if (dropdown.style.display === "block") {
         dropdown.style.display = "none";
     } else {
