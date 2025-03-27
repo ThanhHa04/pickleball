@@ -2230,8 +2230,8 @@ footer {
 
 .notification-count {
     position: absolute;
-    top: -5px;
-    right: -5px;
+    top: -10px;
+    right: 32px;
     background-color: #ff4444;
     color: white;
     border-radius: 50%;
