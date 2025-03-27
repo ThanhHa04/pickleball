@@ -261,16 +261,29 @@ document.addEventListener("DOMContentLoaded", function () {
     locateButton.addTo(map);
 });
 
+//ẩn/hiện dropdown user
 function toggleUserDropdown(event) {
     var dropdown = document.getElementById("user-dropdown");
-    
+    const nndropdown = document.getElementById("notification-dropdown");
     if (dropdown.style.display === "block") {
         dropdown.style.display = "none";
+        nndropdown.style.display = "none";
     } else {
         dropdown.style.display = "block";
+        nndropdown.style.display = "none";
     }
     event.stopPropagation();
 }
+
+//ẩn/hiện dropdown user khi click ra ngoài hoặc click vào button khác
+document.addEventListener("click", function (event) {
+    var dropdown = document.getElementById("user-dropdown");
+    if (!dropdown.contains(event.target) && !event.target.closest(".notification-icon")) {
+        dropdown.style.display = "none";
+    }
+});
+
+
 
 function manageProfile() {
     alert("Quản lý thông tin cá nhân");
@@ -511,10 +524,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function toggleNotificationDropdown(event) {
     const dropdown = document.getElementById("notification-dropdown");
+    var udropdown = document.getElementById("user-dropdown");
     if (dropdown.style.display === "block") {
         dropdown.style.display = "none";
+        udropdown.style.display = "none";
     } else {
         dropdown.style.display = "block";
+        udropdown.style.display = "none";
     }
     event.stopPropagation();
 }
